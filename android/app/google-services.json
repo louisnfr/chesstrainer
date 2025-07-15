@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381542696543",
+    "project_id": "chesstrainer-fc080",
+    "storage_bucket": "chesstrainer-fc080.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381542696543:android:e36cdf1a7c81bf204a7dea",
+        "android_client_info": {
+          "package_name": "com.louisraffin.chesstrainer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWPVq0CJc8Y8v2KRqfN6EBlq_E7-Hl3rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
