@@ -1,4 +1,4 @@
-import 'package:chesstrainer/playground.dart';
+import 'package:chesstrainer/pages/home/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       //     brightness: Brightness.dark,
       //   ),
       // ),
-      home: Playground(),
+      home: HomePage(),
     );
   }
 }
