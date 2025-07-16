@@ -1,4 +1,6 @@
-import 'package:chesstrainer/chessground_example.dart';
+import 'package:chesstrainer/pages/examples/chessground.dart';
+import 'package:chesstrainer/pages/examples/learn_game.dart';
+import 'package:chesstrainer/pages/examples/normal_game_page.dart';
 import 'package:chesstrainer/pages/learn/learn_page.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,11 +72,29 @@ class HomePage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      const ChessgroundExample(title: 'Chessground Example'),
+                      const ChessgroundExample(title: 'Chessground example'),
                 ),
               );
             },
             child: const Text('See Chessground Example'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NormalGamePage()),
+              );
+            },
+            child: const Text('Normal game example'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LearnGamePage()),
+              );
+            },
+            child: const Text('Learn game example'),
           ),
         ],
       ),

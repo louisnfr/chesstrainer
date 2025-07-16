@@ -1,0 +1,45 @@
+{
+	"move": null,
+	"fen": "...",
+	"opening": {
+		"name": "Vienna Gambit",
+		"eco": "C29"
+	},
+	"comment": "Welcome to the Vienna Gambit!",
+	"children": [
+		{
+			"move": "e4",
+			"fen": "...",
+			"comment": "White starts with e4",
+			"children": [
+				{
+					"move": "e5",
+					"fen": "...",
+					"comment": "Black mirrors the center",
+					"children": [
+						{
+							"move": "Nc3",
+							"fen": "...",
+							"comment": "Prepares f4",
+							"children": [
+								{
+									"move": "Nf6",
+									"fen": "...",
+									"comment": "Attacks e4",
+									"children": [
+										{
+											"move": "f4",
+											"fen": "...",
+											"comment": "The gambit begins",
+											"children": []
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

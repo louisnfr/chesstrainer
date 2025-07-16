@@ -16,19 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Chessground Demo',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(
-      //     seedColor: Colors.indigo,
-      //     brightness: Brightness.light,
-      //   ),
-      // ),
-      // darkTheme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(
-      //     seedColor: Colors.indigo,
-      //     brightness: Brightness.dark,
-      //   ),
-      // ),
+      title: 'Chess Trainer',
       home: HomePage(),
     );
   }
