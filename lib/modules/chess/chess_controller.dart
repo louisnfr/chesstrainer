@@ -7,6 +7,9 @@ class ChessController extends ChangeNotifier {
   Position _position = Chess.initial;
   Side _orientation = Side.white;
   String _fen = kInitialBoardFEN;
+  final List<String> _moveHistory = [];
+  final List<String> _fenHistory = [kInitialBoardFEN];
+  int _historyIndex = 0;
   ValidMoves _validMoves = IMap(const {});
   Position? _lastPos;
   NormalMove? _lastMove;
@@ -26,6 +29,7 @@ class ChessController extends ChangeNotifier {
   NormalMove? get lastMove => _lastMove;
   NormalMove? get promotionMove => _promotionMove;
   NormalMove? get premove => _premove;
+  List<String> get moveHistory => _moveHistory;
 
   // Setters
   void setOrientation(Side newOrientation) {
@@ -42,6 +46,7 @@ class ChessController extends ChangeNotifier {
     _position = Chess.initial;
     _fen = _position.fen;
     _validMoves = makeLegalMoves(_position);
+    _moveHistory.clear();
     _lastPos = null;
     _lastMove = null;
     _promotionMove = null;
@@ -63,11 +68,21 @@ class ChessController extends ChangeNotifier {
   }
 
   void playMove(NormalMove move, {bool? isDrop, bool? isPremove}) {
+    final sanMove = _position.makeSanUnchecked(move).$2;
     _lastPos = _position;
     if (_position.isLegal(move)) {
       _position = _position.playUnchecked(move);
       _lastMove = move;
       _fen = _position.fen;
+
+      if (_historyIndex < _fenHistory.length - 1) {
+        _fenHistory.removeRange(_historyIndex + 1, _fenHistory.length);
+        _moveHistory.removeRange(_historyIndex, _moveHistory.length);
+      }
+
+      _fenHistory.add(_fen);
+      _moveHistory.add(sanMove);
+      _historyIndex++;
       _validMoves = makeLegalMoves(_position);
       notifyListeners();
     }
@@ -126,5 +141,27 @@ class ChessController extends ChangeNotifier {
       onMove: onMove,
       onPromotionSelection: onPromotionSelection,
     );
+  }
+
+  void _loadFenFromHistory() {
+    final fenToLoad = _fenHistory[_historyIndex];
+    _position = Chess.fromSetup(Setup.parseFen(fenToLoad));
+    _fen = _position.fen;
+    _validMoves = makeLegalMoves(_position);
+    notifyListeners();
+  }
+
+  void goToPrevious() {
+    if (_historyIndex > 0) {
+      _historyIndex--;
+      _loadFenFromHistory();
+    }
+  }
+
+  void goToNext() {
+    if (_historyIndex < _fenHistory.length - 1) {
+      _historyIndex++;
+      _loadFenFromHistory();
+    }
   }
 }

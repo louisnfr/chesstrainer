@@ -40,12 +40,13 @@ class _LearnGamePageState extends State<LearnGamePage> {
     return DefaultLayout(
       appBar: AppBar(title: const Text('Learn Game')),
       child: ListenableBuilder(
-        listenable: _learnController,
+        listenable: Listenable.merge([_chessController, _learnController]),
+        // listenable: _chessController,
         builder: (context, child) {
           return Column(
             children: [
               const Text('Play a learn chess game with right and wrong moves.'),
-
+              Text(_chessController.moveHistory.join(' ')),
               Text(
                 _chessController.position.turn == Side.white
                     ? 'White to move'
@@ -70,6 +71,18 @@ class _LearnGamePageState extends State<LearnGamePage> {
                 size: screenWidth,
                 orientation: _chessController.orientation,
                 fen: _chessController.fen,
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: _chessController.goToPrevious,
+                    icon: const Icon(Icons.arrow_back_ios_new),
+                  ),
+                  IconButton(
+                    onPressed: _chessController.goToNext,
+                    icon: const Icon(Icons.arrow_forward_ios),
+                  ),
+                ],
               ),
               const Text(''),
               // Row(
