@@ -1,0 +1,84 @@
+{
+  "name": "Vienna Gambit - Main Line",
+  "eco": "C29",
+  "parentOpening": "Vienna Game",
+  "root": {
+    "move": null,
+    "isMainLine": true,
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+    "comment": "Welcome to the Vienna Gambit ! Start by playing e4.",
+    "children": [
+      {
+        "move": "e4",
+        "isMainLine": true,
+        "fen": "rnbqkbnr/pppppppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+        "comment": "The opponent plays e5.",
+        "children": [
+          {
+            "move": "e5",
+            "isMainLine": true,
+            "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+            "comment": "Now play Nc3 to develop the knight and enter the vienna game",
+            "children": [
+              {
+                "move": "Nc3",
+                "isMainLine": true,
+                "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+                "comment": "The opponent plays Nf6, attacking the e4 pawn.",
+                "children": [
+                  {
+                    "move": "Nf6",
+                    "isMainLine": true,
+                    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 2 3",
+                    "comment": "Now play f4 to gambit the pawn!",
+                    "children": [
+                      {
+                        "move": "f4",
+                        "isMainLine": true,
+                        "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq f3 0 3",
+                        "comment": "The opponent plays exf4, big mistake !",
+                        "children": [
+                          {
+                            "move": "exf4",
+                            "isMainLine": true,
+                            "fen": "rnbqkb1r/ppp2ppp/5n2/3pp3/4PP2/2N5/PPPP2PP/R1BQKBNR w KQkq d6 0 4",
+                            "comment": "Now play we play e5 to kick the knight.",
+                            "children": [
+                              {
+                                "move": "e5",
+                                "isMainLine": true,
+                                "fen": "rnbqkb1r/ppp2ppp/5n2/3pP3/4P3/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 4",
+                                "comment": "The opponent has only one move to play, Ng8.",
+                                "children": [
+                                  {
+                                    "move": "Ng8",
+                                    "isMainLine": true,
+                                    "fen": "rnbqkb1r/ppp2ppp/8/3pP3/4n3/2N5/PPPP2PP/R1BQKBNR w KQkq - 0 5",
+                                    "comment": "Important! Now you play Nf3 to prevent the devastating Qh4 move",
+                                    "children": [
+                                      {
+                                        "move": "Nf3",
+                                        "isMainLine": true,
+                                        "fen": "rnbqkbnr/pppp1ppp/8/4P3/5p2/2N2N2/PPPP2PP/R1BQKB1R b KQkq - 2 5",
+                                        "comment": "Congrats ! You have successfully played the Vienna Gambit main line.",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -30,6 +30,8 @@ class ChessController extends ChangeNotifier {
   NormalMove? get promotionMove => _promotionMove;
   NormalMove? get premove => _premove;
   List<String> get moveHistory => _moveHistory;
+  List<String> get fenHistory => _fenHistory;
+  int get historyIndex => _historyIndex;
 
   // Setters
   void setOrientation(Side newOrientation) {
