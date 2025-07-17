@@ -1,17 +1,22 @@
 import 'package:chesstrainer/constants/routes.dart';
+import 'package:chesstrainer/modules/auth/services/auth_service.dart';
+import 'package:chesstrainer/modules/user/services/user_service.dart';
+import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/pages/examples/chessground.dart';
-import 'package:chesstrainer/pages/examples/learn_game.dart';
 import 'package:chesstrainer/pages/examples/normal_game_page.dart';
-import 'package:chesstrainer/pages/learn/learn_page.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Utilisation du provider
+    final user = ref.watch(currentUserProvider);
+
     return DefaultLayout(
       appBar: AppBar(
         actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
@@ -27,14 +32,19 @@ class HomePage extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.red, width: 2),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('User Info:'), Text('**'), Text('**')],
+              children: [
+                const Text('User Info:'),
+                Text('UID: ${user?.uid ?? 'Not connected'}'),
+                Text('Username: ${user?.username ?? 'Not connected'}'),
+                Text('Anonymous: ${user?.isAnonymous ?? 'Unknown'}'),
+              ],
             ),
           ),
-          const Text(
-            'Hi Louis!',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+          Text(
+            'Hi ${user?.username ?? 'Guest'}!',
+            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
           ),
           const Text('Pick up where you left off'),
           GestureDetector(
@@ -90,6 +100,14 @@ class HomePage extends StatelessWidget {
               );
             },
             child: const Text('Normal game example'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await ref.read(userNotifierProvider.notifier).signOut();
+              await UserService.deleteUserData();
+              await AuthService.deleteUserAccount();
+            },
+            child: const Text('DELETE USER'),
           ),
         ],
       ),

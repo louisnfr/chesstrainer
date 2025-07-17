@@ -39,6 +39,7 @@ class _LearnPageState extends State<LearnPage> {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return DefaultLayout(
+      safeAreaMinimum: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
       appBar: AppBar(
         title: const Text('Learn Game'),
         leading: IconButton(
@@ -111,12 +112,7 @@ class _LearnPageState extends State<LearnPage> {
                     Chessboard(
                       game: _chessController.getGameDataWith(
                         onMove: (move, {bool? isDrop}) {
-                          final ok = _learnController!.playMove(move);
-                          if (ok) {
-                            print('good move!');
-                          } else {
-                            print('not good');
-                          }
+                          _learnController!.playMove(move);
                         },
                       ),
                       size: screenWidth,
@@ -124,6 +120,7 @@ class _LearnPageState extends State<LearnPage> {
                       fen: _chessController.fen,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(
                           onPressed: () {

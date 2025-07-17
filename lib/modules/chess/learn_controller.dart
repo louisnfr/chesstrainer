@@ -16,7 +16,6 @@ class LearnController extends ChangeNotifier {
 
   LearnController(this._chessController, this.line) {
     _currentNode = line.root;
-    print('Starting with root node: ${_currentNode?.move}');
     _currentStep = 0;
     _chessController.initialize();
     notifyListeners();
@@ -46,10 +45,6 @@ class LearnController extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-    print(
-      'updating current node to: ${nextNode.move}, '
-      'next we need to : ${nextNode.comment}',
-    );
     _currentNode = nextNode;
     _currentStep++;
     notifyListeners();
@@ -65,7 +60,6 @@ class LearnController extends ChangeNotifier {
 
   void goToPrevious() {
     if (_currentNode?.parent != null) {
-      print('Going to previous node: ${_currentNode!.parent!.move}');
       _currentNode = _currentNode!.parent;
       _currentStep--;
       notifyListeners();

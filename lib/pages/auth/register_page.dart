@@ -1,5 +1,4 @@
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -53,14 +52,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final email = _emailController.text;
-                    final password = _passwordController.text;
-                    final userCredential = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                    print('User registered: $userCredential');
+                    // final email = _emailController.text;
+                    // final password = _passwordController.text;
+                    // final userCredential = await FirebaseAuth.instance
+                    //     .createUserWithEmailAndPassword(
+                    //       email: email,
+                    //       password: password,
+                    //     );
                   },
                   child: const Text('Register'),
                 ),
