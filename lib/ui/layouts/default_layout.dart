@@ -29,7 +29,10 @@ class DefaultLayout extends StatelessWidget {
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
     this.useSafeArea = true,
-    this.safeAreaMinimum = EdgeInsets.zero,
+    this.safeAreaMinimum = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 8,
+    ),
   });
 
   final Widget child;

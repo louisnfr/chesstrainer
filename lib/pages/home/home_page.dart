@@ -1,3 +1,4 @@
+import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/learn_game.dart';
 import 'package:chesstrainer/pages/examples/normal_game_page.dart';
@@ -12,7 +13,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      safeAreaMinimum: const EdgeInsets.symmetric(horizontal: 16),
       appBar: AppBar(
         actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: const Text('Learn Chess Openings'),
@@ -21,9 +21,17 @@ class HomePage extends StatelessWidget {
         ],
       ),
       child: Column(
-        spacing: 8,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red, width: 2),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text('User Info:'), Text('**'), Text('**')],
+            ),
+          ),
           const Text(
             'Hi Louis!',
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
@@ -31,11 +39,7 @@ class HomePage extends StatelessWidget {
           const Text('Pick up where you left off'),
           GestureDetector(
             onTap: () {
-              // Navigate to the opening details page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LearnPage()),
-              );
+              Navigator.pushNamed(context, learnRoute);
             },
             child: Card(
               child: Padding(
@@ -76,7 +80,7 @@ class HomePage extends StatelessWidget {
                 ),
               );
             },
-            child: const Text('See Chessground Example'),
+            child: const Text('Chessground Example'),
           ),
           TextButton(
             onPressed: () {
@@ -86,15 +90,6 @@ class HomePage extends StatelessWidget {
               );
             },
             child: const Text('Normal game example'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LearnGamePage()),
-              );
-            },
-            child: const Text('Learn game example'),
           ),
         ],
       ),

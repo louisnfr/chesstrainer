@@ -141,34 +141,6 @@ class _LearnGamePageState extends State<LearnGamePage> {
                         ),
                       ],
                     ),
-
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     OutlinedButton(
-                    //       onPressed: () {
-                    //         _chessController.resetGame();
-                    //       },
-                    //       child: const Text('Reset Game'),
-                    //     ),
-                    //     OutlinedButton(
-                    //       onPressed: () {
-                    //         _chessController.undoMove();
-                    //       },
-                    //       child: const Text('Undo Move'),
-                    //     ),
-                    //     OutlinedButton(
-                    //       onPressed: () {
-                    //         _chessController.setOrientation(
-                    //           _chessController.orientation == Side.white
-                    //               ? Side.black
-                    //               : Side.white,
-                    //         );
-                    //       },
-                    //       child: const Text('Flip Board'),
-                    //     ),
-                    //   ],
-                    // ),
                     if (_chessController.position.isCheck)
                       if (_chessController.position.isCheckmate)
                         Column(
