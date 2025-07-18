@@ -1,3 +1,5 @@
+import 'package:chesstrainer/modules/auth/services/auth_service.dart';
+import 'package:chesstrainer/modules/user/services/user_service.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
 
@@ -9,15 +11,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late final TextEditingController _emailController;
-  late final TextEditingController _passwordController;
-
-  @override
-  void initState() {
-    super.initState();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-  }
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -52,13 +47,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    // final email = _emailController.text;
-                    // final password = _passwordController.text;
-                    // final userCredential = await FirebaseAuth.instance
-                    //     .createUserWithEmailAndPassword(
-                    //       email: email,
-                    //       password: password,
-                    //     );
+                    await AuthService.linkWithCredential(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    await UserService.upgradeAnonymousUser(
+                      email: _emailController.text,
+                    );
+                    if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text('Register'),
                 ),

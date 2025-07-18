@@ -102,10 +102,16 @@ class HomePage extends ConsumerWidget {
             child: const Text('Normal game example'),
           ),
           TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, registerRoute);
+            },
+            child: const Text('Create account'),
+          ),
+          TextButton(
             onPressed: () async {
-              await ref.read(userNotifierProvider.notifier).signOut();
               await UserService.deleteUserData();
               await AuthService.deleteUserAccount();
+              await ref.read(userNotifierProvider.notifier).deleteUser();
             },
             child: const Text('DELETE USER'),
           ),

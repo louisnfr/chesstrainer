@@ -3,3 +3,4 @@ const onboardingRoute = '/onboarding';
 const loginRoute = '/login';
 const homeRoute = '/home';
 const learnRoute = '/learn';
+const registerRoute = '/register';

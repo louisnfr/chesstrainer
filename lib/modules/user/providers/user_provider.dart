@@ -1,3 +1,4 @@
+import 'package:chesstrainer/modules/auth/services/auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chesstrainer/modules/user/models/user.dart';
@@ -9,7 +10,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
   }
 
   void _listenToAuthChanges() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+    AuthService.authStateChanges().listen((User? user) async {
       if (user != null) {
         await _loadUserData(user);
       } else {
@@ -25,6 +26,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
         final userData = userDoc.data() as Map<String, dynamic>;
         state = UserModel(
           uid: user.uid,
+          email: user.email,
           username: userData['username'],
           isAnonymous: user.isAnonymous,
         );
@@ -36,15 +38,20 @@ class UserNotifier extends StateNotifier<UserModel?> {
 
   Future<void> createUser(String username) async {
     await UserService.createUser(username: username);
-    final currentUser = FirebaseAuth.instance.currentUser;
+    final currentUser = AuthService.currentUser;
     if (currentUser != null) {
       await _loadUserData(currentUser);
     }
   }
 
-  Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    state = null;
+  Future<void> deleteUser() async {
+    try {
+      await UserService.deleteUserData();
+      await AuthService.deleteUserAccount();
+      state = null;
+    } catch (e) {
+      print('Error deleting user: $e');
+    }
   }
 }
 

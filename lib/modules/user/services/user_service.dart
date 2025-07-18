@@ -19,6 +19,22 @@ class UserService {
     });
   }
 
+  static Future<void> upgradeAnonymousUser({required String email}) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('No authenticated user');
+    }
+
+    if (!user.isAnonymous) {
+      throw Exception('User is not anonymous');
+    }
+
+    await _firestore.collection('users').doc(user.uid).update({
+      'email': email,
+      'isAnonymous': false,
+    });
+  }
+
   static Future<DocumentSnapshot> getUser(String uid) async {
     return await _firestore.collection('users').doc(uid).get();
   }
