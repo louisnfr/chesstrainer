@@ -1,8 +1,6 @@
 import 'package:chesstrainer/constants/routes.dart';
-import 'package:chesstrainer/modules/auth/services/auth_service.dart';
 import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,17 +20,13 @@ class _OnboardingState extends ConsumerState<Onboarding> {
     return DefaultLayout(
       appBar: AppBar(title: const Text('Onboarding')),
       child: FutureBuilder(
-        future: AuthService.signInAnonymously(),
+        future: ref.read(userNotifierProvider.notifier).signInAnonymously(),
         builder: (context, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (asyncSnapshot.hasError) {
             return Center(child: Text('Error: ${asyncSnapshot.error}'));
-          }
-
-          if (kDebugMode) {
-            print('User signed in: ${asyncSnapshot.data}');
           }
 
           return Column(

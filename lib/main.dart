@@ -30,12 +30,12 @@ class MyApp extends ConsumerWidget {
       title: 'Chess Trainer',
       home: const WelcomePage(),
       routes: {
+        welcomeRoute: (context) => const WelcomePage(),
         onboardingRoute: (context) => const Onboarding(),
         loginRoute: (context) => const LoginPage(),
         homeRoute: (context) => const HomePage(),
         learnRoute: (context) => const LearnPage(),
-        registerRoute: (context) =>
-            const RegisterPage(), // Assuming registration is part of onboarding
+        registerRoute: (context) => const RegisterPage(),
       },
     );
   }

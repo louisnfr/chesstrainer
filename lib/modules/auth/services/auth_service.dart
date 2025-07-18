@@ -13,9 +13,6 @@ class AuthService {
 
   static Future<UserModel?> signInAnonymously() async {
     try {
-      if (kDebugMode) {
-        print('Signing in anonymously...');
-      }
       UserCredential result = await _auth.signInAnonymously();
       User user = result.user!;
       return UserModel(
@@ -26,6 +23,29 @@ class AuthService {
     } catch (e) {
       if (kDebugMode) {
         print('Error signing in anonymously: $e');
+      }
+      return null;
+    }
+  }
+
+  static Future<UserModel?> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User user = result.user!;
+      return UserModel(
+        uid: user.uid,
+        isAnonymous: user.isAnonymous,
+        email: user.email,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error signing in with email and password: $e');
       }
       return null;
     }

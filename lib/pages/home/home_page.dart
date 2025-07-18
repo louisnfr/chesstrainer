@@ -1,6 +1,4 @@
 import 'package:chesstrainer/constants/routes.dart';
-import 'package:chesstrainer/modules/auth/services/auth_service.dart';
-import 'package:chesstrainer/modules/user/services/user_service.dart';
 import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/normal_game_page.dart';
@@ -109,11 +107,32 @@ class HomePage extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () async {
-              await UserService.deleteUserData();
-              await AuthService.deleteUserAccount();
-              await ref.read(userNotifierProvider.notifier).deleteUser();
+              await ref.read(userNotifierProvider.notifier).signOut();
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  welcomeRoute,
+                  (_) => false,
+                );
+              }
             },
-            child: const Text('DELETE USER'),
+            child: const Text('Sign Out'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await ref.read(userNotifierProvider.notifier).deleteUser();
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  welcomeRoute,
+                  (_) => false,
+                );
+              }
+            },
+            child: const Text(
+              'DELETE USER',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

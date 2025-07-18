@@ -1,4 +1,5 @@
 import 'package:chesstrainer/modules/auth/services/auth_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chesstrainer/modules/user/models/user.dart';
@@ -32,7 +33,9 @@ class UserNotifier extends StateNotifier<UserModel?> {
         );
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      if (kDebugMode) {
+        print('Error loading user data: $e');
+      }
     }
   }
 
@@ -44,13 +47,47 @@ class UserNotifier extends StateNotifier<UserModel?> {
     }
   }
 
+  Future<void> login({required String email, required String password}) async {
+    try {
+      await AuthService.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // Pas besoin de _loadUserData ici car authStateChanges() s'en charge
+    } catch (e) {
+      if (kDebugMode) {
+        print('Login error: $e');
+      }
+      rethrow; // Pour permettre au widget de gérer l'erreur
+    }
+  }
+
+  Future<void> signInAnonymously() async {
+    try {
+      await AuthService.signInAnonymously();
+      // Pas besoin de _loadUserData ici car authStateChanges() s'en charge
+    } catch (e) {
+      if (kDebugMode) {
+        print('Anonymous sign in error: $e');
+      }
+      rethrow; // Pour permettre au widget de gérer l'erreur
+    }
+  }
+
+  Future<void> signOut() async {
+    await AuthService.signOut();
+    state = null;
+  }
+
   Future<void> deleteUser() async {
     try {
       await UserService.deleteUserData();
       await AuthService.deleteUserAccount();
       state = null;
     } catch (e) {
-      print('Error deleting user: $e');
+      if (kDebugMode) {
+        print('Error deleting user: $e');
+      }
     }
   }
 }
