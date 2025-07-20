@@ -3,16 +3,16 @@ import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -35,23 +35,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             autocorrect: false,
             enableSuggestions: false,
           ),
-          TextButton(
-            onPressed: () async {
-              try {
-                await ref
-                    .read(userNotifierProvider.notifier)
-                    .login(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                    );
-                if (context.mounted) {
-                  Navigator.pushNamed(context, homeRoute);
-                }
-              } catch (e) {
-                if (kDebugMode) print('Error on login: $e');
-              }
+          Consumer(
+            builder: (context, ref, child) {
+              return TextButton(
+                onPressed: () async {
+                  try {
+                    await ref
+                        .read(userNotifierProvider.notifier)
+                        .login(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
+                    if (context.mounted) {
+                      Navigator.pushNamed(context, homeRoute);
+                    }
+                  } catch (e) {
+                    if (kDebugMode) print('Error on login: $e');
+                  }
+                },
+                child: const Text('Login'),
+              );
             },
-            child: const Text('Login'),
           ),
         ],
       ),

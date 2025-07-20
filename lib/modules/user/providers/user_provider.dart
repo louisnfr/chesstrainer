@@ -1,13 +1,15 @@
 import 'package:chesstrainer/modules/auth/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chesstrainer/modules/user/models/user.dart';
 import 'package:chesstrainer/modules/user/services/user_service.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class UserNotifier extends StateNotifier<UserModel?> {
-  UserNotifier() : super(null) {
+class UserNotifier extends Notifier<UserModel?> {
+  @override
+  UserModel? build() {
     _listenToAuthChanges();
+    return null;
   }
 
   void _listenToAuthChanges() {
@@ -22,9 +24,9 @@ class UserNotifier extends StateNotifier<UserModel?> {
 
   Future<void> _loadUserData(User user) async {
     try {
-      final userDoc = await UserService.getUser(user.uid);
-      if (userDoc.exists) {
-        final userData = userDoc.data() as Map<String, dynamic>;
+      final userDocument = await UserService.getUser(user.uid);
+      if (userDocument.exists) {
+        final userData = userDocument.data() as Map<String, dynamic>;
         state = UserModel(
           uid: user.uid,
           email: user.email,
@@ -33,9 +35,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
         );
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading user data: $e');
-      }
+      throw Exception('Error loading user data: $e');
     }
   }
 
@@ -55,10 +55,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
       );
       // Pas besoin de _loadUserData ici car authStateChanges() s'en charge
     } catch (e) {
-      if (kDebugMode) {
-        print('Login error: $e');
-      }
-      rethrow; // Pour permettre au widget de gérer l'erreur
+      throw Exception('Error logging in: $e');
     }
   }
 
@@ -93,8 +90,8 @@ class UserNotifier extends StateNotifier<UserModel?> {
 }
 
 // Provider principal
-final userNotifierProvider = StateNotifierProvider<UserNotifier, UserModel?>(
-  (ref) => UserNotifier(),
+final userNotifierProvider = NotifierProvider<UserNotifier, UserModel?>(
+  UserNotifier.new,
 );
 
 // Provider pour accéder à l'utilisateur
