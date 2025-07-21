@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:chesstrainer/modules/user/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+enum AuthResult { abort, success, failure }
+
+@immutable
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -51,6 +56,10 @@ class AuthService {
     }
   }
 
+  static Future<UserModel?> signInWithGoogle() async {
+    return null;
+  }
+
   static Future<void> linkWithCredential({
     required String email,
     required String password,
@@ -60,7 +69,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      _auth.currentUser?.linkWithCredential(credential);
+      await _auth.currentUser?.linkWithCredential(credential);
     } catch (e) {
       if (kDebugMode) {
         print('Error linking credential: $e');
@@ -69,7 +78,7 @@ class AuthService {
   }
 
   static Future<void> signOut() async {
-    _auth.signOut();
+    await _auth.signOut();
   }
 
   static Future<void> deleteUserAccount() async {

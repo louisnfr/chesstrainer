@@ -533,9 +533,11 @@ class _ChessgroundExampleState extends State<ChessgroundExample> {
   }
 
   Future<void> _playBlackMove() async {
-    Future.delayed(const Duration(milliseconds: 100)).then((value) {
-      setState(() {});
-    });
+    unawaited(
+      Future.delayed(const Duration(milliseconds: 100)).then((value) {
+        setState(() {});
+      }),
+    );
     if (position.isGameOver) return;
 
     final random = Random();

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/pages/examples/chessground.dart';
@@ -108,10 +110,12 @@ class HomePage extends ConsumerWidget {
             onPressed: () async {
               await ref.read(userNotifierProvider.notifier).signOut();
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  welcomeRoute,
-                  (_) => false,
+                unawaited(
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    welcomeRoute,
+                    (_) => false,
+                  ),
                 );
               }
             },
@@ -121,10 +125,12 @@ class HomePage extends ConsumerWidget {
             onPressed: () async {
               await ref.read(userNotifierProvider.notifier).deleteUser();
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  welcomeRoute,
-                  (_) => false,
+                unawaited(
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    welcomeRoute,
+                    (_) => false,
+                  ),
                 );
               }
             },

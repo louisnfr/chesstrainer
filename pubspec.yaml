@@ -40,6 +40,8 @@ dependencies:
   dartchess: ^0.11.1
   fast_immutable_collections: ^11.0.4
   hooks_riverpod: ^3.0.0-dev.16
+  google_sign_in: ^7.1.1
+  sign_in_with_apple: ^7.0.1
 
 dev_dependencies:
   flutter_test:

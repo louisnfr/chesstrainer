@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
@@ -47,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                           password: _passwordController.text,
                         );
                     if (context.mounted) {
-                      Navigator.pushNamed(context, homeRoute);
+                      unawaited(Navigator.pushNamed(context, homeRoute));
                     }
                   } catch (e) {
                     if (kDebugMode) print('Error on login: $e');

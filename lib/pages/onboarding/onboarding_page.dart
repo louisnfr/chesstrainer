@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
@@ -77,10 +79,12 @@ class _OnboardingState extends State<Onboarding> {
                               .createUser(username);
 
                           if (context.mounted) {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              homeRoute,
-                              (_) => false,
+                            unawaited(
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                homeRoute,
+                                (_) => false,
+                              ),
                             );
                           }
                         } catch (e) {
