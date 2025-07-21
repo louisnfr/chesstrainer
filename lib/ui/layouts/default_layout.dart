@@ -29,9 +29,11 @@ class DefaultLayout extends Scaffold {
     super.endDrawerEnableOpenDragGesture = true,
     super.restorationId,
     bool useSafeArea = true,
-    EdgeInsets safeAreaMinimum = const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 8,
+    EdgeInsets safeAreaMinimum = const EdgeInsets.fromLTRB(
+      16.0, // left
+      8.0, // top
+      16.0, // right
+      48.0, // bottom
     ),
   }) : super(
          body: useSafeArea

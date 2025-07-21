@@ -1,9 +1,4 @@
-import 'dart:async';
-
-import 'package:chesstrainer/constants/routes.dart';
-import 'package:chesstrainer/modules/user/providers/user_provider.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -41,19 +36,19 @@ class _LoginPageState extends State<LoginPage> {
             builder: (context, ref, child) {
               return TextButton(
                 onPressed: () async {
-                  try {
-                    await ref
-                        .read(userNotifierProvider.notifier)
-                        .login(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        );
-                    if (context.mounted) {
-                      unawaited(Navigator.pushNamed(context, homeRoute));
-                    }
-                  } catch (e) {
-                    if (kDebugMode) print('Error on login: $e');
-                  }
+                  // try {
+                  //   await ref
+                  //       .read(authNotifierProvider.notifier)
+                  //       .signInWithEmailAndPassword(
+                  //         email: _emailController.text,
+                  //         password: _passwordController.text,
+                  //       );
+                  //   if (context.mounted) {
+                  //     unawaited(Navigator.pushNamed(context, homeRoute));
+                  //   }
+                  // } catch (e) {
+                  //   if (kDebugMode) print('Error on login: $e');
+                  // }
                 },
                 child: const Text('Login'),
               );

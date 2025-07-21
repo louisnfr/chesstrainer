@@ -45,19 +45,19 @@ class _RegisterPageState extends State<RegisterPage> {
                   autocorrect: false,
                   decoration: const InputDecoration(hintText: 'Password'),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await AuthService.linkWithCredential(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                    );
-                    await UserService.upgradeAnonymousUser(
-                      email: _emailController.text,
-                    );
-                    if (context.mounted) Navigator.pop(context);
-                  },
-                  child: const Text('Register'),
-                ),
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     await AuthService.linkWithCredential(
+                //       email: _emailController.text,
+                //       password: _passwordController.text,
+                //     );
+                //     await UserService.upgradeAnonymousUser(
+                //       email: _emailController.text,
+                //     );
+                //     if (context.mounted) Navigator.pop(context);
+                //   },
+                //   child: const Text('Register'),
+                // ),
               ],
             ),
           ],

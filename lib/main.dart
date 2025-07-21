@@ -1,11 +1,14 @@
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/firebase_options.dart';
+import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/pages/auth/login_page.dart';
 import 'package:chesstrainer/pages/auth/register_page.dart';
 import 'package:chesstrainer/pages/home/home_page.dart';
 import 'package:chesstrainer/pages/learn/learn_page.dart';
 import 'package:chesstrainer/pages/onboarding/onboarding_page.dart';
 import 'package:chesstrainer/pages/onboarding/welcome_page.dart';
+import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,10 +28,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chess Trainer',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-      ),
-      home: const WelcomePage(),
+      theme: lightTheme,
+      home: const AppWrapper(),
       routes: {
         welcomeRoute: (context) => const WelcomePage(),
         onboardingRoute: (context) => const Onboarding(),
@@ -41,11 +42,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AppWrapper extends StatelessWidget {
+class AppWrapper extends ConsumerWidget {
   const AppWrapper({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+
+    return authState.when(
+      data: (user) => user == null ? const WelcomePage() : const HomePage(),
+      loading: () => DefaultLayout(
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) => const WelcomePage(),
+    );
   }
 }

@@ -1,58 +1,29 @@
+import 'package:chesstrainer/modules/user/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
 class UserService {
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static Future<void> createUser({required String username}) async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('No authenticated user');
-    }
-
+  Future<void> createUser(UserModel user) async {
     await _firestore.collection('users').doc(user.uid).set({
-      'username': username,
-      'isAnonymous': user.isAnonymous,
+      ...user.toMap(),
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
-  static Future<void> upgradeAnonymousUser({required String email}) async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('No authenticated user');
+  Future<UserModel?> getUser(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+
+    if (!doc.exists) {
+      return null;
     }
 
-    if (!user.isAnonymous) {
-      throw Exception('User is not anonymous');
-    }
+    final data = doc.data()!;
 
-    await _firestore.collection('users').doc(user.uid).update({
-      'email': email,
-      'isAnonymous': false,
-    });
+    return UserModel.fromMap(data);
   }
 
-  static Future<DocumentSnapshot> getUser(String uid) async {
-    return await _firestore.collection('users').doc(uid).get();
-  }
-
-  static Future<void> deleteUserData() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        await _firestore.collection('users').doc(user.uid).delete();
-      } else {
-        if (kDebugMode) {
-          print('No user is currently signed in.');
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error deleting user data: $e');
-      }
-    }
+  Future<void> updateUser(UserModel user) async {
+    await _firestore.collection('users').doc(user.uid).update(user.toMap());
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -8,22 +11,43 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      appBar: AppBar(title: const Text('Welcome Page')),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         spacing: 8,
         children: [
-          ElevatedButton(
-            child: const Text('Get Started'),
-            onPressed: () {
-              Navigator.pushNamed(context, onboardingRoute);
-            },
+          const SizedBox(),
+          Text(
+            'Welcome to Chess Trainer',
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.w600),
           ),
-          OutlinedButton(
-            child: const Text('I already have an account'),
-            onPressed: () {
-              Navigator.pushNamed(context, loginRoute);
-            },
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 12,
+            children: [
+              Consumer(
+                builder: (context, ref, child) {
+                  return FilledButton(
+                    onPressed: () async {
+                      if (context.mounted) {
+                        unawaited(
+                          Navigator.pushNamed(context, onboardingRoute),
+                        );
+                      }
+                    },
+                    child: const Text('Get Started'),
+                  );
+                },
+              ),
+              OutlinedButton(
+                child: const Text('I already have an account'),
+                onPressed: () {
+                  // Navigator.pushNamed(context, loginRoute);
+                },
+              ),
+            ],
           ),
         ],
       ),

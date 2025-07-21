@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:chesstrainer/constants/routes.dart';
-import 'package:chesstrainer/modules/user/providers/user_provider.dart';
+import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
+import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/normal_game_page.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
@@ -14,36 +15,33 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
+    final user = ref.watch(currentUserProvider); // Plus simple !
 
     return DefaultLayout(
-      appBar: AppBar(
-        actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
-        title: const Text('Learn Chess Openings'),
-        actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red, width: 2),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              color: Colors.blueGrey[50],
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('User Info:'),
-                Text('UID: ${user?.uid ?? 'Not connected'}'),
-                Text('Username: ${user?.username ?? 'Not connected'}'),
-                Text('Anonymous: ${user?.isAnonymous ?? 'Unknown'}'),
+                Text(
+                  'Welcome back ${user?.displayName ?? 'Guest'}',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
+          const Divider(),
           Text(
-            'Hi ${user?.username ?? 'Guest'}!',
-            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+            'Welcome back ${user?.displayName ?? 'Guest'}!',
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           ),
           const Text('Pick up where you left off'),
           GestureDetector(
@@ -108,31 +106,22 @@ class HomePage extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () async {
-              await ref.read(userNotifierProvider.notifier).signOut();
-              if (context.mounted) {
-                unawaited(
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    welcomeRoute,
-                    (_) => false,
-                  ),
-                );
-              }
+              await ref.read(authNotifierProvider.notifier).signOut();
             },
             child: const Text('Sign Out'),
           ),
           TextButton(
             onPressed: () async {
-              await ref.read(userNotifierProvider.notifier).deleteUser();
-              if (context.mounted) {
-                unawaited(
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    welcomeRoute,
-                    (_) => false,
-                  ),
-                );
-              }
+              // await ref.read(authNotifierProvider.notifier).deleteAccount();
+              // if (context.mounted) {
+              //   unawaited(
+              //     Navigator.pushNamedAndRemoveUntil(
+              //       context,
+              //       welcomeRoute,
+              //       (_) => false,
+              //     ),
+              //   );
+              // }
             },
             child: const Text(
               'DELETE USER',
