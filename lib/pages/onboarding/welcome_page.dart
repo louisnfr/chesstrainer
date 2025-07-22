@@ -30,12 +30,8 @@ class WelcomePage extends StatelessWidget {
               Consumer(
                 builder: (context, ref, child) {
                   return FilledButton(
-                    onPressed: () async {
-                      if (context.mounted) {
-                        unawaited(
-                          Navigator.pushNamed(context, onboardingRoute),
-                        );
-                      }
+                    onPressed: () {
+                      unawaited(Navigator.pushNamed(context, onboardingRoute));
                     },
                     child: const Text('Get Started'),
                   );

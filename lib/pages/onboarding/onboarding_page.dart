@@ -3,8 +3,21 @@ import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Onboarding extends StatelessWidget {
+class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
+
+  @override
+  State<Onboarding> createState() => _OnboardingState();
+}
+
+class _OnboardingState extends State<Onboarding> {
+  final _usernameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +43,61 @@ class Onboarding extends StatelessWidget {
               ),
             ],
           ),
+          TextField(
+            controller: _usernameController,
+            decoration: const InputDecoration(
+              labelText: 'Enter your username',
+              border: OutlineInputBorder(),
+            ),
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
               Consumer(
                 builder: (context, ref, child) {
-                  return FilledButton(
-                    onPressed: () async {
-                      await ref
-                          .read(authNotifierProvider.notifier)
-                          .signInAnonymously();
-                    },
-                    child: const Text('Finish Onboarding'),
+                  final authState = ref.watch(authNotifierProvider);
+
+                  return authState.when(
+                    data: (_) => FilledButton(
+                      onPressed: () async {
+                        await ref
+                            .read(authNotifierProvider.notifier)
+                            .signInAnonymously();
+
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+
+                        // await ref
+                        //     .read(userNotifierProvider.notifier)
+                        //     .createUserProfile(
+                        //       displayName: _usernameController.text,
+                        //     );
+                      },
+                      child: const Text('Finish Onboarding'),
+                    ),
+                    loading: () => const FilledButton(
+                      onPressed: null,
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    error: (error, stack) => FilledButton(
+                      onPressed: () async {
+                        await ref
+                            .read(authNotifierProvider.notifier)
+                            .signInAnonymously();
+                      },
+                      child: const Text('Retry'),
+                    ),
                   );
                 },
               ),

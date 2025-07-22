@@ -2,6 +2,7 @@
   "name": "Vienna Gambit - Main Line",
   "eco": "C29",
   "parentOpening": "Vienna Game",
+  "playerSide": "white",
   "root": {
     "move": null,
     "isMainLine": true,

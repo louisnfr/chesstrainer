@@ -35,7 +35,7 @@ class UserNotifier extends AsyncNotifier<void> {
     // État initial
   }
 
-  Future<void> createUserProfile(String displayName) async {
+  Future<void> createUserProfile({required String displayName}) async {
     state = const AsyncLoading();
 
     try {

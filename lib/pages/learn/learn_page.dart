@@ -2,12 +2,13 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/chess_controller.dart';
 import 'package:chesstrainer/modules/chess/learn_controller.dart';
 import 'package:chesstrainer/modules/chess/models/node.dart';
+import 'package:chesstrainer/pages/learn/ui/coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/theme/theme.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
-/// Exemple d'utilisation du ChessController pour une partie normale
-/// sans logique d'apprentissage
 class LearnPage extends StatefulWidget {
   const LearnPage({super.key});
 
@@ -16,9 +17,10 @@ class LearnPage extends StatefulWidget {
 }
 
 class _LearnPageState extends State<LearnPage> {
-  late ChessController _chessController;
   LearnController? _learnController;
+  late ChessController _chessController;
   late Future<Line> _lineFuture;
+  IMap<Square, Annotation> _annotations = IMap();
 
   @override
   void initState() {
@@ -41,7 +43,10 @@ class _LearnPageState extends State<LearnPage> {
     return DefaultLayout(
       safeAreaMinimum: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
       appBar: AppBar(
-        title: const Text('Learn Game'),
+        title: const Text(
+          'Vienna Gambit - Line 3 / 12',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -70,54 +75,60 @@ class _LearnPageState extends State<LearnPage> {
               ]),
               builder: (context, child) {
                 return Column(
+                  spacing: 12,
                   children: [
-                    const Text(
-                      'Play a learn chess game with right and wrong moves.',
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: LinearProgressIndicator(
+                        backgroundColor: Colors.grey[300],
+                        color: AppColors.primaryColor,
+                        value: 0.5,
+                        minHeight: 12,
+                        borderRadius: BorderRadius.circular(32),
+                      ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color:
-                              _learnController!.currentNode?.isMainLine == true
-                              ? Colors.green
-                              : Colors.red,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        _learnController!.currentNode?.isMainLine == true
-                            ? _learnController!.currentNode?.comment ?? ''
-                            : '${_learnController!.currentNode?.move} is an '
-                                  '${_learnController!.currentNode?.comment}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color:
-                              _learnController!.currentNode?.isMainLine == true
-                              ? Colors.green
-                              : Colors.red,
-                        ),
-                      ),
+                    Coach(
+                      text: _learnController!.currentNode?.isMainLine == true
+                          ? _learnController!.currentNode?.comment ?? ''
+                          : '${_learnController!.currentNode?.move} is an '
+                                '${_learnController!.currentNode?.comment}',
                     ),
                     Text(_chessController.moveHistory.join(' ')),
-                    Text(
-                      _chessController.position.turn == Side.white
-                          ? 'White to move'
-                          : 'Black to move',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                      ),
-                    ),
                     Chessboard(
                       game: _chessController.getGameDataWith(
                         onMove: (move, {bool? isDrop}) {
-                          _learnController!.playMove(move);
+                          final isCorrect = _learnController!.playMove(move);
+                          // Si le coup est incorrect, ajouter une croix rouge sur la case de destination
+                          if (!isCorrect) {
+                            setState(() {
+                              // Créer une croix en utilisant un cercle rouge épais
+                              _annotations = IMap({
+                                Square(move.to): Annotation(
+                                  color: Colors.red,
+                                  symbol: 'X',
+                                  // widget: Icon(Icons.close, color: Colors.white, size: 16),
+                                  widget: Image.asset(
+                                    'assets/images/incorrect.png',
+                                    width: 128,
+                                    height: 128,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              });
+                            });
+                          } else {
+                            setState(() {
+                              _annotations = IMap();
+                            });
+                          }
                         },
                       ),
                       size: screenWidth,
                       orientation: _chessController.orientation,
                       fen: _chessController.fen,
+                      annotations: _annotations.isNotEmpty
+                          ? _annotations
+                          : null,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -126,6 +137,10 @@ class _LearnPageState extends State<LearnPage> {
                           onPressed: () {
                             _chessController.goToPrevious();
                             _learnController!.goToPrevious();
+                            // Effacer les marques d'erreur lors de la navigation
+                            setState(() {
+                              _annotations = IMap();
+                            });
                           },
                           icon: const Icon(Icons.arrow_back_ios_new),
                         ),
@@ -133,6 +148,10 @@ class _LearnPageState extends State<LearnPage> {
                           onPressed: () {
                             _chessController.goToNext();
                             _learnController!.goToNext();
+                            // Effacer les marques d'erreur lors de la navigation
+                            setState(() {
+                              _annotations = IMap();
+                            });
                           },
                           icon: const Icon(Icons.arrow_forward_ios),
                         ),

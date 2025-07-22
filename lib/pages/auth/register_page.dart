@@ -1,5 +1,3 @@
-import 'package:chesstrainer/modules/auth/services/auth_service.dart';
-import 'package:chesstrainer/modules/user/services/user_service.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
 

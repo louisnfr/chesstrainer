@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chessground/chessground.dart';
 import 'package:flutter/services.dart';
 
 class Node {
@@ -36,12 +37,14 @@ class Line {
   final String name;
   final String eco;
   final String parentOpening;
+  final PlayerSide playerSide;
   final Node root;
 
   Line({
     required this.name,
     required this.eco,
     required this.parentOpening,
+    required this.playerSide,
     required this.root,
   });
 
@@ -50,6 +53,9 @@ class Line {
       name: json['name'],
       eco: json['eco'],
       parentOpening: json['parentOpening'],
+      playerSide: json['playerSide'] == 'white'
+          ? PlayerSide.white
+          : PlayerSide.black,
       root: Node.fromJson(json['root']),
     );
   }
