@@ -3,7 +3,6 @@ import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/ui/theme/theme.dart';
 import 'package:dartchess/dartchess.dart';
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 
 class OpeningCard extends StatelessWidget {
@@ -37,19 +36,19 @@ class OpeningCard extends StatelessWidget {
                   fen: opening.fen,
                   size: 128,
                   orientation: Side.white,
-                  annotations: IMap({
-                    const Square(29): Annotation(
-                      color: Colors.red,
-                      symbol: 'X',
-                      // widget: Icon(Icons.close, color: Colors.white, size: 16),
-                      widget: Image.asset(
-                        'assets/images/incorrect.png',
-                        width: 2,
-                        height: 2,
-                        color: Colors.white,
-                      ),
-                    ),
-                  }),
+                  // annotations: IMap({
+                  //   const Square(29): Annotation(
+                  //     color: Colors.red,
+                  //     symbol: 'X',
+                  //     // widget: Icon(Icons.close, color: Colors.white, size: 16),
+                  //     widget: Image.asset(
+                  //       'assets/images/incorrect.png',
+                  //       width: 2,
+                  //       height: 2,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  // }),
                 ),
                 Expanded(
                   child: Column(

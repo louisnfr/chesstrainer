@@ -1,13 +1,9 @@
-import 'package:chesstrainer/constants/routes.dart';
-import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/models/opening_difficulty.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
-import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/normal_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -51,13 +47,21 @@ class HomePage extends ConsumerWidget {
           ),
           const Text('Pick up where you left off'),
           OpeningCard(opening: viennaGambit),
+          // TextButton(
+          //   onPressed: () async {
+          //     await ref.read(authNotifierProvider.notifier).signOut();
+          //   },
+          //   child: const Text('Sign Out'),
+          // ),
           TextButton(
-            onPressed: () async {
-              await ref.read(authNotifierProvider.notifier).signOut();
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NormalGamePage()),
+              );
             },
-            child: const Text('Sign Out'),
+            child: const Text('Normal game example'),
           ),
-          // Text
         ],
       ),
     );
@@ -65,7 +69,7 @@ class HomePage extends ConsumerWidget {
 }
 
 
-// void Button(
+          // Button(
           //   onPressed: () {
           //     Navigator.push(
           //       context,
@@ -77,6 +81,8 @@ class HomePage extends ConsumerWidget {
           //   },
           //   child: const Text('Chessground Example'),
           // ),
+
+
           // TextButton(
           //   onPressed: () {
           //     Navigator.push(
@@ -86,6 +92,8 @@ class HomePage extends ConsumerWidget {
           //   },
           //   child: const Text('Normal game example'),
           // ),
+
+
           // TextButton(
           //   onPressed: () {
           //     Navigator.pushNamed(context, registerRoute);

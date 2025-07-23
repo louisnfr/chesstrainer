@@ -1,112 +1,83 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/modules/chess/chess_controller.dart';
+import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// Exemple d'utilisation du ChessController pour une partie normale
-/// sans logique d'apprentissage
-class NormalGamePage extends StatefulWidget {
+class NormalGamePage extends ConsumerWidget {
   const NormalGamePage({super.key});
 
   @override
-  State<NormalGamePage> createState() => _NormalGamePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerSide = PlayerSide.both;
+    final chessProvider = ref.watch(chessNotifierProvider(playerSide));
+    final chessNotifier = ref.read(chessNotifierProvider(playerSide).notifier);
 
-class _NormalGamePageState extends State<NormalGamePage> {
-  late ChessController _controller;
-
-  @override
-  void initState() {
-    _controller = ChessController();
-    _controller.initialize();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return DefaultLayout(
+      useSafeArea: false,
       appBar: AppBar(title: const Text('Normal Game')),
-      child: ListenableBuilder(
-        listenable: _controller,
-        builder: (context, child) {
-          return Column(
+      child: Column(
+        children: [
+          chessProvider.position.turn == Side.white
+              ? const Text(
+                  'White to move',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+                )
+              : const Text(
+                  'Black to move',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+                ),
+          Chessboard(
+            game: chessNotifier.getGameData(),
+            size: screenWidth,
+            orientation: chessProvider.orientation,
+            fen: chessProvider.fen,
+          ),
+          Row(
             children: [
-              const Text('Play a normal chess game without training mode.'),
-              _controller.position.turn == Side.white
-                  ? const Text(
-                      'White to move',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                      ),
-                    )
-                  : const Text(
-                      'Black to move',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                      ),
-                    ),
-              Chessboard(
-                game: _controller.getGameData(),
-                size: screenWidth,
-                orientation: _controller.orientation,
-                fen: _controller.fen,
+              IconButton(
+                onPressed: () => chessNotifier.goToPrevious(),
+                icon: const Icon(Icons.arrow_back_ios_rounded),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              IconButton(
+                onPressed: () => chessNotifier.goToNext(),
+                icon: const Icon(Icons.arrow_forward_ios_rounded),
+              ),
+            ],
+          ),
+          Wrap(
+            children: [
+              OutlinedButton(
+                onPressed: () => chessNotifier.resetGame(),
+                child: const Text('Reset Game'),
+              ),
+              OutlinedButton(
+                onPressed: () => chessNotifier.undoMove(),
+                child: const Text('Undo Move'),
+              ),
+              OutlinedButton(
+                onPressed: () => chessNotifier.toggleOrientation(),
+                child: const Text('Flip Board'),
+              ),
+            ],
+          ),
+          if (chessProvider.position.isCheck)
+            if (chessProvider.position.isCheckmate)
+              Column(
                 children: [
+                  const Text('Checkmate!'),
                   OutlinedButton(
-                    onPressed: () {
-                      _controller.resetGame();
-                    },
-                    child: const Text('Reset Game'),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      _controller.undoMove();
-                    },
-                    child: const Text('Undo Move'),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      _controller.setOrientation(
-                        _controller.orientation == Side.white
-                            ? Side.black
-                            : Side.white,
-                      );
-                    },
-                    child: const Text('Flip Board'),
+                    onPressed: () => chessNotifier.resetGame(),
+                    child: const Text('Play Again'),
                   ),
                 ],
-              ),
-              if (_controller.position.isCheck)
-                if (_controller.position.isCheckmate)
-                  Column(
-                    children: [
-                      const Text('Checkmate!'),
-                      OutlinedButton(
-                        onPressed: () {
-                          _controller.resetGame();
-                        },
-                        child: const Text('Play Again'),
-                      ),
-                    ],
-                  )
-                else
-                  const Text('Check!'),
-            ],
-          );
-        },
+              )
+            else
+              const Text('Check!'),
+        ],
       ),
     );
   }

@@ -1,17 +1,15 @@
-import 'dart:convert';
+import 'package:flutter/widgets.dart' show immutable;
 
-import 'package:chessground/chessground.dart';
-import 'package:flutter/services.dart';
-
+@immutable
 class Node {
   final String? move;
   final String fen;
   final String? comment;
   final List<Node> children;
   final bool isMainLine;
-  Node? parent;
+  final Node? parent;
 
-  Node({
+  const Node({
     required this.move,
     required this.fen,
     required this.comment,
@@ -33,45 +31,9 @@ class Node {
   }
 }
 
-class Line {
-  final String name;
-  final String eco;
-  final String parentOpening;
-  final PlayerSide playerSide;
-  final Node root;
-
-  Line({
-    required this.name,
-    required this.eco,
-    required this.parentOpening,
-    required this.playerSide,
-    required this.root,
-  });
-
-  factory Line.fromJson(Map<String, dynamic> json) {
-    return Line(
-      name: json['name'],
-      eco: json['eco'],
-      parentOpening: json['parentOpening'],
-      playerSide: json['playerSide'] == 'white'
-          ? PlayerSide.white
-          : PlayerSide.black,
-      root: Node.fromJson(json['root']),
-    );
-  }
-}
-
-Future<Line> loadLine(String assetPath) async {
-  final jsonString = await rootBundle.loadString(assetPath);
-  final data = jsonDecode(jsonString);
-  final Line line = Line.fromJson(data);
-  assignParent(line.root);
-  return line;
-}
-
-void assignParent(Node node, [Node? parent]) {
-  node.parent = parent;
-  for (final child in node.children) {
-    assignParent(child, node);
-  }
-}
+// void assignParent(Node node, [Node? parent]) {
+//   node.parent = parent;
+//   for (final child in node.children) {
+//     assignParent(child, node);
+//   }
+// }

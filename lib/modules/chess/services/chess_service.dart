@@ -1,5 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
+import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,7 @@ class ChessService {
 
   static ChessState initializeGame({PlayerSide playerSide = PlayerSide.both}) {
     final position = Chess.initial;
+
     return ChessState(
       fen: kInitialBoardFEN,
       playerSide: playerSide,
@@ -132,11 +134,12 @@ class ChessService {
     );
   }
 
-  static ChessState setOrientation(
-    ChessState currentState,
-    Side newOrientation,
-  ) {
-    return currentState.copyWith(orientation: newOrientation);
+  // * Side methods
+
+  static ChessState toggleOrientation(ChessState currentState) {
+    return currentState.copyWith(
+      orientation: currentState.orientation.opposite,
+    );
   }
 
   static ChessState setPromotionMove(

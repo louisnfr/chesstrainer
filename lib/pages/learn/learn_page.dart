@@ -1,7 +1,7 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/modules/chess/chess_controller.dart';
-import 'package:chesstrainer/modules/chess/learn_controller.dart';
-import 'package:chesstrainer/modules/chess/models/node.dart';
+import 'package:chesstrainer/modules/chess/TBD_chess_controller.dart';
+import 'package:chesstrainer/modules/chess/TBD_learn_controller.dart';
+import 'package:chesstrainer/modules/learn/models/line.dart';
 import 'package:chesstrainer/pages/learn/ui/coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/theme/theme.dart';

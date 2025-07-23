@@ -1,6 +1,7 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/modules/chess/chess_controller.dart';
+import 'package:chesstrainer/modules/chess/TBD_chess_controller.dart';
 import 'package:chesstrainer/modules/chess/models/node.dart';
+import 'package:chesstrainer/modules/learn/models/line.dart';
 import 'package:collection/collection.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
