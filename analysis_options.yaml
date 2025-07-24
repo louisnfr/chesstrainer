@@ -30,5 +30,6 @@ linter:
     require_trailing_commas: true
     lines_longer_than_80_chars: true
     unawaited_futures: true
+    unnecessary_parenthesis: true
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

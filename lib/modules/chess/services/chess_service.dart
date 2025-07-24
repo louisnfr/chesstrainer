@@ -2,16 +2,14 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:dartchess/dartchess.dart';
-import 'package:flutter/material.dart';
 
 class ChessService {
   // * Initialize methods
 
   static ChessState initializeGame({PlayerSide playerSide = PlayerSide.both}) {
     final position = Chess.initial;
-
     return ChessState(
-      fen: kInitialBoardFEN,
+      fen: position.fen,
       playerSide: playerSide,
       position: position,
       orientation: Side.white,
@@ -104,13 +102,6 @@ class ChessService {
 
   // * Promotion methods
 
-  static ChessState setPromotionMove(
-    ChessState currentState,
-    NormalMove? promotionMove,
-  ) {
-    return currentState.copyWith(promotionMove: promotionMove);
-  }
-
   static bool isPromotionPawnMove(ChessState currentState, NormalMove move) {
     return move.promotion == null &&
         currentState.position.board.roleAt(move.from) == Role.pawn &&
@@ -120,22 +111,55 @@ class ChessService {
                 currentState.position.turn == Side.white));
   }
 
+  static ChessState? handlePromotionSelection(
+    ChessState currentState,
+    Role? role,
+  ) {
+    if (role == null) {
+      return setPromotionMove(currentState, null);
+    } else if (currentState.promotionMove != null) {
+      final newMove = currentState.promotionMove!.withPromotion(role);
+      return playMove(currentState, newMove);
+    }
+    return null;
+  }
+
+  static ChessState setPromotionMove(
+    ChessState currentState,
+    NormalMove? promotionMove,
+  ) {
+    return currentState.copyWith(promotionMove: promotionMove);
+  }
+
   // * Navigation methods
 
   static ChessState? goToPrevious(ChessState currentState) {
-    if (currentState.historyIndex <= 0) {
-      return null;
+    if (currentState.historyIndex > 0) {
+      final newIndex = currentState.historyIndex - 1;
+      return _loadFenFromHistory(currentState, newIndex);
     }
-    final newIndex = currentState.historyIndex - 1;
-    return _loadFenFromHistory(currentState, newIndex);
+    return null;
   }
 
   static ChessState? goToNext(ChessState currentState) {
-    if (currentState.historyIndex >= currentState.fenHistory.length - 1) {
-      return null;
+    if (currentState.historyIndex < currentState.fenHistory.length - 1) {
+      final newIndex = currentState.historyIndex + 1;
+      return _loadFenFromHistory(currentState, newIndex);
     }
-    final newIndex = currentState.historyIndex + 1;
-    return _loadFenFromHistory(currentState, newIndex);
+    return null;
+  }
+
+  static ChessState _loadFenFromHistory(ChessState currentState, int newIndex) {
+    final fenToLoad = currentState.fenHistory[newIndex];
+    final newPosition = Chess.fromSetup(Setup.parseFen(fenToLoad));
+
+    return currentState.copyWith(
+      position: newPosition,
+      fen: newPosition.fen,
+      historyIndex: newIndex,
+      validMoves: makeLegalMoves(newPosition),
+      promotionMove: null,
+    );
   }
 
   static ChessState? undoMove(ChessState currentState) {
@@ -151,46 +175,11 @@ class ChessService {
     );
   }
 
-  // * Side methods
+  // * Helper methods
 
   static ChessState toggleOrientation(ChessState currentState) {
     return currentState.copyWith(
       orientation: currentState.orientation.opposite,
     );
-  }
-
-  // * Helper methods
-
-  static ChessState _loadFenFromHistory(ChessState currentState, int newIndex) {
-    print(
-      'current state fen history: ${currentState.fenHistory}, new index: $newIndex',
-    );
-    final fenToLoad = currentState.fenHistory[newIndex];
-    final newPosition = Chess.fromSetup(Setup.parseFen(fenToLoad));
-
-    return currentState.copyWith(
-      position: newPosition,
-      fen: newPosition.fen,
-      historyIndex: newIndex,
-      validMoves: makeLegalMoves(newPosition),
-      promotionMove: null,
-    );
-  }
-
-  static ChessState? loadPosition(ChessState currentState, String fen) {
-    try {
-      final newPosition = Chess.fromSetup(Setup.parseFen(fen));
-      return currentState.copyWith(
-        position: newPosition,
-        fen: fen,
-        validMoves: makeLegalMoves(newPosition),
-        lastPos: null,
-        lastMove: null,
-        promotionMove: null,
-      );
-    } catch (e) {
-      debugPrint('Error loading position: $e');
-      return null;
-    }
   }
 }

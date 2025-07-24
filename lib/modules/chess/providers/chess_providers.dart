@@ -18,12 +18,12 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
   //   );
   // }
 
-  void loadPosition(String fen) {
-    final newState = ChessService.loadPosition(state, fen);
-    if (newState != null) {
-      state = newState;
-    }
-  }
+  // void loadPosition(String fen) {
+  //   final newState = ChessService.loadPosition(state, fen);
+  //   if (newState != null) {
+  //     state = newState;
+  //   }
+  // }
 
   void resetGame() {
     state = ChessService.resetGame(state);
@@ -53,26 +53,15 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
   // * Promotion methods
 
   void onPromotionSelection(Role? role) {
-    if (role == null) {
-      onPromotionCancel();
-    } else if (state.promotionMove != null) {
-      final newState = ChessService.playMove(
-        state,
-        state.promotionMove!.withPromotion(role),
-      );
-      if (newState != null) {
-        state = newState;
-      }
+    final newState = ChessService.handlePromotionSelection(state, role);
+    if (newState != null) {
+      state = newState;
     }
   }
 
   void onPromotionCancel() {
-    state = ChessService.setPromotionMove(state, null);
+    onPromotionSelection(null);
   }
-
-  // bool isPromotionPawnMove(NormalMove move) {
-  //   return ChessService.isPromotionPawnMove(state, move);
-  // }
 
   // * Navigation methods
 
