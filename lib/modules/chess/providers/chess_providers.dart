@@ -5,27 +5,18 @@ import 'package:dartchess/dartchess.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
-  // ChessNotifier({PlayerSide playerSide = PlayerSide.both})
-  //   : super(ChessService.initializeGame(playerSide: playerSide));
-
   @override
   ChessState build(PlayerSide playerSide) {
     return ChessService.initializeGame(playerSide: playerSide);
   }
 
-  void initialize() {
-    state = state.copyWith(
-      validMoves: ChessService.calculateValidMoves(state.position),
-    );
-  }
+  // * Initialize methods
 
-  void toggleOrientation() {
-    state = ChessService.toggleOrientation(state);
-  }
-
-  void resetGame() {
-    state = ChessService.resetGame(state);
-  }
+  // void initialize() {
+  //   state = state.copyWith(
+  //     validMoves: makeLegalMoves(state.position),
+  //   );
+  // }
 
   void loadPosition(String fen) {
     final newState = ChessService.loadPosition(state, fen);
@@ -34,6 +25,24 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
     }
   }
 
+  void resetGame() {
+    state = ChessService.resetGame(state);
+  }
+
+  // * GameData methods
+
+  GameData getGameData() {
+    return ChessService.createGameData(state, this);
+  }
+
+  GameData getGameDataWith({
+    required void Function(NormalMove, {bool? isDrop}) onMove,
+  }) {
+    return ChessService.createGameDataWith(state, this, onMove: onMove);
+  }
+
+  // * Move methods
+
   void playMove(NormalMove move, {bool? isDrop, bool? isPremove}) {
     final newState = ChessService.playMove(state, move);
     if (newState != null) {
@@ -41,18 +50,19 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
     }
   }
 
-  void undoMove() {
-    final newState = ChessService.undoMove(state);
-    if (newState != null) {
-      state = newState;
-    }
-  }
+  // * Promotion methods
 
   void onPromotionSelection(Role? role) {
     if (role == null) {
       onPromotionCancel();
     } else if (state.promotionMove != null) {
-      playMove(state.promotionMove!.withPromotion(role));
+      final newState = ChessService.playMove(
+        state,
+        state.promotionMove!.withPromotion(role),
+      );
+      if (newState != null) {
+        state = newState;
+      }
     }
   }
 
@@ -60,9 +70,11 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
     state = ChessService.setPromotionMove(state, null);
   }
 
-  bool isPromotionPawnMove(NormalMove move) {
-    return ChessService.isPromotionPawnMove(state, move);
-  }
+  // bool isPromotionPawnMove(NormalMove move) {
+  //   return ChessService.isPromotionPawnMove(state, move);
+  // }
+
+  // * Navigation methods
 
   void goToPrevious() {
     final newState = ChessService.goToPrevious(state);
@@ -78,15 +90,17 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
     }
   }
 
-  // Méthodes pour GameData (délégation au service)
-  GameData getGameData() {
-    return ChessService.createGameData(state, this);
+  void undoMove() {
+    final newState = ChessService.undoMove(state);
+    if (newState != null) {
+      state = newState;
+    }
   }
 
-  GameData getGameDataWith({
-    required void Function(NormalMove, {bool? isDrop}) onMove,
-  }) {
-    return ChessService.createGameDataWith(state, this, onMove: onMove);
+  // * Side methods
+
+  void toggleOrientation() {
+    state = ChessService.toggleOrientation(state);
   }
 }
 

@@ -86,6 +86,7 @@ class ChessController extends ChangeNotifier {
       _moveHistory.add(sanMove);
       _historyIndex++;
       _validMoves = makeLegalMoves(_position);
+      _promotionMove = null; // Remettre à null après avoir joué un coup
       notifyListeners();
     }
   }
@@ -96,6 +97,7 @@ class ChessController extends ChangeNotifier {
       _fen = _position.fen;
       _validMoves = makeLegalMoves(_position);
       _lastMove = null;
+      _promotionMove = null; // Effacer le promotionMove lors de l'annulation
       notifyListeners();
     }
   }
@@ -150,6 +152,7 @@ class ChessController extends ChangeNotifier {
     _position = Chess.fromSetup(Setup.parseFen(fenToLoad));
     _fen = _position.fen;
     _validMoves = makeLegalMoves(_position);
+    _promotionMove = null; // Effacer le promotionMove lors de la navigation
     notifyListeners();
   }
 

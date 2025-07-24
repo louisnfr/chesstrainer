@@ -1,6 +1,7 @@
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/models/opening_difficulty.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
+import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/normal_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
@@ -62,6 +63,18 @@ class HomePage extends ConsumerWidget {
             },
             child: const Text('Normal game example'),
           ),
+          FilledButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const ChessgroundExample(title: 'Chessground example'),
+                ),
+              );
+            },
+            child: const Text('Chessground Example'),
+          ),
         ],
       ),
     );
@@ -69,18 +82,7 @@ class HomePage extends ConsumerWidget {
 }
 
 
-          // Button(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) =>
-          //             const ChessgroundExample(title: 'Chessground example'),
-          //       ),
-          //     );
-          //   },
-          //   child: const Text('Chessground Example'),
-          // ),
+
 
 
           // TextButton(

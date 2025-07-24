@@ -7,7 +7,7 @@ class ChessState {
   final Position position;
   final Side orientation;
   final String fen;
-  final List<String> moveHistory;
+  // final List<String> moveHistory;
   final List<String> fenHistory;
   final int historyIndex;
   final ValidMoves validMoves;
@@ -21,7 +21,7 @@ class ChessState {
     required this.position,
     required this.orientation,
     required this.fen,
-    required this.moveHistory,
+    // required this.moveHistory,
     required this.fenHistory,
     required this.historyIndex,
     required this.validMoves,
@@ -36,6 +36,7 @@ class ChessState {
     Position? position,
     Side? orientation,
     String? fen,
+    PlayerSide? playerSide,
     List<String>? moveHistory,
     List<String>? fenHistory,
     int? historyIndex,
@@ -44,21 +45,20 @@ class ChessState {
     NormalMove? lastMove,
     NormalMove? promotionMove,
     NormalMove? premove,
-    PlayerSide? playerSide,
   }) {
     return ChessState(
       position: position ?? this.position,
       orientation: orientation ?? this.orientation,
       fen: fen ?? this.fen,
-      moveHistory: moveHistory ?? this.moveHistory,
+      // moveHistory: moveHistory ?? this.moveHistory,
+      playerSide: playerSide ?? this.playerSide,
       fenHistory: fenHistory ?? this.fenHistory,
       historyIndex: historyIndex ?? this.historyIndex,
       validMoves: validMoves ?? this.validMoves,
-      lastPos: lastPos ?? this.lastPos,
-      lastMove: lastMove ?? this.lastMove,
-      promotionMove: promotionMove ?? this.promotionMove,
-      premove: premove ?? this.premove,
-      playerSide: playerSide ?? this.playerSide,
+      lastPos: lastPos,
+      lastMove: lastMove,
+      promotionMove: promotionMove,
+      premove: premove,
     );
   }
 }

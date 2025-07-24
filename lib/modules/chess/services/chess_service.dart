@@ -15,21 +15,41 @@ class ChessService {
       playerSide: playerSide,
       position: position,
       orientation: Side.white,
-      moveHistory: const [],
+      // moveHistory: const [],
       fenHistory: const [kInitialBoardFEN],
       historyIndex: 0,
-      validMoves: calculateValidMoves(position),
+      validMoves: makeLegalMoves(position),
+      lastMove: null,
     );
   }
+
+  static ChessState resetGame(ChessState currentState) {
+    final newPosition = Chess.initial;
+    return ChessState(
+      position: newPosition,
+      orientation: currentState.orientation,
+      fen: newPosition.fen,
+      // moveHistory: const [],
+      fenHistory: const [kInitialBoardFEN],
+      historyIndex: 0,
+      validMoves: makeLegalMoves(newPosition),
+      lastPos: null,
+      lastMove: null,
+      promotionMove: null,
+      playerSide: currentState.playerSide,
+    );
+  }
+
+  // * GameData methods
 
   static GameData createGameData(ChessState state, ChessNotifier notifier) {
     return GameData(
       playerSide: state.playerSide,
       sideToMove: state.position.turn,
       validMoves: state.validMoves,
-      promotionMove: state.promotionMove,
-      onMove: notifier.playMove,
       isCheck: state.position.isCheck,
+      onMove: notifier.playMove,
+      promotionMove: state.promotionMove,
       onPromotionSelection: notifier.onPromotionSelection,
     );
   }
@@ -49,98 +69,40 @@ class ChessService {
     );
   }
 
-  static ValidMoves calculateValidMoves(Position position) {
-    return makeLegalMoves(position);
-  }
-
-  static ChessState resetGame(ChessState currentState) {
-    final newPosition = Chess.initial;
-    return ChessState(
-      position: newPosition,
-      orientation: currentState.orientation,
-      fen: newPosition.fen,
-      moveHistory: const [],
-      fenHistory: const [kInitialBoardFEN],
-      historyIndex: 0,
-      validMoves: calculateValidMoves(newPosition),
-      lastPos: null,
-      lastMove: null,
-      promotionMove: null,
-      playerSide: currentState.playerSide,
-    );
-  }
-
-  static ChessState? loadPosition(ChessState currentState, String fen) {
-    try {
-      final newPosition = Chess.fromSetup(Setup.parseFen(fen));
-      return currentState.copyWith(
-        position: newPosition,
-        fen: fen,
-        validMoves: calculateValidMoves(newPosition),
-        lastPos: null,
-        lastMove: null,
-        promotionMove: null,
-      );
-    } catch (e) {
-      debugPrint('Error loading position: $e');
-      return null;
-    }
-  }
+  // * Move methods
 
   static ChessState? playMove(ChessState currentState, NormalMove move) {
-    if (!currentState.position.isLegal(move)) {
-      return null;
+    if (isPromotionPawnMove(currentState, move)) {
+      return currentState.copyWith(promotionMove: move);
+    } else if (currentState.position.isLegal(move)) {
+      final newPosition = currentState.position.playUnchecked(move);
+
+      List<String> newFenHistory = List.from(currentState.fenHistory);
+      int newHistoryIndex = currentState.historyIndex;
+      if (newHistoryIndex < newFenHistory.length - 1) {
+        newFenHistory.removeRange(newHistoryIndex + 1, newFenHistory.length);
+        // newMoveHistory.removeRange(newHistoryIndex, newMoveHistory.length);
+      }
+      newFenHistory.add(newPosition.fen);
+      newHistoryIndex++;
+
+      return currentState.copyWith(
+        position: newPosition,
+        fen: newPosition.fen,
+        lastPos: newPosition,
+        lastMove: move,
+        validMoves: makeLegalMoves(newPosition),
+        fenHistory: newFenHistory,
+        historyIndex: newHistoryIndex,
+        promotionMove: null,
+
+        // moveHistory: null,
+      );
     }
-
-    final sanMove = currentState.position.makeSanUnchecked(move).$2;
-    final newPosition = currentState.position.playUnchecked(move);
-
-    // Gérer l'historique immutable
-    List<String> newFenHistory = List.from(currentState.fenHistory);
-    List<String> newMoveHistory = List.from(currentState.moveHistory);
-    int newHistoryIndex = currentState.historyIndex;
-
-    if (newHistoryIndex < newFenHistory.length - 1) {
-      newFenHistory.removeRange(newHistoryIndex + 1, newFenHistory.length);
-      newMoveHistory.removeRange(newHistoryIndex, newMoveHistory.length);
-    }
-
-    newFenHistory.add(newPosition.fen);
-    newMoveHistory.add(sanMove);
-    newHistoryIndex++;
-
-    return currentState.copyWith(
-      position: newPosition,
-      fen: newPosition.fen,
-      lastPos: currentState.position,
-      lastMove: move,
-      moveHistory: newMoveHistory,
-      fenHistory: newFenHistory,
-      historyIndex: newHistoryIndex,
-      validMoves: calculateValidMoves(newPosition),
-    );
+    return null;
   }
 
-  static ChessState? undoMove(ChessState currentState) {
-    if (currentState.lastPos == null) {
-      return null;
-    }
-
-    return currentState.copyWith(
-      position: currentState.lastPos!,
-      fen: currentState.lastPos!.fen,
-      validMoves: calculateValidMoves(currentState.lastPos!),
-      lastMove: null,
-    );
-  }
-
-  // * Side methods
-
-  static ChessState toggleOrientation(ChessState currentState) {
-    return currentState.copyWith(
-      orientation: currentState.orientation.opposite,
-    );
-  }
+  // * Promotion methods
 
   static ChessState setPromotionMove(
     ChessState currentState,
@@ -158,11 +120,12 @@ class ChessService {
                 currentState.position.turn == Side.white));
   }
 
+  // * Navigation methods
+
   static ChessState? goToPrevious(ChessState currentState) {
     if (currentState.historyIndex <= 0) {
       return null;
     }
-
     final newIndex = currentState.historyIndex - 1;
     return _loadFenFromHistory(currentState, newIndex);
   }
@@ -171,20 +134,63 @@ class ChessService {
     if (currentState.historyIndex >= currentState.fenHistory.length - 1) {
       return null;
     }
-
     final newIndex = currentState.historyIndex + 1;
     return _loadFenFromHistory(currentState, newIndex);
   }
 
-  static ChessState _loadFenFromHistory(ChessState currentState, int index) {
-    final fenToLoad = currentState.fenHistory[index];
+  static ChessState? undoMove(ChessState currentState) {
+    if (currentState.lastPos == null) {
+      return null;
+    }
+    return currentState.copyWith(
+      position: currentState.lastPos!,
+      fen: currentState.lastPos!.fen,
+      validMoves: makeLegalMoves(currentState.lastPos!),
+      lastMove: null,
+      promotionMove: null,
+    );
+  }
+
+  // * Side methods
+
+  static ChessState toggleOrientation(ChessState currentState) {
+    return currentState.copyWith(
+      orientation: currentState.orientation.opposite,
+    );
+  }
+
+  // * Helper methods
+
+  static ChessState _loadFenFromHistory(ChessState currentState, int newIndex) {
+    print(
+      'current state fen history: ${currentState.fenHistory}, new index: $newIndex',
+    );
+    final fenToLoad = currentState.fenHistory[newIndex];
     final newPosition = Chess.fromSetup(Setup.parseFen(fenToLoad));
 
     return currentState.copyWith(
       position: newPosition,
       fen: newPosition.fen,
-      historyIndex: index,
-      validMoves: calculateValidMoves(newPosition),
+      historyIndex: newIndex,
+      validMoves: makeLegalMoves(newPosition),
+      promotionMove: null,
     );
+  }
+
+  static ChessState? loadPosition(ChessState currentState, String fen) {
+    try {
+      final newPosition = Chess.fromSetup(Setup.parseFen(fen));
+      return currentState.copyWith(
+        position: newPosition,
+        fen: fen,
+        validMoves: makeLegalMoves(newPosition),
+        lastPos: null,
+        lastMove: null,
+        promotionMove: null,
+      );
+    } catch (e) {
+      debugPrint('Error loading position: $e');
+      return null;
+    }
   }
 }

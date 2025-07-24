@@ -11,8 +11,8 @@ class NormalGamePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final playerSide = PlayerSide.both;
-    final chessProvider = ref.watch(chessNotifierProvider(playerSide));
     final chessNotifier = ref.read(chessNotifierProvider(playerSide).notifier);
+    final chessProvider = ref.watch(chessNotifierProvider(playerSide));
 
     final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -35,6 +35,7 @@ class NormalGamePage extends ConsumerWidget {
             size: screenWidth,
             orientation: chessProvider.orientation,
             fen: chessProvider.fen,
+            lastMove: chessProvider.lastMove,
           ),
           Row(
             children: [
