@@ -93,7 +93,6 @@ class ChessService {
         fenHistory: newFenHistory,
         historyIndex: newHistoryIndex,
         promotionMove: null,
-
         // moveHistory: null,
       );
     }
@@ -134,7 +133,7 @@ class ChessService {
   // * Navigation methods
 
   static ChessState? goToPrevious(ChessState currentState) {
-    if (currentState.historyIndex > 0) {
+    if (canGoToPrevious(currentState)) {
       final newIndex = currentState.historyIndex - 1;
       return _loadFenFromHistory(currentState, newIndex);
     }
@@ -142,7 +141,7 @@ class ChessService {
   }
 
   static ChessState? goToNext(ChessState currentState) {
-    if (currentState.historyIndex < currentState.fenHistory.length - 1) {
+    if (canGoToNext(currentState)) {
       final newIndex = currentState.historyIndex + 1;
       return _loadFenFromHistory(currentState, newIndex);
     }
@@ -181,5 +180,13 @@ class ChessService {
     return currentState.copyWith(
       orientation: currentState.orientation.opposite,
     );
+  }
+
+  static bool canGoToNext(ChessState state) {
+    return state.historyIndex < state.fenHistory.length - 1;
+  }
+
+  static bool canGoToPrevious(ChessState state) {
+    return state.historyIndex > 0;
   }
 }

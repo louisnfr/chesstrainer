@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         onboardingRoute: (context) => const Onboarding(),
         loginRoute: (context) => const LoginPage(),
         homeRoute: (context) => const HomePage(),
-        learnRoute: (context) => const LearnPage(),
+        // learnRoute: (context) => const LearnPage(),
         registerRoute: (context) => const RegisterPage(),
       },
     );

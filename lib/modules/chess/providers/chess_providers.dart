@@ -65,18 +65,22 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
 
   // * Navigation methods
 
-  void goToPrevious() {
+  bool goToPrevious() {
     final newState = ChessService.goToPrevious(state);
     if (newState != null) {
       state = newState;
+      return true;
     }
+    return false;
   }
 
-  void goToNext() {
+  bool goToNext() {
     final newState = ChessService.goToNext(state);
     if (newState != null) {
       state = newState;
+      return true;
     }
+    return false;
   }
 
   void undoMove() {
@@ -86,7 +90,7 @@ class ChessNotifier extends FamilyNotifier<ChessState, PlayerSide> {
     }
   }
 
-  // * Side methods
+  // * Helper methods
 
   void toggleOrientation() {
     state = ChessService.toggleOrientation(state);

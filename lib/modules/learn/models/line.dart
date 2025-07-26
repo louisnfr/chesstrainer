@@ -32,12 +32,40 @@ class Line {
       root: Node.fromJson(json['root']),
     );
   }
+
+  @override
+  String toString() {
+    final buffer = StringBuffer();
+
+    String formatNode(Node node) {
+      final details = <String>[];
+      details.add('move: ${node.move ?? "root"}');
+      details.add('parent: ${node.parent?.move ?? "null"}');
+      details.add('children: ${node.children.length}');
+      return '[${details.join(', ')}]';
+    }
+
+    void printTree(Node node) {
+      buffer.write(formatNode(node));
+      if (node.children.isNotEmpty) {
+        buffer.write('\n');
+        for (int i = 0; i < node.children.length; i++) {
+          printTree(node.children[i]);
+          if (i < node.children.length - 1) buffer.write(' ');
+        }
+      }
+    }
+
+    buffer.write(
+      'Line(name: $name, eco: $eco, parentOpening: $parentOpening, playerSide: $playerSide):\n',
+    );
+    printTree(root);
+    return buffer.toString();
+  }
 }
 
 Future<Line> loadLine(String assetPath) async {
   final jsonString = await rootBundle.loadString(assetPath);
   final data = jsonDecode(jsonString);
-  final Line line = Line.fromJson(data);
-  // assignParent(line.root);
-  return line;
+  return Line.fromJson(data);
 }

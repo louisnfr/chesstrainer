@@ -65,6 +65,7 @@ flutter:
   assets:
     - assets/openings/
     - assets/openings/vienna_gambit/main_line.json
+    - assets/openings/vienna_gambit/vienna_gambit_1.pgn
     - assets/images/
     - assets/images/coach.png
     - assets/images/correct.png

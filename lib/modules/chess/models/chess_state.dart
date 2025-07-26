@@ -32,6 +32,14 @@ class ChessState {
     this.premove,
   });
 
+  bool get canGoToNext {
+    return historyIndex < fenHistory.length - 1;
+  }
+
+  bool get canGoToPrevious {
+    return historyIndex > 0;
+  }
+
   ChessState copyWith({
     Position? position,
     Side? orientation,

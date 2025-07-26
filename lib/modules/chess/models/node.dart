@@ -18,22 +18,34 @@ class Node {
     this.parent,
   });
 
-  factory Node.fromJson(Map<String, dynamic> json) {
-    return Node(
+  factory Node.fromJson(Map<String, dynamic> json, [Node? parent]) {
+    final node = Node(
       move: json['move'],
       fen: json['fen'],
       comment: json['comment'],
       isMainLine: json['isMainLine'] ?? false,
-      children: (json['children'] as List<dynamic>)
-          .map((child) => Node.fromJson(child))
-          .toList(),
+      parent: parent,
+      children: [], // Temporairement vide
+    );
+
+    // Créer les enfants avec la référence au parent
+    final children = (json['children'] as List<dynamic>)
+        .map((child) => Node.fromJson(child, node))
+        .toList();
+
+    // Retourner un nouveau nœud avec les enfants
+    return Node(
+      move: node.move,
+      fen: node.fen,
+      comment: node.comment,
+      isMainLine: node.isMainLine,
+      parent: parent,
+      children: children,
     );
   }
-}
 
-// void assignParent(Node node, [Node? parent]) {
-//   node.parent = parent;
-//   for (final child in node.children) {
-//     assignParent(child, node);
-//   }
-// }
+  @override
+  String toString() {
+    return 'Parent ${parent?.move ?? 'null'}, \nChildren: ${children.length}';
+  }
+}
