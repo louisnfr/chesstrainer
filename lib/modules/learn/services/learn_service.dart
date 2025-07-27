@@ -5,23 +5,77 @@ class LearnService {
   // * Initialization methods
 
   static LearnState initialize(PgnGame pgnGame) {
+    final currentNodeData = pgnGame.moves.children.isNotEmpty
+        ? pgnGame.moves.children[0].data
+        : null;
+
+    final lineLength = pgnGame.moves.mainline().length;
+
     return LearnState(
       pgnGame: pgnGame,
       currentNode: pgnGame.moves,
+      currentNodeData: currentNodeData,
+      lineLength: lineLength,
       currentStep: 0,
     );
   }
 
-  static LearnState reset(LearnState state) {
-    return state.copyWith(pgnGame: state.pgnGame, currentStep: 0);
-  }
+  // static LearnState reset(LearnState state) {
+  //   return state.copyWith(pgnGame: state.pgnGame, currentStep: 0);
+  // }
 
   // * Validation methods
 
-  static ({LearnState newState, bool isCorrect}) validateMove(
+  static ({LearnState newState, bool isCorrect})? validateMove(
     LearnState state,
     String sanMove,
   ) {
+    if (sanMove == state.currentNodeData?.san) {
+      print('Good move, we go next node');
+      final newNode = state.currentNode?.children[0];
+      if (newNode != null && newNode.children.isEmpty) {
+        print('No next node available');
+        final newState = state.copyWith(
+          currentNode: newNode,
+          currentNodeData: newNode.data, // <- Ajouter cette ligne !
+          currentStep: state.currentStep + 1,
+          isFinished: true,
+        );
+        return (newState: newState, isCorrect: true);
+      }
+      state = state.copyWith(
+        currentNode: newNode,
+        currentNodeData: newNode?.children[0].data,
+        currentStep: state.currentStep + 1,
+      );
+      return (newState: state, isCorrect: true);
+      // * play computer move
+      // final nextNode = state.currentNode?.children[0];
+      // if (nextNode != null && nextNode.children.isEmpty) {
+      //   print('No next node available');
+      //   return (state: state, isCorrect: true);
+      // }
+      // final nextMove = _chessProvider.position.parseSan(
+      //   nextNode?.data.san ?? '',
+      // );
+      // Future.delayed(_computerMoveDelay, () {
+      //   _chessNotifier.playMove(nextMove as NormalMove);
+      //   state = state.copyWith(
+      //     currentNode: nextNode,
+      //     currentNodeData: nextNode?.children[0].data,
+      //     currentStep: state.currentStep + 1,
+      //   );
+      // });
+    } else {
+      print('Bad move');
+      return (
+        newState: state.copyWith(
+          currentNode: state.currentNode,
+          currentStep: state.currentStep + 1,
+        ),
+        isCorrect: false,
+      );
+    }
     // final nextNode = state.currentNode?.children.firstWhereOrNull(
     //   (child) => child.move == sanMove && child.isMainLine == true,
     // );
@@ -49,13 +103,6 @@ class LearnService {
     // );
 
     // return (newState: NewState., isCorrect: true);
-    return (
-      newState: state.copyWith(
-        currentNode: state.currentNode,
-        currentStep: state.currentStep + 1,
-      ),
-      isCorrect: true,
-    );
   }
 
   // static Node? getComputerMove(LearnState state) {

@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:dartchess/dartchess.dart';
+import 'package:gaimon/gaimon.dart';
 
 class ChessService {
   // * Initialize methods
@@ -74,7 +75,6 @@ class ChessService {
       return currentState.copyWith(promotionMove: move);
     } else if (currentState.position.isLegal(move)) {
       final newPosition = currentState.position.playUnchecked(move);
-
       List<String> newFenHistory = List.from(currentState.fenHistory);
       int newHistoryIndex = currentState.historyIndex;
       if (newHistoryIndex < newFenHistory.length - 1) {

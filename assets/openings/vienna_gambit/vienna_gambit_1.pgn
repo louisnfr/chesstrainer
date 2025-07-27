@@ -1,14 +1,29 @@
-[Event "?"]
-[Site "?"]
-[Date "????.??.??"]
-[Round "?"]
-[White "?"]
-[Black "?"]
-[Result "*"]
-[WhiteELO "?"]
-[BlackELO "?"]
+[PlayerSide "white"]
 
-%Created by Caissa.com PGN Maker
-1. e4 {Welcome to the vienna gambit blablabla play e4} 1... e5 {Black's turn...}
-2. Nc3 {now you play Nc3 ! } 2... Nf6 {Black's turn...}
-3. f4 {and now f4 !!! you gambit the pawn}
+1. e4 {Let's learn one of the most crushing openings for White: The Vienna. Start by pushing the king's pawn forward two squares to e4.}
+1... e5
+
+2. Nc3 {Now develop the queen's knight to c3, which begins the Vienna Game.}
+2... Nf6
+
+3. f4 {The Vienna Gambit is played after Black plays knight f6. Let's gambit our f pawn by pushing it 2 squares forward.}
+3... exf4
+
+4. e5 {Black has taken our pawn - a huge mistake we will now exploit. Pushing our e pawn forward forces their knight back to its home square. If it goes anywhere else, it can be taken.}
+4... Ng8
+
+5. Nf3 {Black is threatening to move their queen to h4 with check. This would be devastating, so let's develop our king's knight to f3 so it can guard the h4 square.}
+5...Nc6
+
+6. d4 {Let's push our pawn to d4 to take the center and prepare our bishop to recapture Black's f4 pawn.}
+6...d6
+
+7. Bxf4 {Now we can recapture our gambited pawn with our bishop, developing it to f4. We regain material while improving our position.}
+7...dxe5
+
+8. Nxe5 {We have 3 ways to recapture the e5 pawn, but capturing with our knight is the best. If we capture with our d4 pawn, it opens up a queen trade which helps black. If we take with the bishop, Black can take it for a knight, which also helps black.}
+8...Nxe5
+
+9. Bxe5 {The best way to capture the e5 knight is with our bishop. If we capture with our d4 pawn, it opens up a queen trade which helps black.}
+
+* {Well done! You have a huge lead in development and have recaptured all your material.}

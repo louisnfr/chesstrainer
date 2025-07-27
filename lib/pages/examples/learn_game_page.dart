@@ -13,7 +13,7 @@ class LearnGamePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerSide = PlayerSide.white;
+    // final playerSide = PlayerSide.white;
     final double screenWidth = MediaQuery.of(context).size.width;
 
     final pgnGameProvider = ref.watch(
@@ -27,6 +27,10 @@ class LearnGamePage extends ConsumerWidget {
       error: (error, stack) => Center(child: Text('Error: $error')),
 
       data: (PgnGame pgnGame) {
+        final playerSide = pgnGame.headers['PlayerSide'] == 'white'
+            ? PlayerSide.white
+            : PlayerSide.black;
+
         final chessProvider = ref.watch(chessNotifierProvider(playerSide));
         final learnProvider = ref.watch(learnNotifierProvider(pgnGame));
 
@@ -34,20 +38,49 @@ class LearnGamePage extends ConsumerWidget {
           learnNotifierProvider(pgnGame).notifier,
         );
 
+        // * coach shit
+        final comments = learnProvider.currentNodeData?.comments ?? [];
+        final instructionComment = comments.isNotEmpty ? comments.first : null;
+        final computerComment = chessProvider.playerSide == PlayerSide.white
+            ? "Black's turn..."
+            : "White's turn...";
+        final completionComment = comments.length > 1 ? comments.last : null;
+
         return DefaultLayout(
           useSafeArea: false,
+          bottomNavigationBar: NavigationBar(
+            maintainBottomViewPadding: false,
+            destinations: [
+              const NavigationDestination(
+                icon: Icon(Icons.home),
+                label: 'Home',
+                tooltip: null,
+              ),
+              const NavigationDestination(
+                icon: Icon(Icons.business),
+                label: 'Homwe',
+              ),
+              const NavigationDestination(
+                icon: Icon(Icons.school),
+                label: 'Homee',
+              ),
+              const NavigationDestination(
+                icon: Icon(Icons.settings),
+                label: 'ttt',
+              ),
+            ],
+          ),
           appBar: AppBar(title: const Text('Learn Game')),
           child: Column(
+            spacing: 12,
             children: [
-              Coach(
-                text:
-                    learnProvider
-                        .currentNode
-                        ?.children[0]
-                        .data
-                        .comments
-                        ?.first ??
-                    learnProvider.pgnGame.comments.first,
+              SizedBox(
+                height: 128,
+                child: Coach(
+                  text: learnProvider.isFinished && completionComment != null
+                      ? completionComment
+                      : (instructionComment ?? computerComment),
+                ),
               ),
               Chessboard(
                 game: learnNotifier.getGameData(),
@@ -56,6 +89,29 @@ class LearnGamePage extends ConsumerWidget {
                 fen: chessProvider.fen,
                 lastMove: chessProvider.lastMove,
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: LinearProgressIndicator(
+                  minHeight: 16,
+                  borderRadius: BorderRadius.circular(32),
+                  backgroundColor: Colors.grey.shade300,
+
+                  value: learnProvider.currentStep / (learnProvider.lineLength),
+                ),
+              ),
+              if (learnProvider.isFinished)
+                Column(
+                  children: [
+                    Text(
+                      'Congratulations! You have completed this line.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    // FilledButton(
+                    //   onPressed: () {},
+                    //   child: const Text('Go Home'),
+                    // ),
+                  ],
+                ),
             ],
           ),
         );
