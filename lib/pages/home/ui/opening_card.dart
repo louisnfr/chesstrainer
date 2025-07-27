@@ -1,7 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/ui/theme/theme.dart';
+import 'package:chesstrainer/ui/theme/light_theme.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 

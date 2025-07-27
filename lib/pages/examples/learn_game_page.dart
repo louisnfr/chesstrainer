@@ -48,28 +48,7 @@ class LearnGamePage extends ConsumerWidget {
 
         return DefaultLayout(
           useSafeArea: false,
-          bottomNavigationBar: NavigationBar(
-            maintainBottomViewPadding: false,
-            destinations: [
-              const NavigationDestination(
-                icon: Icon(Icons.home),
-                label: 'Home',
-                tooltip: null,
-              ),
-              const NavigationDestination(
-                icon: Icon(Icons.business),
-                label: 'Homwe',
-              ),
-              const NavigationDestination(
-                icon: Icon(Icons.school),
-                label: 'Homee',
-              ),
-              const NavigationDestination(
-                icon: Icon(Icons.settings),
-                label: 'ttt',
-              ),
-            ],
-          ),
+
           appBar: AppBar(title: const Text('Learn Game')),
           child: Column(
             spacing: 12,
@@ -83,6 +62,10 @@ class LearnGamePage extends ConsumerWidget {
                 ),
               ),
               Chessboard(
+                settings: const ChessboardSettings(
+                  pieceAssets: PieceSet.meridaAssets,
+                  colorScheme: ChessboardColorScheme.blue,
+                ),
                 game: learnNotifier.getGameData(),
                 size: screenWidth,
                 orientation: chessProvider.orientation,

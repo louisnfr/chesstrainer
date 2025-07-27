@@ -4,11 +4,10 @@ import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/pages/auth/login_page.dart';
 import 'package:chesstrainer/pages/auth/register_page.dart';
 import 'package:chesstrainer/pages/home/home_page.dart';
-import 'package:chesstrainer/pages/learn/learn_page.dart';
 import 'package:chesstrainer/pages/onboarding/onboarding_page.dart';
 import 'package:chesstrainer/pages/onboarding/welcome_page.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
-import 'package:chesstrainer/ui/theme/theme.dart';
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chess Trainer',
       debugShowCheckedModeBanner: false,
-      theme: lightTheme,
+      theme: darkTheme,
       home: const AppWrapper(),
       routes: {
         welcomeRoute: (context) => const WelcomePage(),

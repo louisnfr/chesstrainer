@@ -3,9 +3,11 @@ import 'package:chesstrainer/modules/opening/models/opening_difficulty.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
-import 'package:chesstrainer/pages/examples/normal_game_page.dart';
+import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
+import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -27,25 +29,20 @@ class HomePage extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
 
     return DefaultLayout(
+      bottomNavigationBar: const HomeNavigationBar(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              color: Colors.blueGrey[50],
-            ),
-            child: Column(
-              children: [
-                Text(
-                  'Welcome back ${user?.displayName ?? '!'}',
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+          Column(
+            children: [
+              Text(
+                'Welcome back ${user?.displayName ?? '!'}',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const Text('Pick up where you left off'),
           OpeningCard(opening: viennaGambit),
@@ -60,18 +57,7 @@ class HomePage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NormalGamePage(),
-                    ),
-                  );
-                },
-                child: const Text('Normal game example'),
-              ),
-              OutlinedButton(
+              PrimaryButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -80,9 +66,9 @@ class HomePage extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const Text('Learn game example'),
+                text: 'Learn game example',
               ),
-              FilledButton(
+              PrimaryButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -93,8 +79,20 @@ class HomePage extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const Text('Chessground Example'),
+                text: 'Chessground Example',
               ),
+              SecondaryButton(
+                onPressed: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const NormalGamePage(),
+                  //   ),
+                  // );
+                },
+                text: 'Normal game example',
+              ),
+              PrimaryButton(onPressed: () {}, text: 'Normal game example'),
             ],
           ),
         ],
@@ -102,25 +100,3 @@ class HomePage extends ConsumerWidget {
     );
   }
 }
-
-
-
-
-
-          // OutlinedButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => const NormalGamePage()),
-          //     );
-          //   },
-          //   child: const Text('Normal game example'),
-          // ),
-
-
-          // TextButton(
-          //   onPressed: () {
-          //     Navigator.pushNamed(context, registerRoute);
-          //   },
-          //   child: const Text('Create account'),
-          // ),
