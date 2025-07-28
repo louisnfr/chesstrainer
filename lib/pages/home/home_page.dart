@@ -5,9 +5,11 @@ import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
+import 'package:chesstrainer/ui/buttons/app_icon_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -15,6 +17,8 @@ final viennaGambit = const OpeningModel(
   id: 'vienna-gambit',
   name: 'Vienna Gambit',
   description: 'A classic opening that leads to rich tactical battles.',
+  tags: ['White', 'Gambit', 'Aggressive'],
+  side: Side.white,
   difficulty: OpeningDifficulty.intermediate,
   ecoCode: 'C29',
   lineCount: 3,
@@ -37,22 +41,30 @@ class HomePage extends ConsumerWidget {
             children: [
               Text(
                 'Welcome back ${user?.displayName ?? '!'}',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ],
           ),
-          const Text('Pick up where you left off'),
-          OpeningCard(opening: viennaGambit),
+          Text(
+            'Resume your training',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          OpeningCard(opening: viennaGambit, onPressed: () {}),
           // TextButton(
           //   onPressed: () async {
           //     await ref.read(authNotifierProvider.notifier).signOut();
           //   },
           //   child: const Text('Sign Out'),
           // ),
+
+          // * Dev tools
           const SizedBox(height: 12),
+          Text('Dev Tools', style: Theme.of(context).textTheme.headlineMedium),
+          Row(
+            children: [
+              AppIconButton(onPressed: () {}, icon: Icons.play_arrow_rounded),
+            ],
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,

@@ -1,85 +1,146 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/ui/theme/light_theme.dart';
-import 'package:dartchess/dartchess.dart';
+import 'package:chesstrainer/ui/buttons/app_icon_button.dart';
+import 'package:chesstrainer/ui/chips/tag_chip.dart';
+import 'package:chesstrainer/ui/gamification/progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:gaimon/gaimon.dart';
 
-class OpeningCard extends StatelessWidget {
-  const OpeningCard({super.key, required this.opening});
-
+class OpeningCard extends StatefulWidget {
   final OpeningModel opening;
+  final VoidCallback onPressed;
+  final double shadowHeight;
+  final EdgeInsetsGeometry padding;
+  final double borderRadius;
+  final Color? shadowColor;
+  final Color? backgroundColor;
+
+  const OpeningCard({
+    super.key,
+    required this.opening,
+    required this.onPressed,
+    this.backgroundColor,
+    this.shadowHeight = 4,
+    this.shadowColor,
+    this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    this.borderRadius = 16,
+  });
+
+  @override
+  State<OpeningCard> createState() => _OpeningCardState();
+}
+
+class _OpeningCardState extends State<OpeningCard> {
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final backgroundColor =
+        widget.backgroundColor ?? theme.colorScheme.tertiary;
+    final shadowColor =
+        widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
+    // final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
+
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, learnRoute, arguments: opening);
+      onTapDown: (_) {
+        Gaimon.selection();
+        setState(() => _isPressed = true);
       },
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        widget.onPressed.call();
+      },
+      onTapCancel: () => setState(() => _isPressed = false),
       child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!, width: 2),
-          borderRadius: BorderRadius.circular(8),
+        transform: Matrix4.translationValues(
+          0,
+          _isPressed ? widget.shadowHeight : 0,
+          0,
         ),
-        child: Column(
-          spacing: 12,
-          children: [
-            Row(
-              spacing: 12,
+        child: Container(
+          margin: EdgeInsets.only(bottom: widget.shadowHeight),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            boxShadow: _isPressed
+                ? null
+                : [
+                    BoxShadow(
+                      color: shadowColor,
+                      offset: Offset(0, widget.shadowHeight),
+                      blurRadius: 0,
+                      spreadRadius: 0,
+                    ),
+                  ],
+          ),
+          child: Container(
+            padding: widget.padding,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              border: Border.all(color: shadowColor, width: 2),
+            ),
+            child: Column(
+              // spacing: 12,
               children: [
-                Chessboard.fixed(
-                  settings: ChessboardSettings(
-                    enableCoordinates: false,
-                    borderRadius: BorderRadiusGeometry.circular(8),
-                  ),
-                  fen: opening.fen,
-                  size: 128,
-                  orientation: Side.white,
-                  // annotations: IMap({
-                  //   const Square(29): Annotation(
-                  //     color: Colors.red,
-                  //     symbol: 'X',
-                  //     // widget: Icon(Icons.close, color: Colors.white, size: 16),
-                  //     widget: Image.asset(
-                  //       'assets/images/incorrect.png',
-                  //       width: 2,
-                  //       height: 2,
-                  //       color: Colors.white,
-                  //     ),
-                  //   ),
-                  // }),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        opening.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                Row(
+                  spacing: 12,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Chessboard.fixed(
+                      settings: ChessboardSettings(
+                        enableCoordinates: false,
+                        borderRadius: BorderRadiusGeometry.circular(8),
+                        pieceAssets: PieceSet.meridaAssets,
+                        colorScheme: ChessboardColorScheme.blue,
+                      ),
+                      fen: widget.opening.fen,
+                      size: 128,
+                      orientation: widget.opening.side,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.opening.name,
+                            style: theme.textTheme.headlineLarge,
+                          ),
+                          Wrap(
+                            spacing: 4,
+                            runSpacing: 4,
+                            children: widget.opening.tags
+                                .map((tag) => TagChip(label: tag))
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(),
+                        AppIconButton(
+                          icon: Icons.play_arrow_rounded,
+                          onPressed: () {},
                         ),
-                      ),
-                      Text(opening.description),
-                      Text(
-                        '${opening.lineCount} lines',
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
+                      ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('3 / 15 Lines', style: theme.textTheme.bodyMedium),
                     ],
                   ),
                 ),
+                const ProgressBar(),
               ],
             ),
-            LinearProgressIndicator(
-              backgroundColor: Colors.grey[300],
-              color: AppColors.primaryColor,
-              value: 0.5,
-              minHeight: 8,
-              borderRadius: BorderRadius.circular(32),
-            ),
-          ],
+          ),
         ),
       ),
     );

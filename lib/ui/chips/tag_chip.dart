@@ -7,36 +7,15 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // seed color for the chip
+    final theme = Theme.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: const BoxDecoration(
-        border: Border.fromBorderSide(BorderSide(color: Colors.red)),
-        borderRadius: BorderRadius.all(Radius.circular(64)),
-        color: Color.fromARGB(69, 244, 67, 54),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface.withValues(alpha: 0.6),
+        borderRadius: const BorderRadius.all(Radius.circular(32)),
       ),
-      child: Row(
-        spacing: 4,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: const BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-            ),
-          ),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
+      child: Text(label, style: theme.textTheme.labelSmall),
       // shape: RoundedRectangleBorder(
       //   borderRadius: BorderRadiusGeometry.circular(64),
       // ),

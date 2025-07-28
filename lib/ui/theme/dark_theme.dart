@@ -13,7 +13,7 @@ class AppColors {
   static const Color secondary = Color.fromRGBO(103, 58, 183, 1);
   static const Color onSecondary = Color.fromRGBO(224, 224, 224, 1);
 
-  static const Color tertiary = Color.fromRGBO(88, 88, 88, 1);
+  static const Color tertiary = Color.fromRGBO(79, 79, 79, 1);
   static const Color onTertiary = Color.fromRGBO(255, 255, 255, 1);
 
   static const Color success = Color.fromRGBO(255, 235, 59, 1);
@@ -135,6 +135,4 @@ ThemeData darkTheme = ThemeData(
       fontFamily: 'Nunito',
     ),
   ),
-
-  // navigation,
 );
