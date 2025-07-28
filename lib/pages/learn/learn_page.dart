@@ -38,7 +38,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final double screenWidth = MediaQuery.of(context).size.width;
+//     final double screenWidth = MediaQuery.sizeOf(context).width;
 
 //     return DefaultLayout(
 //       safeAreaMinimum: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),

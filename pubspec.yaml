@@ -43,6 +43,7 @@ dependencies:
   google_sign_in: ^7.1.1
   hooks_riverpod: ^3.0.0-dev.16
   material_symbols_icons: ^4.2815.1
+  percent_indicator: ^4.2.5
   sign_in_with_apple: ^7.0.1
 
 dev_dependencies:

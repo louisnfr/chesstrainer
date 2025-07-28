@@ -2,7 +2,6 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:dartchess/dartchess.dart';
-import 'package:gaimon/gaimon.dart';
 
 class ChessService {
   // * Initialize methods

@@ -28,64 +28,47 @@ class SecondaryButton extends StatefulWidget {
 }
 
 class _SecondaryButtonState extends State<SecondaryButton> {
-  bool _isPressed = false;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final backgroundColor =
-        widget.backgroundColor ?? theme.colorScheme.tertiary;
+        widget.backgroundColor ?? theme.colorScheme.secondary;
     final shadowColor =
         widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
-    final textColor = widget.textColor ?? theme.colorScheme.onTertiary;
+    final textColor = widget.textColor ?? theme.colorScheme.onSecondary;
 
     return GestureDetector(
-      onTapDown: (_) {
+      onPanDown: (_) {
         Gaimon.selection();
-        setState(() => _isPressed = true);
       },
       onTapUp: (_) {
-        setState(() => _isPressed = false);
         widget.onPressed.call();
       },
-      onTapCancel: () => setState(() => _isPressed = false),
       child: Container(
-        transform: Matrix4.translationValues(
-          0,
-          _isPressed ? widget.shadowHeight : 0,
-          0,
+        margin: EdgeInsets.only(bottom: widget.shadowHeight),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         child: Container(
-          margin: EdgeInsets.only(bottom: widget.shadowHeight),
+          padding: widget.padding,
           decoration: BoxDecoration(
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            boxShadow: _isPressed
-                ? null
-                : [
-                    BoxShadow(
-                      color: shadowColor,
-                      offset: Offset(0, widget.shadowHeight),
-                      blurRadius: 0,
-                      spreadRadius: 0,
-                    ),
-                  ],
-          ),
-          child: Container(
-            padding: widget.padding,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              border: Border.all(color: shadowColor, width: 2),
+            border: Border(
+              top: BorderSide(color: shadowColor, width: 2),
+              left: BorderSide(color: shadowColor, width: 2),
+              right: BorderSide(color: shadowColor, width: 2),
+              bottom: BorderSide(color: shadowColor, width: 2),
             ),
-            child: Center(
-              child: Text(
-                widget.text,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Nunito',
-                ),
+          ),
+          child: Center(
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                color: textColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
               ),
             ),
           ),

@@ -1,11 +1,11 @@
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/models/opening_difficulty.dart';
-import 'package:chesstrainer/modules/user/providers/user_providers.dart';
-import 'package:chesstrainer/pages/examples/chessground.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
-import 'package:chesstrainer/ui/buttons/app_icon_button.dart';
+import 'package:chesstrainer/pages/home/ui/opening_card_2.dart';
+import 'package:chesstrainer/ui/buttons/action_button.dart';
+import 'package:chesstrainer/ui/buttons/outline_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
@@ -30,84 +30,101 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
+    final theme = Theme.of(context);
 
     return DefaultLayout(
+      useSafeAreaBottom: false,
+      useSafeAreaTop: false,
+      appBar: AppBar(title: Text('Learn', style: theme.textTheme.displayLarge)),
       bottomNavigationBar: const HomeNavigationBar(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            children: [
-              Text(
-                'Welcome back ${user?.displayName ?? '!'}',
-                style: Theme.of(context).textTheme.displayLarge,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'CONTINUE LEARNING',
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: theme.colorScheme.outline,
+                ),
               ),
-            ],
-          ),
-          Text(
-            'Resume your training',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          OpeningCard(opening: viennaGambit, onPressed: () {}),
-          // TextButton(
-          //   onPressed: () async {
-          //     await ref.read(authNotifierProvider.notifier).signOut();
-          //   },
-          //   child: const Text('Sign Out'),
-          // ),
+            ),
+            OpeningCard(opening: viennaGambit, onPressed: () {}),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'ALL OPENINGS',
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: theme.colorScheme.outline,
+                ),
+              ),
+            ),
+            Center(
+              child: Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: List.generate(6, (index) {
+                  return OpeningCard2(opening: viennaGambit, onPressed: () {});
+                }),
+              ),
+            ),
 
-          // * Dev tools
-          const SizedBox(height: 12),
-          Text('Dev Tools', style: Theme.of(context).textTheme.headlineMedium),
-          Row(
-            children: [
-              AppIconButton(onPressed: () {}, icon: Icons.play_arrow_rounded),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 12,
-            children: [
-              PrimaryButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LearnGamePage(),
-                    ),
-                  );
-                },
-                text: 'Learn game example',
-              ),
-              PrimaryButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChessgroundExample(
-                        title: 'Chessground example',
+            // * Dev tools
+            const SizedBox(height: 12),
+            Text('Dev Tools', style: theme.textTheme.headlineMedium),
+            Row(
+              children: [
+                ActionButton(onPressed: () {}, icon: Icons.play_arrow_rounded),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 12,
+              children: [
+                PrimaryButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LearnGamePage(),
                       ),
-                    ),
-                  );
-                },
-                text: 'Chessground Example',
-              ),
-              SecondaryButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const NormalGamePage(),
-                  //   ),
-                  // );
-                },
-                text: 'Normal game example',
-              ),
-              PrimaryButton(onPressed: () {}, text: 'Normal game example'),
-            ],
-          ),
-        ],
+                    );
+                  },
+                  text: 'Learn game example',
+                ),
+                PrimaryButton(
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const ChessgroundExample(
+                    //       title: 'Chessground example',
+                    //     ),
+                    //   ),
+                    // );
+                  },
+                  text: 'Chessground Example prim',
+                ),
+                SecondaryButton(
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const NormalGamePage(),
+                    //   ),
+                    // );
+                  },
+                  text: 'Normal game example sec',
+                ),
+                OutlineButton(
+                  onPressed: () {},
+                  text: 'Normal game example out',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 
-class PrimaryButton extends StatefulWidget {
+class OutlineButton extends StatefulWidget {
   final String text;
   final VoidCallback onPressed;
   final Color? backgroundColor;
@@ -11,7 +11,7 @@ class PrimaryButton extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final double borderRadius;
 
-  const PrimaryButton({
+  const OutlineButton({
     super.key,
     required this.text,
     required this.onPressed,
@@ -24,19 +24,18 @@ class PrimaryButton extends StatefulWidget {
   });
 
   @override
-  State<PrimaryButton> createState() => _PrimaryButtonState();
+  State<OutlineButton> createState() => _OutlineButtonState();
 }
 
-class _PrimaryButtonState extends State<PrimaryButton> {
+class _OutlineButtonState extends State<OutlineButton> {
   bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final backgroundColor = widget.backgroundColor ?? theme.colorScheme.primary;
-    final shadowColor =
-        widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
-    final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
+    final backgroundColor = widget.backgroundColor ?? theme.colorScheme.surface;
+    final shadowColor = widget.shadowColor ?? theme.colorScheme.outline;
+    final textColor = widget.textColor ?? theme.colorScheme.onSurface;
 
     return GestureDetector(
       onPanDown: (_) {
@@ -45,11 +44,15 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       },
       onTapUp: (_) {
         setState(() => _isPressed = false);
-        widget.onPressed();
+        widget.onPressed.call();
       },
       onTapCancel: () => setState(() => _isPressed = false),
-      child: Transform.translate(
-        offset: Offset(0, _isPressed ? widget.shadowHeight : 0),
+      child: Container(
+        transform: Matrix4.translationValues(
+          0,
+          _isPressed ? widget.shadowHeight : 0,
+          0,
+        ),
         child: Container(
           margin: EdgeInsets.only(bottom: widget.shadowHeight),
           decoration: BoxDecoration(

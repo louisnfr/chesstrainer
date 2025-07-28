@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 
-class AppIconButton extends StatefulWidget {
+class ActionButton extends StatefulWidget {
   final IconData icon;
   final String? label;
   final VoidCallback onPressed;
@@ -13,7 +13,7 @@ class AppIconButton extends StatefulWidget {
   final double borderRadius;
   final double iconSize;
 
-  const AppIconButton({
+  const ActionButton({
     super.key,
     required this.icon,
     required this.onPressed,
@@ -28,10 +28,10 @@ class AppIconButton extends StatefulWidget {
   });
 
   @override
-  State<AppIconButton> createState() => _AppIconButtonState();
+  State<ActionButton> createState() => _ActionButtonState();
 }
 
-class _AppIconButtonState extends State<AppIconButton> {
+class _ActionButtonState extends State<ActionButton> {
   bool _isPressed = false;
 
   @override
@@ -43,9 +43,9 @@ class _AppIconButtonState extends State<AppIconButton> {
     final iconColor = widget.textColor ?? theme.colorScheme.onPrimary;
 
     return GestureDetector(
-      onTapDown: (_) {
-        Gaimon.selection();
+      onPanDown: (_) {
         setState(() => _isPressed = true);
+        Gaimon.selection();
       },
       onTapUp: (_) {
         setState(() => _isPressed = false);
@@ -82,10 +82,14 @@ class _AppIconButtonState extends State<AppIconButton> {
             ),
             child: Center(
               child: Row(
-                spacing: 4,
                 children: [
                   if (widget.label != null)
-                    Text(widget.label!, style: TextStyle(color: iconColor)),
+                    Text(
+                      widget.label!,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: iconColor,
+                      ),
+                    ),
                   Icon(widget.icon, color: iconColor, size: widget.iconSize),
                 ],
               ),

@@ -14,7 +14,7 @@ class NormalGamePage extends ConsumerWidget {
     final chessNotifier = ref.read(chessNotifierProvider(playerSide).notifier);
     final chessProvider = ref.watch(chessNotifierProvider(playerSide));
 
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.sizeOf(context).width;
 
     return DefaultLayout(
       useSafeArea: false,

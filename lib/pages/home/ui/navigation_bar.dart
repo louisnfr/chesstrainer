@@ -17,7 +17,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).colorScheme.tertiary,
+            color: Theme.of(context).colorScheme.outline,
             width: 2,
           ),
         ),
@@ -41,7 +41,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
             NavigationDestination(
               icon: Icon(
                 Icons.school_outlined,
-                color: Theme.of(context).colorScheme.tertiary,
+                color: Theme.of(context).colorScheme.outline,
               ),
               selectedIcon: Icon(
                 Icons.school,
@@ -53,7 +53,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
             NavigationDestination(
               icon: Icon(
                 Symbols.target,
-                color: Theme.of(context).colorScheme.tertiary,
+                color: Theme.of(context).colorScheme.outline,
               ),
               selectedIcon: const Icon(
                 Symbols.target,
@@ -65,7 +65,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
             NavigationDestination(
               icon: Icon(
                 Symbols.trophy,
-                color: Theme.of(context).colorScheme.tertiary,
+                color: Theme.of(context).colorScheme.outline,
               ),
               selectedIcon: const Icon(
                 Symbols.trophy,
@@ -77,7 +77,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
             NavigationDestination(
               icon: Icon(
                 Icons.account_circle_outlined,
-                color: Theme.of(context).colorScheme.tertiary,
+                color: Theme.of(context).colorScheme.outline,
               ),
               selectedIcon: const Icon(
                 Icons.account_circle,

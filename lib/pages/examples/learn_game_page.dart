@@ -14,7 +14,7 @@ class LearnGamePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final playerSide = PlayerSide.white;
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.sizeOf(context).width;
 
     final pgnGameProvider = ref.watch(
       pgnGameNotifierProvider(
@@ -132,7 +132,7 @@ class LearnGamePage extends ConsumerWidget {
 //       pgnGameProvider('assets/openings/vienna_gambit/vienna_gambit_1.pgn'),
 //     );
 
-//     final double screenWidth = MediaQuery.of(context).size.width;
+//     final double screenWidth = MediaQuery.sizeOf(context).width;
 
 //     return pgnGameAsync.when(
 //       data: (pgnGame) {

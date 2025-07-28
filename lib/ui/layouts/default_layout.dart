@@ -29,6 +29,10 @@ class DefaultLayout extends Scaffold {
     super.endDrawerEnableOpenDragGesture = true,
     super.restorationId,
     bool useSafeArea = true,
+    bool useSafeAreaLeft = true,
+    bool useSafeAreaTop = true,
+    bool useSafeAreaRight = true,
+    bool useSafeAreaBottom = true,
     EdgeInsets safeAreaMinimum = const EdgeInsets.fromLTRB(
       16.0, // left
       8.0, // top
@@ -37,7 +41,15 @@ class DefaultLayout extends Scaffold {
     ),
   }) : super(
          body: useSafeArea
-             ? SafeArea(minimum: safeAreaMinimum, child: child)
+             ? SafeArea(
+                 minimum: EdgeInsets.fromLTRB(
+                   useSafeAreaLeft ? safeAreaMinimum.left : 0.0,
+                   useSafeAreaTop ? safeAreaMinimum.top : 0.0,
+                   useSafeAreaRight ? safeAreaMinimum.right : 0.0,
+                   useSafeAreaBottom ? safeAreaMinimum.bottom : 0.0,
+                 ),
+                 child: child,
+               )
              : child,
        );
 }

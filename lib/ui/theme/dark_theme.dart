@@ -4,19 +4,28 @@ import 'package:flutter/material.dart';
 class AppColors {
   const AppColors._();
 
-  // Fond principal
-  static const Color surface = Color.fromRGBO(50, 46, 43, 1);
+  // static const Color surface = Color.fromRGBO(41, 41, 41, 1);
+  static const Color surface = Color.fromRGBO(27, 27, 27, 1);
+  static const Color onSurface = AppColors.white;
 
-  static const Color primary = Color.fromRGBO(28, 176, 246, 1);
-  static const Color onPrimary = Color.fromRGBO(255, 255, 255, 1);
+  static Color surfaceDim = surface.withValues(alpha: 0.8);
 
-  static const Color secondary = Color.fromRGBO(103, 58, 183, 1);
-  static const Color onSecondary = Color.fromRGBO(224, 224, 224, 1);
+  static const Color primary = Color.fromRGBO(33, 158, 188, 1);
+  static const Color onPrimary = AppColors.black;
 
-  static const Color tertiary = Color.fromRGBO(79, 79, 79, 1);
-  static const Color onTertiary = Color.fromRGBO(255, 255, 255, 1);
+  static const Color primaryContainer = Color.fromRGBO(142, 202, 230, 1);
+  static const Color onPrimaryContainer = AppColors.black;
 
-  static const Color success = Color.fromRGBO(255, 235, 59, 1);
+  static const Color secondary = Color.fromRGBO(255, 183, 3, 1);
+  static const Color onSecondary = AppColors.black;
+
+  static const Color tertiary = Color.fromRGBO(251, 133, 0, 1);
+  static const Color onTertiary = AppColors.black;
+
+  static const Color success = Color.fromRGBO(76, 170, 61, 1);
+
+  static const Color outline = Color.fromRGBO(100, 100, 100, 1);
+  static Color outlineVariant = outline.withValues(alpha: 0.6);
 
   static const Color black = Color.fromRGBO(0, 0, 0, 1);
   static const Color white = Color.fromRGBO(255, 255, 255, 1);
@@ -27,14 +36,29 @@ ThemeData darkTheme = ThemeData(
 
   colorScheme: const ColorScheme.dark().copyWith(
     brightness: Brightness.dark,
-    primary: AppColors.primary,
-    secondary: AppColors.secondary,
     surface: AppColors.surface,
+    onSurface: AppColors.onSurface,
+    surfaceDim: AppColors.surfaceDim,
+    primary: AppColors.primary,
     onPrimary: AppColors.onPrimary,
+    primaryContainer: AppColors.primaryContainer,
+    onPrimaryContainer: AppColors.onPrimaryContainer,
+    secondary: AppColors.secondary,
     onSecondary: AppColors.onSecondary,
-    onSurface: AppColors.onPrimary,
     tertiary: AppColors.tertiary,
     onTertiary: AppColors.onTertiary,
+    outline: AppColors.outline,
+    outlineVariant: AppColors.outlineVariant,
+  ),
+
+  // Configuration de l'AppBar pour éviter la couleur purple lors du scroll
+  appBarTheme: const AppBarTheme(
+    backgroundColor: AppColors.surface,
+    foregroundColor: AppColors.onSurface,
+    elevation: 0,
+    scrolledUnderElevation: 0,
+    surfaceTintColor: Colors.transparent,
+    shadowColor: Colors.transparent,
   ),
 
   textTheme: const TextTheme(
@@ -42,19 +66,19 @@ ThemeData darkTheme = ThemeData(
     displayLarge: TextStyle(
       fontSize: 32,
       fontWeight: FontWeight.bold,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     displayMedium: TextStyle(
       fontSize: 28,
       fontWeight: FontWeight.bold,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     displaySmall: TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
 
@@ -62,19 +86,19 @@ ThemeData darkTheme = ThemeData(
     headlineLarge: TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     headlineMedium: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     headlineSmall: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
 
@@ -82,36 +106,36 @@ ThemeData darkTheme = ThemeData(
     titleLarge: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w600,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     titleMedium: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w600,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     titleSmall: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w600,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
 
     // ************ Body text styles ************
     bodyLarge: TextStyle(
       fontSize: 18,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     bodyMedium: TextStyle(
       fontSize: 16,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     bodySmall: TextStyle(
       fontSize: 14,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
 
@@ -119,19 +143,19 @@ ThemeData darkTheme = ThemeData(
     labelLarge: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w600,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     labelMedium: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w600,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
     labelSmall: TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w600,
-      color: AppColors.onPrimary,
+      color: AppColors.onSurface,
       fontFamily: 'Nunito',
     ),
   ),
