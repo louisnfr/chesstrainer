@@ -33,9 +33,7 @@ class Coach extends StatelessWidget {
                   left: 0,
                   top: 12,
                   child: CustomPaint(
-                    painter: BubbleTrianglePainter(
-                      color: AppColors.primaryColor,
-                    ),
+                    painter: BubbleTrianglePainter(color: AppColors.white),
                     size: const Size(8, 16),
                   ),
                 ),
@@ -44,15 +42,15 @@ class Coach extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 8),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     text,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.black,
                     ),
                   ),
                 ),

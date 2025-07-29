@@ -113,15 +113,14 @@ class LearnService {
 
   // * Navigation methods
 
-  // static LearnState? goToPrevious(LearnState state) {
-  //   if (state.currentNode?.parent != null) {
-  //     return state.copyWith(
-  //       currentNode: state.currentNode!.parent,
-  //       currentStep: state.currentStep - 1,
-  //     );
-  //   }
-  //   return null;
-  // }
+  static LearnState? goToPrevious(LearnState state) {
+    if (state.currentStep > 0) {
+      // On ne peut pas naviguer dans l'arbre PGN car il n'y a pas de référence parent
+      // On se contente de décrémenter currentStep et laisser le ChessService gérer la position
+      return state.copyWith(currentStep: state.currentStep - 1);
+    }
+    return null;
+  }
 
   // static LearnState? goToNext(LearnState state) {
   //   print('Going to next: ${state.currentNode}');

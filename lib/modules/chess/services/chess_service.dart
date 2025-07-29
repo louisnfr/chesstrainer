@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:dartchess/dartchess.dart';
+import 'package:gaimon/gaimon.dart';
 
 class ChessService {
   // * Initialize methods
@@ -133,6 +134,7 @@ class ChessService {
 
   static ChessState? goToPrevious(ChessState currentState) {
     if (canGoToPrevious(currentState)) {
+      Gaimon.selection();
       final newIndex = currentState.historyIndex - 1;
       return _loadFenFromHistory(currentState, newIndex);
     }
@@ -141,6 +143,7 @@ class ChessService {
 
   static ChessState? goToNext(ChessState currentState) {
     if (canGoToNext(currentState)) {
+      Gaimon.selection();
       final newIndex = currentState.historyIndex + 1;
       return _loadFenFromHistory(currentState, newIndex);
     }

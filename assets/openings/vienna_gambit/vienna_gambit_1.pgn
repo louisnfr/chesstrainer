@@ -1,4 +1,25 @@
+[Event "Vienna Gambit"]
+[Site "?"]
+[Date "?"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+[Opening "Vienna Gambit"]
+[LineNumber "1"]
 [PlayerSide "white"]
+[ID "vienna-gambit"]
+[Variation ""]
+[Annotator ""]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C29"]
+[FEN "rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3"]
+[Description "A classic opening that leads to rich tactical battles."]
+[Tags "White,Gambit,Aggressive"]
+[Difficulty "beginner"]
+[LineCount "3"]
 
 1. e4 {Let's learn one of the most crushing openings for White: The Vienna. Start by pushing the king's pawn forward two squares to e4.}
 1... e5

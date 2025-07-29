@@ -1,26 +1,62 @@
 import 'package:chessground/chessground.dart';
+import 'package:chesstrainer/constants/openings/vienna_gambit/vienna_gambit.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
+import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
 import 'package:chesstrainer/pages/learn/ui/coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:gaimon/gaimon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
-class LearnGamePage extends ConsumerWidget {
+final viennaGambit = OpeningModel(
+  id: 'vienna-gambit',
+  name: 'Vienna Gambit',
+  description: 'A classic opening that leads to rich tactical battles.',
+  tags: ['White', 'Gambit', 'Aggressive'],
+  linePaths: viennaGambitPaths.values.toList(),
+  side: Side.white,
+  ecoCode: 'C29',
+  fen: 'rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3',
+);
+
+class LearnGamePage extends ConsumerStatefulWidget {
   const LearnGamePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // final playerSide = PlayerSide.white;
+  ConsumerState<LearnGamePage> createState() => _LearnGamePageState();
+}
+
+class _LearnGamePageState extends ConsumerState<LearnGamePage> {
+  int selectedLine = 1;
+
+  @override
+  Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
+    final theme = Theme.of(context);
+
+    // final pgnNotifierProvider = pgnGameNotifierProvider(
+    //   'assets/openings/vienna_gambit/vienna_gambit_$selectedLine.pgn',
+    // );
 
     final pgnGameProvider = ref.watch(
       pgnGameNotifierProvider(
-        'assets/openings/vienna_gambit/vienna_gambit_1.pgn',
+        'assets/openings/vienna_gambit/vienna_gambit_$selectedLine.pgn',
       ),
     );
+
+    void dropdownCallback(int? value) {
+      if (value is int) {
+        setState(() {
+          selectedLine = value;
+        });
+      }
+    }
 
     return pgnGameProvider.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -33,7 +69,11 @@ class LearnGamePage extends ConsumerWidget {
 
         final chessProvider = ref.watch(chessNotifierProvider(playerSide));
         final learnProvider = ref.watch(learnNotifierProvider(pgnGame));
+        final annotations = ref.watch(annotationProvider(pgnGame));
 
+        final chessNotifier = ref.watch(
+          chessNotifierProvider(chessProvider.playerSide).notifier,
+        );
         final learnNotifier = ref.watch(
           learnNotifierProvider(pgnGame).notifier,
         );
@@ -49,10 +89,41 @@ class LearnGamePage extends ConsumerWidget {
         return DefaultLayout(
           useSafeArea: false,
 
-          appBar: AppBar(title: const Text('Learn Game')),
+          appBar: AppBar(title: const Text('Learn - Vienna Gambit')),
           child: Column(
             spacing: 12,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: LinearPercentIndicator(
+                        // backgroundColor: Colors.grey.shade300,
+                        barRadius: const Radius.circular(8),
+                        lineHeight: 16,
+                        animation: true,
+                        animationDuration: 250,
+                        animateFromLastPercent: true,
+                        progressColor: theme.colorScheme.primary,
+                        percent:
+                            learnProvider.currentStep /
+                            (learnProvider.lineLength),
+                      ),
+                    ),
+                    DropdownButton(
+                      value: selectedLine,
+                      items: List.generate(2, (index) {
+                        return DropdownMenuItem<int>(
+                          value: index + 1,
+                          child: Text('Line ${index + 1}'),
+                        );
+                      }),
+                      onChanged: dropdownCallback,
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 128,
                 child: Coach(
@@ -61,39 +132,63 @@ class LearnGamePage extends ConsumerWidget {
                       : (instructionComment ?? computerComment),
                 ),
               ),
-              Chessboard(
-                settings: const ChessboardSettings(
-                  pieceAssets: PieceSet.meridaAssets,
-                  colorScheme: ChessboardColorScheme.blue,
-                ),
-                game: learnNotifier.getGameData(),
-                size: screenWidth,
-                orientation: chessProvider.orientation,
-                fen: chessProvider.fen,
-                lastMove: chessProvider.lastMove,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: LinearProgressIndicator(
-                  minHeight: 16,
-                  borderRadius: BorderRadius.circular(32),
-                  backgroundColor: Colors.grey.shade300,
 
-                  value: learnProvider.currentStep / (learnProvider.lineLength),
-                ),
+              Column(
+                children: [
+                  Chessboard(
+                    settings: const ChessboardSettings(
+                      pieceAssets: PieceSet.meridaAssets,
+                      colorScheme: ChessboardColorScheme.blue,
+                    ),
+                    game: learnNotifier.getGameData(),
+                    size: screenWidth,
+                    orientation: chessProvider.orientation,
+                    fen: chessProvider.fen,
+                    lastMove: chessProvider.lastMove,
+                    annotations: annotations,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.lightbulb_outline),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.interests),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            chessNotifier.goToPrevious();
+                          },
+                          icon: const Icon(Icons.arrow_back_ios_rounded),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            chessNotifier.goToNext();
+                          },
+                          icon: const Icon(Icons.arrow_forward_ios_rounded),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               if (learnProvider.isFinished)
-                Column(
-                  children: [
-                    Text(
-                      'Congratulations! You have completed this line.',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    // FilledButton(
-                    //   onPressed: () {},
-                    //   child: const Text('Go Home'),
-                    // ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: PrimaryButton(
+                    text: 'Next Line',
+                    onPressed: () {
+                      setState(() {
+                        selectedLine =
+                            (selectedLine % 2) + 1; // Toggle between 1 and 2
+                      });
+                    },
+                  ),
                 ),
             ],
           ),

@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/models/learn_state.dart';
+import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/services/learn_service.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:gaimon/gaimon.dart';
@@ -15,6 +16,9 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
 
   ChessState get _chessProvider =>
       ref.read(chessNotifierProvider(PlayerSide.white));
+
+  AnnotationNotifier get _annotationNotifier =>
+      ref.read(annotationProvider(arg).notifier);
 
   // * Initialization methods
 
@@ -56,12 +60,18 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
     }
 
     if (result.isCorrect) {
+      // Show green checkmark on the destination square
+      _annotationNotifier.setAnnotation(move.to, correct: true);
+
       Gaimon.success();
       state = result.newState;
       if (!state.isFinished) {
         _playComputerMove();
       }
     } else {
+      // Show red X on the destination square
+      _annotationNotifier.setAnnotation(move.to, correct: false);
+
       Gaimon.error();
       print('Invalid move: $sanMove');
     }
@@ -116,6 +126,9 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
     final nextNode = state.currentNode?.children[0];
     final nextMove = _chessProvider.position.parseSan(nextNode?.data.san ?? '');
     Future.delayed(_computerMoveDelay, () {
+      // Clear annotations before computer move
+      _annotationNotifier.clearAnnotations();
+
       _chessNotifier.playMove(nextMove as NormalMove);
       state = state.copyWith(
         currentNode: nextNode,
@@ -127,15 +140,14 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
 
   // * Navigation methods
 
-  // void goToPrevious() {
-  //   if (!_chessState.canGoToPrevious) return;
-  //   _chessNotifier.goToPrevious();
-  //   final newState = LearnService.goToPrevious(state);
-  //   print('Going to previous: $newState');
-  //   if (newState != null) {
-  //     state = newState;
-  //   }
-  // }
+  void goToPrevious() {
+    _chessNotifier.goToPrevious();
+    final newState = LearnService.goToPrevious(state);
+    print('Going to previous: $newState');
+    if (newState != null) {
+      state = newState;
+    }
+  }
 
   // void goToNext() {
   //   if (!_chessState.canGoToNext) return;

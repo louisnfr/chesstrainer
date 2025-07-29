@@ -1,5 +1,5 @@
+import 'package:chesstrainer/constants/openings/vienna_gambit/vienna_gambit.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/modules/opening/models/opening_difficulty.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
@@ -13,15 +13,14 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final viennaGambit = const OpeningModel(
+final viennaGambit = OpeningModel(
   id: 'vienna-gambit',
   name: 'Vienna Gambit',
   description: 'A classic opening that leads to rich tactical battles.',
   tags: ['White', 'Gambit', 'Aggressive'],
+  linePaths: viennaGambitPaths.values.toList(),
   side: Side.white,
-  difficulty: OpeningDifficulty.intermediate,
   ecoCode: 'C29',
-  lineCount: 3,
   fen: 'rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3',
 );
 
@@ -50,7 +49,17 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            OpeningCard(opening: viennaGambit, onPressed: () {}),
+            OpeningCard(
+              opening: viennaGambit,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LearnGamePage(),
+                  ),
+                );
+              },
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(

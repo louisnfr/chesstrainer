@@ -67,8 +67,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/openings/
-    - assets/openings/vienna_gambit/main_line.json
+    - assets/openings/vienna_gambit/
     - assets/openings/vienna_gambit/vienna_gambit_1.pgn
+    - assets/openings/vienna_gambit/vienna_gambit_2.pgn
+
     - assets/images/
     - assets/images/coach.png
     - assets/images/correct.png

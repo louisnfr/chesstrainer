@@ -1,8 +1,5 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/ui/buttons/secondary_button.dart';
-import 'package:chesstrainer/ui/chips/tag_chip.dart';
-import 'package:chesstrainer/ui/gamification/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:percent_indicator/percent_indicator.dart';

@@ -8,6 +8,11 @@ class PgnGameNotifier extends FamilyAsyncNotifier<PgnGame, String> {
     final pgnString = await PgnLoader.loadPgn(assetPath);
     return PgnGame.parsePgn(pgnString);
   }
+
+  Future<PgnGame> loadGame(String assetPath) async {
+    final pgnString = await PgnLoader.loadPgn(assetPath);
+    return PgnGame.parsePgn(pgnString);
+  }
 }
 
 // * Providers
