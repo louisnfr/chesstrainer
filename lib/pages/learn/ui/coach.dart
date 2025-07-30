@@ -13,6 +13,7 @@ class Coach extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final theme = Theme.of(context);
     final playerSide = pgnGame.headers['PLayerSide'] == 'white'
         ? PlayerSide.white
         : PlayerSide.black;
@@ -23,8 +24,8 @@ class Coach extends ConsumerWidget {
     final comments = learnProvider.currentNodeData?.comments ?? [];
     final instructionComment = comments.isNotEmpty ? comments.first : null;
     final computerComment = chessProvider.playerSide == PlayerSide.white
-        ? "Black's turn..."
-        : "White's turn...";
+        ? "White's turn..."
+        : "Black's turn...";
     final completionComment = comments.length > 1 ? comments.last : null;
 
     final displayMessage =
@@ -36,29 +37,24 @@ class Coach extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         spacing: 8,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.brown,
-            child: Image(
-              image: AssetImage('assets/images/coach.png'),
-              width: 28,
-              height: 28,
-              color: Colors.white,
-            ),
+          const Image(
+            image: AssetImage('assets/images/coach2.png'),
+            width: 64,
+            height: 64,
+            // color: Colors.white,
           ),
           Expanded(
             child: Stack(
               children: [
-                // Triangle pointer sur la gauche
                 Positioned(
                   left: 0,
-                  top: 12,
+                  bottom: 8,
                   child: CustomPaint(
                     painter: BubbleTrianglePainter(color: AppColors.white),
-                    size: const Size(8, 16),
+                    size: const Size(10, 16),
                   ),
                 ),
                 // Container principal avec marge à gauche pour le triangle
@@ -99,10 +95,9 @@ class BubbleTrianglePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final path = Path();
-    // Créer un triangle pointant vers la gauche
-    path.moveTo(size.width, 0); // Point en haut à droite
-    path.lineTo(0, size.height / 2); // Point à gauche (milieu)
-    path.lineTo(size.width, size.height); // Point en bas à droite
+    path.moveTo(size.width, size.height);
+    path.lineTo(0, size.height / 3);
+    path.lineTo(size.width, 0);
     path.close();
 
     canvas.drawPath(path, paint);

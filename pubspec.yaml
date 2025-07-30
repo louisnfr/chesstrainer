@@ -73,6 +73,7 @@ flutter:
 
     - assets/images/
     - assets/images/coach.png
+    - assets/images/coach2.png
     - assets/images/correct.png
     - assets/images/incorrect.png
   # An image asset can refer to one or more resolution-specific "variants", see
