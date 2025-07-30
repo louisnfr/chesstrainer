@@ -10,7 +10,6 @@ import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
-import 'package:gaimon/gaimon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -40,10 +39,6 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     final theme = Theme.of(context);
 
-    // final pgnNotifierProvider = pgnGameNotifierProvider(
-    //   'assets/openings/vienna_gambit/vienna_gambit_$selectedLine.pgn',
-    // );
-
     final pgnGameProvider = ref.watch(
       pgnGameNotifierProvider(
         'assets/openings/vienna_gambit/vienna_gambit_$selectedLine.pgn',
@@ -71,25 +66,29 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
         final learnProvider = ref.watch(learnNotifierProvider(pgnGame));
         final annotations = ref.watch(annotationProvider(pgnGame));
 
-        final chessNotifier = ref.watch(
-          chessNotifierProvider(chessProvider.playerSide).notifier,
-        );
         final learnNotifier = ref.watch(
           learnNotifierProvider(pgnGame).notifier,
         );
 
-        // * coach shit
-        final comments = learnProvider.currentNodeData?.comments ?? [];
-        final instructionComment = comments.isNotEmpty ? comments.first : null;
-        final computerComment = chessProvider.playerSide == PlayerSide.white
-            ? "Black's turn..."
-            : "White's turn...";
-        final completionComment = comments.length > 1 ? comments.last : null;
-
         return DefaultLayout(
           useSafeArea: false,
-
-          appBar: AppBar(title: const Text('Learn - Vienna Gambit')),
+          // useSafeAreaLeft: false,
+          // useSafeAreaRight: false,
+          // useSafeAreaTop: false,
+          appBar: AppBar(title: const Text('Vienna Gambit')),
+          bottomNavigationBar: NavigationBar(
+            height: 48,
+            destinations: [
+              const NavigationDestination(
+                icon: Icon(Icons.lightbulb_outline),
+                label: 'Coach',
+              ),
+              const NavigationDestination(
+                icon: Icon(Icons.interests),
+                label: 'Annotations',
+              ),
+            ],
+          ),
           child: Column(
             spacing: 12,
             children: [
@@ -124,14 +123,7 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 128,
-                child: Coach(
-                  text: learnProvider.isFinished && completionComment != null
-                      ? completionComment
-                      : (instructionComment ?? computerComment),
-                ),
-              ),
+              SizedBox(height: 128, child: Coach(pgnGame: pgnGame)),
 
               Column(
                 children: [
@@ -147,34 +139,34 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
                     lastMove: chessProvider.lastMove,
                     annotations: annotations,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.lightbulb_outline),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.interests),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            chessNotifier.goToPrevious();
-                          },
-                          icon: const Icon(Icons.arrow_back_ios_rounded),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            chessNotifier.goToNext();
-                          },
-                          icon: const Icon(Icons.arrow_forward_ios_rounded),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //     children: [
+                  //       IconButton(
+                  //         onPressed: () {},
+                  //         icon: const Icon(Icons.lightbulb_outline),
+                  //       ),
+                  //       IconButton(
+                  //         onPressed: () {},
+                  //         icon: const Icon(Icons.interests),
+                  //       ),
+                  //       IconButton(
+                  //         onPressed: () {
+                  //           learnNotifier.goToPrevious();
+                  //         },
+                  //         icon: const Icon(Icons.arrow_back_ios_rounded),
+                  //       ),
+                  //       IconButton(
+                  //         onPressed: () {
+                  //           learnNotifier.goToNext();
+                  //         },
+                  //         icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
               if (learnProvider.isFinished)

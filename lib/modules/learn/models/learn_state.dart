@@ -1,15 +1,16 @@
+import 'package:chesstrainer/modules/learn/models/pgn_node_with_parent.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
 class LearnState {
   final PgnGame pgnGame;
-  final PgnNode? currentNode;
+  final PgnNodeWithParent<PgnNodeData>? currentNode;
   final PgnNodeData? currentNodeData;
-  // final String? currentNodeComment;
   final int lineLength;
   final int currentStep;
   final bool isFinished;
+  final List<PgnNodeWithParent<PgnNodeData>> navigationHistory;
 
   const LearnState({
     required this.pgnGame,
@@ -18,15 +19,17 @@ class LearnState {
     this.currentNode,
     this.currentStep = 0,
     this.isFinished = false,
+    this.navigationHistory = const [],
   });
 
   LearnState copyWith({
     PgnGame? pgnGame,
     int? currentStep,
-    PgnNode? currentNode,
+    PgnNodeWithParent<PgnNodeData>? currentNode,
     PgnNodeData? currentNodeData,
     int? lineLength,
     bool? isFinished,
+    List<PgnNodeWithParent<PgnNodeData>>? navigationHistory,
   }) {
     return LearnState(
       pgnGame: pgnGame ?? this.pgnGame,
@@ -35,6 +38,7 @@ class LearnState {
       currentStep: currentStep ?? this.currentStep,
       lineLength: lineLength ?? this.lineLength,
       isFinished: isFinished ?? this.isFinished,
+      navigationHistory: navigationHistory ?? this.navigationHistory,
     );
   }
 }

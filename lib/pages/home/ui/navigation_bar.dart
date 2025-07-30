@@ -18,7 +18,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         border: Border(
           top: BorderSide(
             color: Theme.of(context).colorScheme.outline,
-            width: 2,
+            width: 0,
           ),
         ),
       ),
@@ -28,9 +28,9 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
           highlightColor: Colors.transparent,
         ),
         child: NavigationBar(
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
           indicatorColor: Colors.transparent,
-          height: 64,
+          height: 48,
           selectedIndex: currentPageIndex,
           onDestinationSelected: (index) {
             setState(() {

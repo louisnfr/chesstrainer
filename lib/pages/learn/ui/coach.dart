@@ -1,13 +1,37 @@
+import 'package:chessground/chessground.dart';
+import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
 import 'package:chesstrainer/ui/theme/light_theme.dart';
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Coach extends StatelessWidget {
-  const Coach({super.key, required this.text});
+class Coach extends ConsumerWidget {
+  const Coach({super.key, required this.pgnGame});
 
-  final String text;
+  final PgnGame pgnGame;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerSide = pgnGame.headers['PLayerSide'] == 'white'
+        ? PlayerSide.white
+        : PlayerSide.black;
+
+    final chessProvider = ref.watch(chessNotifierProvider(playerSide));
+    final learnProvider = ref.watch(learnNotifierProvider(pgnGame));
+
+    final comments = learnProvider.currentNodeData?.comments ?? [];
+    final instructionComment = comments.isNotEmpty ? comments.first : null;
+    final computerComment = chessProvider.playerSide == PlayerSide.white
+        ? "Black's turn..."
+        : "White's turn...";
+    final completionComment = comments.length > 1 ? comments.last : null;
+
+    final displayMessage =
+        (learnProvider.isFinished && completionComment != null
+        ? completionComment
+        : (instructionComment ?? computerComment));
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
@@ -46,7 +70,7 @@ class Coach extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    text,
+                    displayMessage,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,

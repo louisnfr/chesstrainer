@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/models/learn_state.dart';
+import 'package:chesstrainer/modules/learn/models/pgn_node_with_parent.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/services/learn_service.dart';
 import 'package:dartchess/dartchess.dart';
@@ -11,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 const Duration _computerMoveDelay = Duration(milliseconds: 500);
 
 class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
+  // * Other providers
   ChessNotifier get _chessNotifier =>
       ref.read(chessNotifierProvider(PlayerSide.white).notifier);
 
@@ -53,74 +55,26 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
     final sanMove = _chessProvider.position.makeSanUnchecked(move).$2;
     _chessNotifier.playMove(move);
 
-    // Validate the move against the current node data
     final result = LearnService.validateMove(state, sanMove);
-    if (result == null) {
-      return;
-    }
+    if (result == null) return;
 
     if (result.isCorrect) {
-      // Show green checkmark on the destination square
       _annotationNotifier.setAnnotation(move.to, correct: true);
-
       Gaimon.success();
       state = result.newState;
       if (!state.isFinished) {
         _playComputerMove();
       }
     } else {
-      // Show red X on the destination square
       _annotationNotifier.setAnnotation(move.to, correct: false);
-
       Gaimon.error();
-      print('Invalid move: $sanMove');
+      state = result.newState;
     }
-    // final result = LearnService.validateMove(state, sanMove);
-    // state = result.newState;
-    // if (result.isCorrect) {
-    //   Future.delayed(_computerMoveDelay, () {
-    //     _playOpponentMoveIfNeeded();
-    //   });
-    // }
-    // if (sanMove == state.currentNodeData?.san) {
-    //   print('Good move');
-    //   final newNode = state.currentNode?.children[0];
-    //   if (newNode != null && newNode.children.isEmpty) {
-    //     print('No next node available');
-    //     return;
-    //   }
-    //   state = state.copyWith(
-    //     currentNode: newNode,
-    //     currentNodeData: newNode?.children[0].data,
-    //     currentStep: state.currentStep + 1,
-    //   );
-    //   // * play computer move
-    //   final nextNode = state.currentNode?.children[0];
-    //   if (nextNode != null && nextNode.children.isEmpty) {
-    //     print('No next node available');
-    //     return;
-    //   }
-    //   final nextMove = _chessProvider.position.parseSan(
-    //     nextNode?.data.san ?? '',
-    //   );
-    //   Future.delayed(_computerMoveDelay, () {
-    //     _chessNotifier.playMove(nextMove as NormalMove);
-    //     state = state.copyWith(
-    //       currentNode: nextNode,
-    //       currentNodeData: nextNode?.children[0].data,
-    //       currentStep: state.currentStep + 1,
-    //     );
-    //   });
-    // } else {
-    //   print('Bad move');
-    // }
-    // return result.isCorrect;
   }
 
   void _playComputerMove() {
     if (state.currentNode != null &&
         state.currentNode?.children.isEmpty == true) {
-      print('No next node available');
       return;
     }
     final nextNode = state.currentNode?.children[0];
@@ -130,10 +84,21 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       _annotationNotifier.clearAnnotations();
 
       _chessNotifier.playMove(nextMove as NormalMove);
+
+      // Tronquer l'historique si on n'est pas au bout, puis ajouter le coup de l'ordinateur
+      List<PgnNodeWithParent<PgnNodeData>> newHistory = List.from(
+        state.navigationHistory,
+      );
+      if (state.currentStep < newHistory.length - 1) {
+        newHistory.removeRange(state.currentStep + 1, newHistory.length);
+      }
+      newHistory.add(nextNode!);
+
       state = state.copyWith(
         currentNode: nextNode,
-        currentNodeData: nextNode?.children[0].data,
+        currentNodeData: nextNode.children[0].data,
         currentStep: state.currentStep + 1,
+        navigationHistory: newHistory,
       );
     });
   }
@@ -141,23 +106,46 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
   // * Navigation methods
 
   void goToPrevious() {
-    _chessNotifier.goToPrevious();
+    final canGoToPrevious = _chessNotifier.goToPrevious();
+    if (!canGoToPrevious) return;
+    _annotationNotifier.clearAnnotations();
     final newState = LearnService.goToPrevious(state);
-    print('Going to previous: $newState');
     if (newState != null) {
       state = newState;
     }
   }
 
-  // void goToNext() {
-  //   if (!_chessState.canGoToNext) return;
-  //   _chessNotifier.goToNext();
-  //   final newState = LearnService.goToNext(state);
-  //   print('Going to next: $newState');
-  //   if (newState != null) {
-  //     state = newState;
-  //   }
-  // }
+  void goToNext() {
+    final canGoToNext = _chessNotifier.goToNext();
+    if (!canGoToNext) return;
+    _annotationNotifier.clearAnnotations();
+
+    final newState = LearnService.goToNext(state);
+    if (newState != null) {
+      state = newState;
+    }
+  }
+
+  void goToStep(int stepIndex) {
+    final newState = LearnService.goToStep(state, stepIndex);
+    if (newState != null) {
+      state = newState;
+    }
+  }
+
+  // * Helper methods
+
+  List<PgnNodeData> getCurrentPath() {
+    return LearnService.getCurrentPath(state);
+  }
+
+  int getCurrentDepth() {
+    return LearnService.getCurrentDepth(state);
+  }
+
+  List<String> getAvailableMoves() {
+    return LearnService.getAvailableMoves(state);
+  }
 }
 
 // * Providers
