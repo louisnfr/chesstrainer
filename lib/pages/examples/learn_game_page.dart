@@ -76,19 +76,19 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
           // useSafeAreaRight: false,
           // useSafeAreaTop: false,
           appBar: AppBar(title: const Text('Vienna Gambit')),
-          bottomNavigationBar: NavigationBar(
-            height: 48,
-            destinations: [
-              const NavigationDestination(
-                icon: Icon(Icons.lightbulb_outline),
-                label: 'Coach',
-              ),
-              const NavigationDestination(
-                icon: Icon(Icons.interests),
-                label: 'Annotations',
-              ),
-            ],
-          ),
+          // bottomNavigationBar: NavigationBar(
+          //   height: 48,
+          //   destinations: [
+          //     const NavigationDestination(
+          //       icon: Icon(Icons.lightbulb_outline),
+          //       label: 'Coach',
+          //     ),
+          //     const NavigationDestination(
+          //       icon: Icon(Icons.interests),
+          //       label: 'Annotations',
+          //     ),
+          //   ],
+          // ),
           child: Column(
             spacing: 12,
             children: [
@@ -139,34 +139,34 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
                     lastMove: chessProvider.lastMove,
                     annotations: annotations,
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //     children: [
-                  //       IconButton(
-                  //         onPressed: () {},
-                  //         icon: const Icon(Icons.lightbulb_outline),
-                  //       ),
-                  //       IconButton(
-                  //         onPressed: () {},
-                  //         icon: const Icon(Icons.interests),
-                  //       ),
-                  //       IconButton(
-                  //         onPressed: () {
-                  //           learnNotifier.goToPrevious();
-                  //         },
-                  //         icon: const Icon(Icons.arrow_back_ios_rounded),
-                  //       ),
-                  //       IconButton(
-                  //         onPressed: () {
-                  //           learnNotifier.goToNext();
-                  //         },
-                  //         icon: const Icon(Icons.arrow_forward_ios_rounded),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.lightbulb_outline),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.interests),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            learnNotifier.goToPrevious();
+                          },
+                          icon: const Icon(Icons.arrow_back_ios_rounded),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            learnNotifier.goToNext();
+                          },
+                          icon: const Icon(Icons.arrow_forward_ios_rounded),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               if (learnProvider.isFinished)
