@@ -1,12 +1,10 @@
 import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/firebase_options.dart';
-import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/pages/auth/login_page.dart';
 import 'package:chesstrainer/pages/auth/register_page.dart';
 import 'package:chesstrainer/pages/home/home_page.dart';
 import 'package:chesstrainer/pages/onboarding/onboarding_page.dart';
 import 'package:chesstrainer/pages/onboarding/welcome_page.dart';
-import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -46,14 +44,15 @@ class AppWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    // final authState = ref.watch(authStateProvider);
 
-    return authState.when(
-      data: (user) => user == null ? const WelcomePage() : const HomePage(),
-      loading: () => DefaultLayout(
-        child: const Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, stack) => const WelcomePage(),
-    );
+    // return authState.when(
+    //   data: (user) => user == null ? const WelcomePage() : const HomePage(),
+    //   loading: () => DefaultLayout(
+    //     child: const Center(child: CircularProgressIndicator()),
+    //   ),
+    //   error: (error, stack) => const WelcomePage(),
+    // );
+    return const HomePage();
   }
 }

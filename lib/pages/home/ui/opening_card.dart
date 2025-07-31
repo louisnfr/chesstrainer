@@ -18,7 +18,7 @@ class OpeningCard extends StatefulWidget {
     required this.opening,
     required this.onPressed,
     this.backgroundColor,
-    this.shadowHeight = 2,
+    this.shadowHeight = 4,
     this.shadowColor,
     this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
     this.borderRadius = 16,
@@ -35,8 +35,9 @@ class _OpeningCardState extends State<OpeningCard> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final theme = Theme.of(context);
-    final backgroundColor = widget.backgroundColor ?? theme.colorScheme.surface;
-    final shadowColor = widget.shadowColor ?? theme.colorScheme.outline;
+    final backgroundColor = widget.backgroundColor ?? theme.colorScheme.primary;
+    final shadowColor =
+        widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
     // final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
 
     return GestureDetector(

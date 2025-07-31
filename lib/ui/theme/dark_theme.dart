@@ -5,8 +5,11 @@ class AppColors {
   const AppColors._();
 
   // static const Color surface = Color.fromRGBO(41, 41, 41, 1);
-  static const Color surface = Color.fromRGBO(27, 27, 27, 1);
+  static const Color surface = Color.fromRGBO(37, 37, 37, 1);
   static const Color onSurface = AppColors.white;
+
+  // static const Color surfaceContainer = Color.fromRGBO(108, 196, 217, 1);
+  static const Color surfaceContainer = Color.fromRGBO(67, 67, 67, 1);
 
   static Color surfaceDim = surface.withValues(alpha: 0.8);
 
@@ -38,6 +41,7 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     surface: AppColors.surface,
     onSurface: AppColors.onSurface,
+    surfaceContainer: AppColors.surfaceContainer,
     surfaceDim: AppColors.surfaceDim,
     primary: AppColors.primary,
     onPrimary: AppColors.onPrimary,
@@ -51,7 +55,7 @@ ThemeData darkTheme = ThemeData(
     outlineVariant: AppColors.outlineVariant,
   ),
 
-  // Configuration de l'AppBar pour éviter la couleur purple lors du scroll
+  // * App Bar Theme
   appBarTheme: const AppBarTheme(
     backgroundColor: AppColors.surface,
     foregroundColor: AppColors.onSurface,
@@ -61,6 +65,10 @@ ThemeData darkTheme = ThemeData(
     shadowColor: Colors.transparent,
   ),
 
+  // * Chip Theme
+  chipTheme: const ChipThemeData(),
+
+  // * Text Theme
   textTheme: const TextTheme(
     // ************ Display text styles ************
     displayLarge: TextStyle(

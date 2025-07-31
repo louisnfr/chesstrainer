@@ -1,4 +1,4 @@
-import 'package:chesstrainer/constants/openings/vienna_gambit/vienna_gambit.dart';
+import 'package:chesstrainer/constants/openings.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
@@ -17,7 +17,7 @@ final viennaGambit = OpeningModel(
   id: 'vienna-gambit',
   name: 'Vienna Gambit',
   description: 'A classic opening that leads to rich tactical battles.',
-  tags: ['White', 'Gambit', 'Aggressive'],
+  tags: ['e4', 'Aggressive'],
   linePaths: viennaGambitPaths.values.toList(),
   side: Side.white,
   ecoCode: 'C29',
@@ -34,7 +34,9 @@ class HomePage extends ConsumerWidget {
     return DefaultLayout(
       useSafeAreaBottom: false,
       useSafeAreaTop: false,
-      appBar: AppBar(title: Text('Learn', style: theme.textTheme.displayLarge)),
+      appBar: AppBar(
+        title: Text('Openings', style: theme.textTheme.displayLarge),
+      ),
       bottomNavigationBar: const HomeNavigationBar(),
       child: SingleChildScrollView(
         child: Column(

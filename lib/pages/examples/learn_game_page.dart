@@ -1,5 +1,5 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/constants/openings/vienna_gambit/vienna_gambit.dart';
+import 'package:chesstrainer/constants/openings.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
@@ -38,6 +38,8 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     final theme = Theme.of(context);
+
+    final linesNumber = viennaGambit.linePaths.length;
 
     final pgnGameProvider = ref.watch(
       pgnGameNotifierProvider(
@@ -112,7 +114,7 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
                     ),
                     DropdownButton(
                       value: selectedLine,
-                      items: List.generate(2, (index) {
+                      items: List.generate(linesNumber, (index) {
                         return DropdownMenuItem<int>(
                           value: index + 1,
                           child: Text('Line ${index + 1}'),

@@ -44,6 +44,7 @@ dependencies:
   hooks_riverpod: ^3.0.0-dev.16
   material_symbols_icons: ^4.2815.1
   percent_indicator: ^4.2.5
+  shared_preferences: ^2.5.3
   sign_in_with_apple: ^7.0.1
 
 dev_dependencies:
@@ -70,6 +71,7 @@ flutter:
     - assets/openings/vienna_gambit/
     - assets/openings/vienna_gambit/vienna_gambit_1.pgn
     - assets/openings/vienna_gambit/vienna_gambit_2.pgn
+    - assets/openings/vienna_gambit/vienna_gambit_3.pgn
 
     - assets/images/
     - assets/images/coach.png

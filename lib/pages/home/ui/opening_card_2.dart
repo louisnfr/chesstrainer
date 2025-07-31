@@ -1,7 +1,10 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class OpeningCard2 extends StatefulWidget {
   final OpeningModel opening;
@@ -32,10 +35,14 @@ class _OpeningCard2State extends State<OpeningCard2> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
     final theme = Theme.of(context);
-    final backgroundColor = widget.backgroundColor ?? theme.colorScheme.surface;
-    final shadowColor = widget.shadowColor ?? theme.colorScheme.outline;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final cardSize = screenWidth * 0.35;
+
+    final backgroundColor =
+        widget.backgroundColor ?? theme.colorScheme.surfaceContainer;
+    final shadowColor =
+        widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
     // final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
 
     return GestureDetector(
@@ -66,8 +73,8 @@ class _OpeningCard2State extends State<OpeningCard2> {
                   ],
           ),
           child: Container(
-            // height: screenWidth * 0.4 + widget.shadowHeight,
-            width: screenWidth * 0.4 + widget.shadowHeight,
+            height: cardSize + widget.shadowHeight,
+            // width: screenWidth * 0.4 + widget.shadowHeight,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -79,7 +86,8 @@ class _OpeningCard2State extends State<OpeningCard2> {
                 topRight: Radius.circular(widget.borderRadius - 2),
                 bottomLeft: Radius.circular(widget.borderRadius - 2),
               ),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Chessboard.fixed(
                     settings: const ChessboardSettings(
@@ -88,14 +96,56 @@ class _OpeningCard2State extends State<OpeningCard2> {
                       colorScheme: ChessboardColorScheme.blue,
                     ),
                     fen: widget.opening.fen,
-                    size: screenWidth * 0.4,
+                    size: cardSize,
                     orientation: widget.opening.side,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      widget.opening.name,
-                      style: theme.textTheme.headlineSmall,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            widget.opening.name,
+                            style: theme.textTheme.headlineLarge?.copyWith(
+                              color: widget.opening.side == Side.black
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                          ),
+                          Wrap(
+                            // spacing: 8,
+                            // runSpacing: 4,
+                            children: widget.opening.tags
+                                .map(
+                                  (tag) => Chip(
+                                    label: Text(tag),
+                                    backgroundColor: theme.colorScheme.outline
+                                        .withValues(alpha: 0.2),
+                                    labelStyle: theme.textTheme.labelMedium,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: LinearPercentIndicator(
+                                  // backgroundColor: Colors.grey.shade300,
+                                  barRadius: const Radius.circular(8),
+                                  lineHeight: 8,
+                                  animation: true,
+                                  animationDuration: 250,
+                                  animateFromLastPercent: true,
+                                  progressColor: theme.colorScheme.primary,
+                                  percent: 25 / 100,
+                                ),
+                              ),
+                              const Icon(Symbols.line_end_arrow_notch_rounded),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

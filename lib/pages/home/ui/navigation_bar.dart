@@ -28,7 +28,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
           highlightColor: Colors.transparent,
         ),
         child: NavigationBar(
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          backgroundColor: Theme.of(context).colorScheme.surfaceDim,
           indicatorColor: Colors.transparent,
           height: 48,
           selectedIndex: currentPageIndex,

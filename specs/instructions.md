@@ -1,144 +1,268 @@
-# Chess Openings Learning App - Development Instructions
+# ChessTrainer - Instructions de Développement
 
-## 🎯 Project Vision
+## 🎯 Vision du Projet
 
-**Ultra-gamified chess openings learning app** that transforms boring memorization into an engaging, fun experience. Think Duolingo meets Chess.com - interactive lessons, streaks, achievements, and a friendly coach mascot that makes learning addictive.
+Application ultra-gamifiée d'apprentissage des ouvertures ### Conventions de Code
 
-**Core Loop**: Choose opening → Learn interactively → Practice without help → Earn rewards → Repeat
+### Architecture Détaillée Implémentée
 
-## 🏗️ Architecture Philosophy
+#### Structure des Modules
+
+```text
+modules/
+├── auth/           # Authentification utilisateur
+│   ├── providers/  # Riverpod providers (auth_providers.dart)
+│   └── services/   # Services business (auth_service.dart)
+├── chess/          # Logique échecs & plateau
+│   ├── models/     # États & modèles (chess_state.dart, node.dart)
+│   ├── providers/  # Providers chess (chess_providers.dart)
+│   └── services/   # Services échecs (chess_service.dart)
+├── learn/          # Système apprentissage
+│   ├── models/     # États apprentissage (learn_state.dart)
+│   ├── providers/  # Providers apprentissage
+│   └── services/   # Services coaching
+├── opening/        # Gestion ouvertures PGN
+│   ├── models/     # Modèles ouvertures (opening.dart, opening_style.dart)
+│   ├── providers/  # Providers PGN (opening_pgn_provider.dart)
+│   └── services/   # Services PGN (pgn_loader.dart)
+└── user/           # Données & progression utilisateur
+    ├── models/     # Modèles user (user.dart)
+    ├── providers/  # Providers user (user_providers.dart)
+    └── services/   # Services user (user_service.dart)
+```
+
+#### Structure des Pages
+
+```text
+pages/
+├── auth/           # Pages authentification
+│   └── auth_wrapper.dart
+├── examples/       # Pages développement/tests
+│   ├── chessground.dart
+│   ├── learn_game_page.dart
+│   └── normal_game_page.dart
+├── home/           # Page principale/accueil
+├── learn/          # Pages apprentissage
+└── onboarding/     # Pages onboarding
+    ├── onboarding_page.dart
+    └── welcome_page.dart
+```
+
+#### Structure UI
+
+```text
+ui/
+├── buttons/        # Boutons standardisés
+│   ├── action_button.dart
+│   ├── outline_button.dart
+│   ├── primary_button.dart
+│   └── secondary_button.dart
+├── chips/          # Sélecteurs en pastilles
+├── gamification/   # Composants gamification
+│   └── progress_bar.dart
+├── layouts/        # Layouts réutilisables
+├── theme/          # Thème & styles globaux
+└── ui.dart         # Index exports centralisés
+```
+
+#### Structure Constants
+
+```text
+constants/
+├── openings/       # Organisation PGN par ouverture
+│   └── vienna_gambit/
+│       └── vienna_gambit.dart
+├── openings.dart   # Maps chemins PGN globaux
+└── routes.dart     # Routes navigation centralisées
+```
+
+### Organisation des Donnéeschecs
+
+Transformer l'apprentissage ennuyeux des ouvertures en expérience addictive et fun. Inspiration : Duolingo + Chess.com.
+
+**Public cible** : Joueurs casual-intermédiaires, amateurs passionnés qui veulent s'améliorer de façon engageante (tout âge)
+
+**Ton unique** : Ludique et fun MAIS sérieux dans l'apprentissage. Éviter le ton enfantin ET le côté rébarbatif des cours classiques. Mix parfait entre engagement et pédagogie de qualité.
+
+**Boucle principale** : Choisir ouverture → Apprendre interactivement → Pratiquer sans aide → Gagner récompenses → Répéter
+
+## 🏗️ Architecture Technique
+
+### Structure du Projet
 
 lib/
-├── modules/     # Business logic & state
-├── pages/       # UI following navigation structure
-└── ui/          # Reusable components
+├── constants/   # Constantes globales (routes, chemins PGN)
+├── modules/     # Logique métier + état (Riverpod providers)
+├── pages/       # Écrans UI (suit la navigation)
+└── ui/          # Composants réutilisables
 
-### Key Principles
+### Stack Technique
 
-- **Riverpod 3** (manual providers, no code generation)
-- **Firebase**
-- **Single responsibility**: One provider per concern
-- **No repositories**: Services talk directly to data, providers hold state
-- **Global vs Page-scoped**: Providers are either app-wide or page-specific
-- **Navigation-based structure**: Folder structure mirrors app navigation
-- **Separation of concerns**: Business logic 100% separate from UI
+- **Flutter** (dernière version stable)
+- **Riverpod 3** (providers manuels, pas de génération de code)
+- **SharedPreferences** (stockage local MVP → Firebase plus tard)
+- **Firebase** (Auth + Firestore pour versions futures)
+- **Hooks** pour la gestion d'état locale
+- **dartchess** (logique échecs Lichess)
+- **chessground** (affichage plateau Lichess)
+- **PGN** stockés dans assets/ pour les ouvertures
 
-## 🎮 Core Features
+### Règles d'Architecture
 
-### Onboarding & Personalization
+1. **Un provider = une responsabilité**
+2. **Pas de repositories** : Services → données directement
+3. **Providers globaux** vs **page-scoped** (auto-dispose)
+4. **Structure = navigation** : dossiers miroir de l'app
+5. **Séparation stricte** : logique métier ≠ UI
+6. **Modules organisés** : models/ + providers/ + services/ par domaine
+7. **UI centralisée** : composants exports via ui/ui.dart
+8. **Constants séparées** : routes, chemins assets, configurations
 
-- **Quick setup**: Elo + playing style + daily commitment
-- **Smart recommendations**: Algorithm matches user to perfect opening
-- **Guest mode**: Local progress vs cloud sync
+## 🎮 Fonctionnalités Cœur
 
-### Learning System
+### 1. Système d'Apprentissage
 
-- **Interactive board**: Tap-to-move, visual feedback
-- **Coach mascot**: Animated character explaining each move
-- **Progressive disclosure**: Learn line by line, move by move
-- **Rich explanations**: Why each move matters strategically
+- **Plateau interactif** : tap-to-move, feedback visuel
+- **Coach mascotte** : personnage animé qui explique
+- **Apprentissage progressif** : ligne par ligne, coup par coup
+- **Explications riches** : pourquoi chaque coup compte
 
-### Practice Mode
+### 2. Mode Pratique
 
-- **No training wheels**: User must find correct moves alone
-- **Adaptive difficulty**: Responds to user mistakes intelligently
-- **Real scenarios**: Practice against common opponent responses
+- **Sans aide** : utilisateur trouve les coups seul
+- **Difficulté adaptive** : réagit aux erreurs intelligemment
+- **Scénarios réels** : contre réponses d'adversaires communes
 
-### Gamification Engine
+### 3. Gamification
 
-- **Daily streaks**: Maintain momentum with commitment tracking
-- **XP & levels**: Points for learning, bonuses for perfection
-- **Achievement system**: Unlock milestones and collectibles
-- **Progress visualization**: Charts, percentages, completion stats
+- **Streaks quotidiennes** : maintenir l'élan
+- **XP & niveaux** : points apprentissage + bonus perfection
+- **Système d'achievements** : débloquer jalons et collectibles
+- **Visualisation progrès** : graphiques, pourcentages
 
-## 🎨 UI Guidelines
+### 4. Onboarding
 
-### Design Philosophy
+- **Setup rapide** : Elo + style de jeu + engagement quotidien
+- **Recommandations intelligentes** : algorithme matche ouverture parfaite
+- **Mode invité** : progrès local vs sync cloud
 
-- **Game-first**: Smooth animations, satisfying interactions
-- **Chess-focused**: Board is central, everything else supports it
-- **Friendly & encouraging**: Warm colors, positive messaging
-- **Progressive**: Show complexity gradually, not overwhelming
+## 🎨 Guidelines UI/UX
 
-### Component Strategy
+### Philosophie Design
 
-- **Reusable widgets** in `ui/` folder for common elements
-- **Feature-specific widgets** stay in page folders
-- **Lift widgets** to `ui/` only when reused across pages
-- **Design system** with consistent colors, typography, spacing
+- **Game-first** : animations fluides, interactions satisfaisantes
+- **Chess-focused** : plateau central, tout supporte l'échiquier
+- **Ton équilibré** : ludique sans être enfantin, sérieux sans être rébarbatif
+- **Qualité pédagogique** : explications claires, progression logique
+- **Engagement adulte** : respect de l'intelligence du joueur
+- **Progressif** : montrer complexité graduellement
 
-### Key UI Components
+### Composants Clés
 
-- Interactive chess board with smooth piece animations
-- Coach mascot with personality and contextual animations
-- Progress indicators that feel rewarding to fill
-- Achievement celebrations (confetti, sound effects)
+- Plateau d'échecs avec animations fluides des pièces
+- Mascotte coach avec personnalité et animations contextuelles
+- Indicateurs de progrès gratifiants à remplir
+- Célébrations d'achievements (confettis, effets sonores)
 
-## 🚀 Implementation Strategy
+## 🚀 Stratégie d'Implémentation
 
-### MVP Scope
+### MVP (Phase 1)
 
-1. **Core chess logic**: Board, moves, basic validation
-2. **Single opening**: One complete opening with multiple lines
-3. **Basic learning flow**: Interactive lessons without gamification
-4. **Simple UI**: Functional board + move explanations
+1. ✅ **Logique échecs de base** : dartchess + chessground intégrés
+2. ✅ **Plateau fonctionnel** : coups jouables, affichage Lichess
+3. ✅ **Providers chess & learning** : suivi de ligne + coach basique
+4. ✅ **Données ouvertures** : PGN stockés dans assets/
+5. ✅ **Architecture modulaire** : modules/, pages/, ui/, constants/
+6. ✅ **Modèles d'état** : ChessState, LearnState avec copyWith
+7. ✅ **Services séparés** : logique métier dans services/
+8. ✅ **UI componentisée** : boutons, layouts, gamification
+9. 🔄 **Stockage données user local** : progrès, préférences, état apprentissage
+10. 🔄 **Flow d'apprentissage affiné** : interaction coach + explications
+11. 🔄 **UI learning page** : plateau + panneaux explications
 
-### Enhancement Phases
+### Phases d'Amélioration
 
-1. **Gamification**: Add streaks, XP, achievements
-2. **Multiple openings**: Expand opening library
-3. **Practice mode**: Test knowledge without hints
-4. **Onboarding**: Personalization and recommendations
-5. **Polish**: Animations, sounds, advanced features
+1. **MVP Stockage Local** : SharedPreferences, mode hors-ligne complet
+2. **Logique métier complète** : système progrès, persistance robuste
+3. **Migration Firebase** : Auth + sync cloud, conservation interface
+4. **UI/UX polish** : design, animations, interactions fluides
+5. **Gamification** : streaks, XP, achievements
+6. **Bibliothèque ouvertures** : expansion multiple ouvertures
+7. **Mode pratique** : test connaissances sans indices
+8. **Onboarding** : personnalisation et recommandations
+9. **Polish avancé** : sons, effets, fonctionnalités premium
 
-### Development Philosophy
+## 📊 Métriques de Succès
 
-- **Start simple**: Get core experience working first
-- **Iterate fast**: Playtest early, adjust based on user feel
-- **Focus on fun**: Gamification should feel rewarding, not grindy
-- **Performance matters**: Smooth 60fps chess board interactions
+### Engagement Utilisateur
 
-## 🎯 Key Success Metrics
+- Maintien streaks quotidiennes
+- Lignes complétées par session
+- Taux de retour après première semaine
 
-### User Engagement
+### Efficacité Apprentissage
 
-- Daily streak maintenance
-- Lines completed per session
-- Return rate after first week
-- Time spent in learning vs practice modes
+- Amélioration précision dans le temps
+- Rétention connaissances (succès mode pratique)
+- Variété ouvertures explorées
 
-### Learning Effectiveness
+## 📝 Conventions de Code
 
-- Accuracy improvement over time
-- Knowledge retention (practice mode success)
-- Opening variety explored
-- Real game application
+### Organisation des Données
 
-## 📝 Code Style & Conventions
+- **PGN par ligne** : `assets/openings/[opening_name]/[opening_name]_[line_number].pgn`
+- **Chemins dans constants** : Maps simples dans `constants/openings.dart`
+- **Parsing PGN** : utiliser dartchess directement
+- **Structure exemple** : `assets/openings/vienna_gambit/vienna_gambit_1.pgn`
+- **Stockage local MVP** : SharedPreferences pour progrès/préférences
+- **Architecture upgradable** : interface abstraite → implémentation SharedPref/Firebase
 
-### Architecture Rules
+### Organisation du Code
 
-- **Feature-based modules**: Business logic organized by domain
-- **Navigation-based pages**: UI structure mirrors app flow
-- **Provider scoping**: Global for shared state, auto-dispose for page-specific
-- **Service as singleton**: One instance per service type
+- **Noms descriptifs** plutôt qu'abréviations
+- **Patterns cohérents** à travers composants similaires
+- **Commentaires** pour logique spécifique échecs
+- **Performance** : 60fps interactions plateau
 
-### Naming & Organization
+### Providers Riverpod
 
-- Descriptive names over abbreviations
-- Consistent patterns across similar components
-- Clear separation between data, logic, and presentation
-- Comments for chess-specific logic and algorithms
+```dart
+// Global (app-wide)
+final globalUserProvider = Provider<User>((ref) => ...);
 
-### Performance Guidelines
+// Page-scoped (auto-dispose)
+final pageSpecificProvider = Provider.autoDispose<State>((ref) => ...);
+```
 
-- **Efficient rebuilds**: Watch specific providers, not entire state trees
-- **Lazy loading**: Load opening data as needed
-- **Animation performance**: Use appropriate widgets for smooth interactions
-- **Memory management**: Auto-dispose providers when pages close
+## 🎪 Objectif : Rendre Magique
 
-## 🎪 Make It Feel Magical
+Faire que l'apprentissage des ouvertures ressemble à jouer à un super jeu mobile. Chaque interaction fluide, chaque achievement mérité, chaque leçon donne envie d'apprendre "juste une ligne de plus".
 
-The goal is to make learning chess openings feel like playing a great mobile game. Every interaction should be smooth, every achievement should feel earned, and every lesson should leave users wanting to learn just one more line.
+---
 
-**Remember**: The best architecture is one that lets you iterate quickly and build features that users love. Keep it simple, keep it fun, and focus on the core experience of making chess learning addictive.
+## 🤖 Pour l'IA Future
+
+### Quand vous aidez sur ce projet
+
+1. **TOUJOURS** suivre l'architecture modules/pages/ui
+2. **PRIORITÉ** à l'expérience utilisateur et la fluidité
+3. **SIMPLIFIER** avant de complexifier
+4. **TESTER** l'expérience chess au centre de tout
+5. **ITÉRER** rapidement, pas de sur-engineering
+
+### Questions à poser si pas clair
+
+- Quelle fonctionnalité spécifique développer ?
+- MVP ou fonctionnalité avancée ?
+- Pour quel niveau de joueur (casual/intermédiaire) ?
+- Priorité performance vs fonctionnalités ?
+- Ton ludique ou pédagogique pour cette feature ?
+
+### Ton & Communication pour l'IA
+
+- **Éviter** : ton enfantin, explications condescendantes, gamification excessive
+- **Préférer** : ton engageant mais respectueux, explications claires et complètes
+- **Objectif** : faire sentir l'utilisateur intelligent tout en s'amusant
+- **Style** : professionnel décontracté, motivant sans être excessif
+
+**Principe de base** : Architecture simple → itération rapide → features que les users adorent
