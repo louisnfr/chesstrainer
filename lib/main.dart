@@ -49,10 +49,7 @@ class AppWrapper extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
 
     return authState.when(
-      data: (user) {
-        print('Current user: $user');
-        return user == null ? const LoginPage() : const HomePage();
-      },
+      data: (user) => user == null ? const LoginPage() : const HomePage(),
       loading: () => DefaultLayout(
         child: const Center(child: CircularProgressIndicator()),
       ),
