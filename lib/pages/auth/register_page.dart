@@ -1,5 +1,9 @@
+import 'package:chesstrainer/constants/routes.dart';
+import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
+import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -27,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Column(
           children: [
             Column(
-              spacing: 8,
+              spacing: 12,
               children: [
                 TextField(
                   controller: _emailController,
@@ -43,19 +47,31 @@ class _RegisterPageState extends State<RegisterPage> {
                   autocorrect: false,
                   decoration: const InputDecoration(hintText: 'Password'),
                 ),
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     await AuthService.linkWithCredential(
-                //       email: _emailController.text,
-                //       password: _passwordController.text,
-                //     );
-                //     await UserService.upgradeAnonymousUser(
-                //       email: _emailController.text,
-                //     );
-                //     if (context.mounted) Navigator.pop(context);
-                //   },
-                //   child: const Text('Register'),
-                // ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    return PrimaryButton(
+                      onPressed: () async {
+                        await ref
+                            .read(authNotifierProvider.notifier)
+                            .createUserWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            );
+                      },
+                      text: 'Register',
+                    );
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      loginRoute,
+                      (route) => false,
+                    );
+                  },
+                  child: const Text('Already have an account? Log in'),
+                ),
               ],
             ),
           ],

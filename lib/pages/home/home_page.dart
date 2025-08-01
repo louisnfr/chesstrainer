@@ -1,4 +1,5 @@
 import 'package:chesstrainer/constants/openings.dart';
+import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
@@ -129,8 +130,11 @@ class HomePage extends ConsumerWidget {
                   text: 'Normal game example sec',
                 ),
                 OutlineButton(
-                  onPressed: () {},
-                  text: 'Normal game example out',
+                  onPressed: () {
+                    final auth = ref.read(authNotifierProvider.notifier);
+                    auth.signOut();
+                  },
+                  text: 'log out',
                 ),
               ],
             ),

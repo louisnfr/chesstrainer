@@ -1,3 +1,6 @@
+import 'package:chesstrainer/constants/routes.dart';
+import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
+import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
     return DefaultLayout(
       appBar: AppBar(title: const Text('Login')),
       child: Column(
+        spacing: 12,
         children: [
           TextField(
             controller: _emailController,
@@ -34,25 +38,28 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Consumer(
             builder: (context, ref, child) {
-              return TextButton(
+              return PrimaryButton(
                 onPressed: () async {
-                  // try {
-                  //   await ref
-                  //       .read(authNotifierProvider.notifier)
-                  //       .signInWithEmailAndPassword(
-                  //         email: _emailController.text,
-                  //         password: _passwordController.text,
-                  //       );
-                  //   if (context.mounted) {
-                  //     unawaited(Navigator.pushNamed(context, homeRoute));
-                  //   }
-                  // } catch (e) {
-                  //   if (kDebugMode) print('Error on login: $e');
-                  // }
+                  await ref
+                      .read(authNotifierProvider.notifier)
+                      .signInWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
                 },
-                child: const Text('Login'),
+                text: 'Login',
               );
             },
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                registerRoute,
+                (route) => false,
+              );
+            },
+            child: const Text("Don't have an account yet? Register"),
           ),
         ],
       ),
