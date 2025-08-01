@@ -55,10 +55,7 @@ class _ChessgroundExampleState extends State<ChessgroundExample> {
 
   void _playMove(NormalMove move, {bool? isDrop, bool? isPremove}) {
     if (isPromotionPawnMove(move)) {
-      print('Promotion pawn move detected: $move');
-      setState(() {
-        promotionMove = move;
-      });
+      setState(() => promotionMove = move);
     } else if (position.isLegal(move)) {
       setState(() {
         position = position.playUnchecked(move);
@@ -71,21 +68,15 @@ class _ChessgroundExampleState extends State<ChessgroundExample> {
   }
 
   void _onPromotionSelection(Role? role) {
-    print('Promotion selected: $role');
     if (role == null) {
-      print('Promotion cancelled');
       _onPromotionCancel();
     } else if (promotionMove != null) {
-      print('Playing promotion move with role: $role');
       _playMove(promotionMove!.withPromotion(role));
     }
   }
 
   void _onPromotionCancel() {
-    print('Promotion cancelled');
-    setState(() {
-      promotionMove = null;
-    });
+    setState(() => promotionMove = null);
   }
 
   bool isPromotionPawnMove(NormalMove move) {

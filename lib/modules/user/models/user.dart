@@ -6,12 +6,14 @@ class UserModel {
   final String? email;
   final String? displayName;
   final bool isAnonymous;
+  final List<String> learnedOpenings; // IDs des ouvertures apprises
 
   const UserModel({
     required this.uid,
     this.email,
     this.displayName,
     required this.isAnonymous,
+    this.learnedOpenings = const [],
   });
 
   // Pour sauvegarder dans Firestore
@@ -21,6 +23,7 @@ class UserModel {
       'email': email,
       'displayName': displayName,
       'isAnonymous': isAnonymous,
+      'learnedOpenings': learnedOpenings,
     };
   }
 
@@ -31,6 +34,7 @@ class UserModel {
       email: map['email'],
       displayName: map['displayName'],
       isAnonymous: map['isAnonymous'],
+      learnedOpenings: List<String>.from(map['learnedOpenings'] ?? []),
     );
   }
 
@@ -39,6 +43,7 @@ class UserModel {
     return 'UserModel(uid: $uid, '
         'email: $email, '
         'displayName: $displayName, '
-        'isAnonymous: $isAnonymous)';
+        'isAnonymous: $isAnonymous, '
+        'learnedOpenings: $learnedOpenings)';
   }
 }

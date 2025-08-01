@@ -1,9 +1,8 @@
-import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -49,28 +48,39 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    return PrimaryButton(
-                      onPressed: () async {
-                        await ref
-                            .read(authNotifierProvider.notifier)
-                            .createUserWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            );
-                      },
-                      text: 'Register',
+                    final authState = ref.watch(authNotifierProvider);
+
+                    ref.listen(authNotifierProvider, (previous, next) {
+                      if (previous?.isLoading == true && next.hasValue) {
+                        Navigator.pop(context);
+                      }
+                    });
+
+                    if (authState.isLoading) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    return Column(
+                      children: [
+                        PrimaryButton(
+                          onPressed: () async {
+                            await ref
+                                .read(authNotifierProvider.notifier)
+                                .createUserWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                );
+                          },
+                          text: 'Register',
+                        ),
+                        if (authState.hasError)
+                          Text(
+                            'Error: ${authState.error}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                      ],
                     );
                   },
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      loginRoute,
-                      (route) => false,
-                    );
-                  },
-                  child: const Text('Already have an account? Log in'),
                 ),
               ],
             ),

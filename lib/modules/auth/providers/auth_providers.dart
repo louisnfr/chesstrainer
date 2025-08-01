@@ -1,6 +1,10 @@
 import 'package:chesstrainer/modules/auth/services/auth_service.dart';
+import 'package:chesstrainer/modules/user/models/user.dart';
+import 'package:chesstrainer/modules/user/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final _userServiceProvider = Provider<UserService>((ref) => UserService());
 
 final _authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
@@ -30,11 +34,11 @@ class AuthNotifier extends AsyncNotifier<void> {
     required String password,
   }) async {
     state = const AsyncLoading();
-
     try {
       await ref
           .read(_authServiceProvider)
           .signInWithEmailAndPassword(email: email, password: password);
+
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
@@ -48,9 +52,21 @@ class AuthNotifier extends AsyncNotifier<void> {
     state = const AsyncLoading();
 
     try {
-      await ref
+      final user = await ref
           .read(_authServiceProvider)
           .createUserWithEmailAndPassword(email: email, password: password);
+
+      if (user != null) {
+        final userModel = UserModel(
+          uid: user.uid,
+          email: user.email,
+          displayName: user.email?.split('@').first,
+          isAnonymous: user.isAnonymous,
+        );
+
+        await ref.read(_userServiceProvider).createUser(userModel);
+      }
+
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);

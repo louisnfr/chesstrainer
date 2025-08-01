@@ -96,7 +96,6 @@ class PgnChildNodeWithParent<T extends PgnNodeData>
 
 /// Utilitaire pour convertir un PgnNode existant en PgnNodeWithParent
 class PgnNodeConverter {
-  /// Convertit un PgnNode en PgnNodeWithParent en ajoutant les références parent
   static PgnNodeWithParent<T> addParentReferences<T extends PgnNodeData>(
     PgnNode<T> originalNode, [
     PgnNodeWithParent<T>? parent,

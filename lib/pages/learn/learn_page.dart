@@ -41,7 +41,7 @@
 //     final double screenWidth = MediaQuery.sizeOf(context).width;
 
 //     return DefaultLayout(
-//       safeAreaMinimum: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+//       safeAreaMinimum: const EdgeInsets.symmetric(horizontal: 0, vertical: 8)
 //       appBar: AppBar(
 //         title: const Text(
 //           'Vienna Gambit - Line 3 / 12',

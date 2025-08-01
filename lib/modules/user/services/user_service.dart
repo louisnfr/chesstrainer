@@ -26,4 +26,10 @@ class UserService {
   Future<void> updateUser(UserModel user) async {
     await _firestore.collection('users').doc(user.uid).update(user.toMap());
   }
+
+  Future<void> addLearnedOpening(String uid, String openingId) async {
+    await _firestore.collection('users').doc(uid).update({
+      'learnedOpenings': FieldValue.arrayUnion([openingId]),
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:chesstrainer/constants/openings.dart';
 import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
-import 'package:chesstrainer/modules/opening/models/opening.dart';
+import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
@@ -10,20 +10,8 @@ import 'package:chesstrainer/ui/buttons/outline_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
-import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-final viennaGambit = OpeningModel(
-  id: 'vienna-gambit',
-  name: 'Vienna Gambit',
-  description: 'A classic opening that leads to rich tactical battles.',
-  tags: ['e4', 'Aggressive'],
-  linePaths: viennaGambitPaths.values.toList(),
-  side: Side.white,
-  ecoCode: 'C29',
-  fen: 'rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3',
-);
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -31,6 +19,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final user = ref.watch(currentUserProvider);
 
     return DefaultLayout(
       useSafeAreaBottom: false,
@@ -43,6 +32,10 @@ class HomePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Welcome back, ${user?.displayName ?? 'Guest'}!',
+              style: theme.textTheme.headlineLarge,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(

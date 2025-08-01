@@ -53,10 +53,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
+              Navigator.pushNamed(
                 context,
                 registerRoute,
-                (route) => false,
+                // (route) => route.isFirst,
               );
             },
             child: const Text("Don't have an account yet? Register"),

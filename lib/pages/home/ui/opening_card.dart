@@ -1,7 +1,9 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
+import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class OpeningCard extends StatefulWidget {
@@ -107,23 +109,35 @@ class _OpeningCardState extends State<OpeningCard> {
                       style: theme.textTheme.headlineLarge,
                     ),
                     const Spacer(),
-                    CircularPercentIndicator(
-                      progressColor: theme.colorScheme.secondary,
-                      circularStrokeCap: CircularStrokeCap.round,
-                      radius: 40,
-                      percent: 0.2,
-                      center: Text(
-                        '2 / 12',
-                        style: theme.textTheme.labelMedium,
-                      ),
-                      footer: Text(
-                        'Lines learned',
-                        style: theme.textTheme.labelLarge,
-                      ),
-                      lineWidth: 10,
-                      backgroundColor: theme.colorScheme.outline.withValues(
-                        alpha: 0.6,
-                      ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final currentUser = ref.watch(currentUserProvider);
+                        final userLearnedOpenings =
+                            currentUser?.learnedOpenings ?? [];
+
+                        final progress = widget.opening.progressFor(
+                          userLearnedOpenings,
+                        );
+
+                        return CircularPercentIndicator(
+                          progressColor: theme.colorScheme.secondary,
+                          circularStrokeCap: CircularStrokeCap.round,
+                          radius: 40,
+                          percent: progress.percentage,
+                          center: Text(
+                            '${progress.learned} / ${progress.total}',
+                            style: theme.textTheme.labelMedium,
+                          ),
+                          footer: Text(
+                            'Lines learned',
+                            style: theme.textTheme.labelLarge,
+                          ),
+                          lineWidth: 10,
+                          backgroundColor: theme.colorScheme.outline.withValues(
+                            alpha: 0.6,
+                          ),
+                        );
+                      },
                     ),
                     const Spacer(),
                   ],

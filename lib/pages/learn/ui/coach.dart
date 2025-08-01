@@ -13,7 +13,7 @@ class Coach extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final theme = Theme.of(context);
+    final theme = Theme.of(context);
     final playerSide = pgnGame.headers['PLayerSide'] == 'white'
         ? PlayerSide.white
         : PlayerSide.black;
@@ -57,7 +57,6 @@ class Coach extends ConsumerWidget {
                     size: const Size(10, 16),
                   ),
                 ),
-                // Container principal avec marge à gauche pour le triangle
                 Container(
                   margin: const EdgeInsets.only(left: 8),
                   padding: const EdgeInsets.all(8),
@@ -67,9 +66,7 @@ class Coach extends ConsumerWidget {
                   ),
                   child: Text(
                     displayMessage,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppColors.black,
                     ),
                   ),

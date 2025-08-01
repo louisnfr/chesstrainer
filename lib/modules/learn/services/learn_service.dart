@@ -19,6 +19,7 @@ class LearnService {
 
     return LearnState(
       pgnGame: pgnGame,
+      lineId: pgnGame.headers['LineId'] ?? 'unknown',
       currentNode: rootNodeWithParent,
       currentNodeData: currentNodeData,
       lineLength: lineLength,
@@ -40,7 +41,6 @@ class LearnService {
     if (sanMove == state.currentNodeData?.san) {
       final newNode = state.currentNode?.children[0];
       if (newNode != null && newNode.children.isEmpty) {
-        // Tronquer l'historique si on n'est pas au bout, puis ajouter le nouveau nœud
         List<PgnNodeWithParent<PgnNodeData>> newHistory = List.from(
           state.navigationHistory,
         );
@@ -83,7 +83,6 @@ class LearnService {
       // Ajouter le nœud d'erreur aux enfants du nœud actuel
       state.currentNode?.children.add(incorrectNode);
 
-      // Tronquer l'historique si on n'est pas au bout, puis ajouter le nœud d'erreur
       List<PgnNodeWithParent<PgnNodeData>> newHistory = List.from(
         state.navigationHistory,
       );

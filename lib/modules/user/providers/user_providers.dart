@@ -47,12 +47,34 @@ class UserNotifier extends AsyncNotifier<void> {
 
       final user = UserModel(
         uid: authUser.uid,
-        displayName: displayName,
         email: authUser.email,
+        displayName: displayName,
         isAnonymous: authUser.isAnonymous,
       );
 
       await ref.read(userServiceProvider).createUser(user);
+
+      // Invalider le cache pour recharger les données
+      ref.invalidate(userDataProvider);
+
+      state = const AsyncData(null);
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+    }
+  }
+
+  Future<void> markOpeningAsLearned(String openingId) async {
+    state = const AsyncLoading();
+
+    try {
+      final authUser = ref.read(authStateProvider).value;
+      if (authUser == null) {
+        throw Exception('No authenticated user');
+      }
+
+      await ref
+          .read(userServiceProvider)
+          .addLearnedOpening(authUser.uid, openingId);
 
       // Invalider le cache pour recharger les données
       ref.invalidate(userDataProvider);

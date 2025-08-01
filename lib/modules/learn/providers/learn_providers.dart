@@ -5,6 +5,7 @@ import 'package:chesstrainer/modules/learn/models/learn_state.dart';
 import 'package:chesstrainer/modules/learn/models/pgn_node_with_parent.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/services/learn_service.dart';
+import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -64,6 +65,10 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       state = result.newState;
       if (!state.isFinished) {
         _playComputerMove();
+      } else if (state.isFinished == true) {
+        ref
+            .read(userNotifierProvider.notifier)
+            .markOpeningAsLearned(state.lineId);
       }
     } else {
       _annotationNotifier.setAnnotation(move.to, correct: false);
@@ -85,7 +90,7 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
 
       _chessNotifier.playMove(nextMove as NormalMove);
 
-      // Tronquer l'historique si on n'est pas au bout, puis ajouter le coup de l'ordinateur
+      // Truncate history if not at the end, then add the computer move
       List<PgnNodeWithParent<PgnNodeData>> newHistory = List.from(
         state.navigationHistory,
       );

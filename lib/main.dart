@@ -53,7 +53,8 @@ class AppWrapper extends ConsumerWidget {
       loading: () => DefaultLayout(
         child: const Center(child: CircularProgressIndicator()),
       ),
-      error: (error, stack) => const LoginPage(),
+      error: (error, stack) =>
+          Scaffold(body: Center(child: Text('Error: $error'))),
     );
   }
 }

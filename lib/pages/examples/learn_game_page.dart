@@ -3,8 +3,8 @@ import 'package:chesstrainer/constants/openings.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
-import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
+import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/learn/ui/coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
@@ -12,17 +12,6 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
-final viennaGambit = OpeningModel(
-  id: 'vienna-gambit',
-  name: 'Vienna Gambit',
-  description: 'A classic opening that leads to rich tactical battles.',
-  tags: ['White', 'Gambit', 'Aggressive'],
-  linePaths: viennaGambitPaths.values.toList(),
-  side: Side.white,
-  ecoCode: 'C29',
-  fen: 'rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3',
-);
 
 class LearnGamePage extends ConsumerStatefulWidget {
   const LearnGamePage({super.key});
@@ -32,7 +21,7 @@ class LearnGamePage extends ConsumerStatefulWidget {
 }
 
 class _LearnGamePageState extends ConsumerState<LearnGamePage> {
-  int selectedLine = 1;
+  int? selectedLine; // Nullable au début
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +29,15 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
     final theme = Theme.of(context);
 
     final linesNumber = viennaGambit.linePaths.length;
+
+    // Initialiser selectedLine avec la première ligne non apprise
+    if (selectedLine == null) {
+      final currentUser = ref.watch(currentUserProvider);
+      final userLearnedOpenings = currentUser?.learnedOpenings ?? [];
+      selectedLine = viennaGambit.getFirstUnlearnedLineIndex(
+        userLearnedOpenings,
+      );
+    }
 
     final pgnGameProvider = ref.watch(
       pgnGameNotifierProvider(
@@ -49,10 +47,13 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
 
     void dropdownCallback(int? value) {
       if (value is int) {
-        setState(() {
-          selectedLine = value;
-        });
+        setState(() => selectedLine = value);
       }
+    }
+
+    // Return loading si selectedLine n'est pas encore initialisé
+    if (selectedLine == null) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     return pgnGameProvider.when(
@@ -178,8 +179,7 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
                     text: 'Next Line',
                     onPressed: () {
                       setState(() {
-                        selectedLine =
-                            (selectedLine % 2) + 1; // Toggle between 1 and 2
+                        selectedLine = ((selectedLine ?? 1) % linesNumber) + 1;
                       });
                     },
                   ),
@@ -191,184 +191,3 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
     );
   }
 }
-
-// import 'package:chessground/chessground.dart';
-// import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
-// import 'package:chesstrainer/modules/learn/models/line.dart';
-// import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
-// import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
-// import 'package:chesstrainer/pages/learn/ui/coach.dart';
-// import 'package:chesstrainer/ui/layouts/default_layout.dart';
-// import 'package:dartchess/dartchess.dart';
-// import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-// import 'package:flutter/material.dart';
-// import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-// class LearnGamePage extends ConsumerStatefulWidget {
-//   const LearnGamePage({super.key});
-
-//   @override
-//   ConsumerState<LearnGamePage> createState() => _LearnGamePageState();
-// }
-
-// class _LearnGamePageState extends ConsumerState<LearnGamePage> {
-//   final IMap<Square, Annotation> _annotations = IMap();
-//   int currentMoveIndex = 0; // Move this to class level
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final pgnGameAsync = ref.watch(
-//       pgnGameProvider('assets/openings/vienna_gambit/vienna_gambit_1.pgn'),
-//     );
-
-//     final double screenWidth = MediaQuery.sizeOf(context).width;
-
-//     return pgnGameAsync.when(
-//       data: (pgnGame) {
-//         // Debug: print les commentaires du jeu
-//         print('Game comments: ${pgnGame.comments}');
-
-//         final mainLine = pgnGame.moves.mainline();
-
-//         // Helper to get the current move and navigation capability
-//         final moves = mainLine.toList();
-//         bool canGoPrevious = currentMoveIndex > 0;
-//         bool canGoNext = currentMoveIndex < moves.length - 1;
-//         PgnNodeData? currentMove = moves.isNotEmpty
-//             ? moves[currentMoveIndex]
-//             : null;
-
-//         // final learnNotifier = ref.read(learnNotifierProvider(line).notifier);
-//         // final chessState = ref.watch(chessNotifierProvider(line.playerSide));
-//         // final learnState = ref.watch(learnNotifierProvider(line));
-
-//         return DefaultLayout(
-//           useSafeArea: false,
-//           appBar: AppBar(
-//             title: const Text(
-//               'Vienna Gambit - Line 3 / 12',
-//               style: TextStyle(fontWeight: FontWeight.w500),
-//             ),
-//             leading: IconButton(
-//               onPressed: () {
-//                 Navigator.pop(context);
-//               },
-//               icon: const Icon(Icons.arrow_back_ios_new_rounded),
-//             ),
-//           ),
-//           child: PopScope(
-//             canPop: false,
-//             child: Column(
-//               spacing: 12,
-//               children: [
-//                 Text(currentMove?.san ?? 'No move selected'),
-//                 Text(
-//                   mainLine.first.startingComments?.first ?? 'No main comment',
-//                 ),
-//                 Text(currentMove?.comments?.first ?? 'No comment'),
-
-//                 Row(
-//                   children: [
-//                     IconButton(
-//                       onPressed: () {
-//                         setState(() {
-//                           if (canGoPrevious) {
-//                             currentMoveIndex--;
-//                             currentMove = moves[currentMoveIndex];
-//                           }
-//                         });
-//                       },
-//                       icon: const Icon(Icons.arrow_back_ios_new_rounded),
-//                     ),
-//                     Text('${currentMoveIndex + 1} / ${moves.length}'),
-//                     IconButton(
-//                       onPressed: () {
-//                         setState(() {
-//                           if (canGoNext) {
-//                             currentMoveIndex++;
-//                             currentMove = moves[currentMoveIndex];
-//                           }
-//                         });
-//                       },
-//                       icon: const Icon(Icons.arrow_forward_ios_rounded),
-//                     ),
-//                   ],
-//                 ),
-//                 ConstrainedBox(
-//                   constraints: const BoxConstraints(minHeight: 156),
-//                   child: const Coach(text: 'heyy'),
-//                   // child: Coach(text: learnState.currentNode?.comment ?? ''),
-//                 ),
-//                 // Chessboard(
-//                 //   settings: const ChessboardSettings(
-//                 //     pieceAssets: PieceSet.meridaAssets,
-//                 //     colorScheme: ChessboardColorScheme.blue,
-//                 //   ),
-//                 //   game: ref
-//                 //       .read(chessNotifierProvider(PlayerSide.white).notifier)
-//                 //       .getGameDataWith(
-//                 //         onMove: (move, {isDrop}) {
-//                 //           learnNotifier.playMove(move);
-//                 //         },
-//                 //       ),
-//                 //   size: screenWidth,
-//                 //   orientation: line.playerSide == PlayerSide.white
-//                 //       ? Side.white
-//                 //       : Side.black,
-//                 //   fen: chessState.fen,
-//                 //   annotations: _annotations.isNotEmpty ? _annotations : null,
-//                 // ),
-//                 // Padding(
-//                 //   padding: const EdgeInsets.symmetric(horizontal: 16),
-//                 //   child: Row(
-//                 //     children: [
-//                 //       Expanded(
-//                 //         child: FilledButton(
-//                 //           onPressed: chessState.canGoToPrevious
-//                 //               ? () => learnNotifier.goToPrevious()
-//                 //               : null,
-//                 //           child: const Text('Previous'),
-//                 //         ),
-//                 //       ),
-//                 //       const SizedBox(width: 16),
-//                 //       Expanded(
-//                 //         child: FilledButton(
-//                 //           onPressed: chessState.canGoToNext
-//                 //               ? () => learnNotifier.goToNext()
-//                 //               : null,
-//                 //           child: const Text('Next'),
-//                 //         ),
-//                 //       ),
-//                 //     ],
-//                 //   ),
-//                 // ),
-//                 // Padding(
-//                 //   padding: const EdgeInsets.symmetric(horizontal: 16),
-//                 //   child: Row(
-//                 //     spacing: 16,
-//                 //     children: [
-//                 //       Expanded(
-//                 //         child: FilledButton(
-//                 //           onPressed: () => learnNotifier.reset(),
-//                 //           child: const Text('Reset'),
-//                 //         ),
-//                 //       ),
-//                 //       Expanded(
-//                 //         child: FilledButton(
-//                 //           onPressed: () => print(line.toString()),
-//                 //           child: const Text('Print Line'),
-//                 //         ),
-//                 //       ),
-//                 //     ],
-//                 //   ),
-//                 // ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//       loading: () => const Center(child: CircularProgressIndicator()),
-//       error: (error, stack) => Center(child: Text('Error: $error')),
-//     );
-//   }
-// }
