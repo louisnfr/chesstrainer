@@ -1,10 +1,11 @@
 import 'package:chesstrainer/constants/openings.dart';
 import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
-import 'package:chesstrainer/pages/examples/learn_game_page.dart';
 import 'package:chesstrainer/pages/home/ui/navigation_bar.dart';
 import 'package:chesstrainer/pages/home/ui/opening_card.dart';
-import 'package:chesstrainer/pages/home/ui/opening_card_2.dart';
+import 'package:chesstrainer/pages/home/ui/recent_opening_card.dart';
+import 'package:chesstrainer/pages/learn/learn_page.dart';
+import 'package:chesstrainer/pages/opening/opening_page.dart';
 import 'package:chesstrainer/ui/buttons/action_button.dart';
 import 'package:chesstrainer/ui/buttons/outline_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
@@ -20,6 +21,8 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final user = ref.watch(currentUserProvider);
+
+    final allOpenings = openings;
 
     return DefaultLayout(
       useSafeAreaBottom: false,
@@ -45,13 +48,14 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            OpeningCard(
+            RecentOpeningCard(
               opening: viennaGambit,
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LearnGamePage(),
+                    builder: (context) =>
+                        const LearnPage(opening: viennaGambit),
                   ),
                 );
               },
@@ -69,8 +73,19 @@ class HomePage extends ConsumerWidget {
               child: Wrap(
                 spacing: 16,
                 runSpacing: 16,
-                children: List.generate(6, (index) {
-                  return OpeningCard2(opening: viennaGambit, onPressed: () {});
+                children: List.generate(allOpenings.length, (index) {
+                  return OpeningCard(
+                    opening: allOpenings[index],
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              OpeningPage(opening: allOpenings[index]),
+                        ),
+                      );
+                    },
+                  );
                 }),
               ),
             ),
@@ -89,12 +104,12 @@ class HomePage extends ConsumerWidget {
               children: [
                 PrimaryButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LearnGamePage(),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const LearnGamePage(),
+                    //   ),
+                    // );
                   },
                   text: 'Learn game example',
                 ),

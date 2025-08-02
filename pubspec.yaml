@@ -69,15 +69,8 @@ flutter:
   assets:
     - assets/openings/
     - assets/openings/vienna_gambit/
-    - assets/openings/vienna_gambit/vienna_gambit_1.pgn
-    - assets/openings/vienna_gambit/vienna_gambit_2.pgn
-    - assets/openings/vienna_gambit/vienna_gambit_3.pgn
 
     - assets/images/
-    - assets/images/coach.png
-    - assets/images/coach2.png
-    - assets/images/correct.png
-    - assets/images/incorrect.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
   # For details regarding adding assets from package dependencies, see

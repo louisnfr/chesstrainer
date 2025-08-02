@@ -8,14 +8,7 @@
 
 [PlayerSide "white"]
 [LineId "vienna_gambit_1"]
-
-[Opening "Vienna Gambit"]
-[ID "vienna-gambit"]
-[ECO "C29"]
-[FEN "rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3"]
-[Description "A classic opening that leads to rich tactical battles."]
-[Tags "White,Gambit,Aggressive"]
-[Difficulty "beginner"]
+[Category "Discover"]
 
 1. e4 {Welcome to the Vienna Gambit! We kick things off with e4 — classic move. Grabs space in the center and opens up lines for the queen and bishop.}
 1... e5
