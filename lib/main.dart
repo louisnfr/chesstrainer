@@ -6,6 +6,7 @@ import 'package:chesstrainer/pages/auth/register_page.dart';
 import 'package:chesstrainer/pages/home/home_page.dart';
 import 'package:chesstrainer/pages/onboarding/onboarding_page.dart';
 import 'package:chesstrainer/pages/onboarding/welcome_page.dart';
+import 'package:chesstrainer/pages/root/root_page.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,7 +50,7 @@ class AppWrapper extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
 
     return authState.when(
-      data: (user) => user == null ? const LoginPage() : const HomePage(),
+      data: (user) => user == null ? const LoginPage() : const RootPage(),
       loading: () => DefaultLayout(
         child: const Center(child: CircularProgressIndicator()),
       ),

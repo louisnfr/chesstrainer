@@ -1,7 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
-import 'package:chesstrainer/ui/theme/light_theme.dart';
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +14,7 @@ class Coach extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final playerSide = pgnGame.headers['PLayerSide'] == 'white'
+    final playerSide = pgnGame.headers['PlayerSide'] == 'white'
         ? PlayerSide.white
         : PlayerSide.black;
 

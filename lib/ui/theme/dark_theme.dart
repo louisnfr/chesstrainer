@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
 @immutable
+class AppTextStyles {
+  const AppTextStyles._();
+
+  static const TextStyle headlineLarge = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.onSurface,
+    fontFamily: 'Nunito',
+  );
+}
+
+@immutable
 class AppColors {
   const AppColors._();
 
@@ -36,6 +48,7 @@ class AppColors {
 
 ThemeData darkTheme = ThemeData(
   useMaterial3: true,
+  splashFactory: NoSplash.splashFactory,
 
   colorScheme: const ColorScheme.dark().copyWith(
     brightness: Brightness.dark,
@@ -55,6 +68,24 @@ ThemeData darkTheme = ThemeData(
     outlineVariant: AppColors.outlineVariant,
   ),
 
+  navigationBarTheme: const NavigationBarThemeData(
+    backgroundColor: AppColors.surface,
+    indicatorColor: Colors.transparent,
+    labelPadding: EdgeInsets.all(0),
+    labelTextStyle: WidgetStateProperty.fromMap({
+      WidgetState.selected: TextStyle(
+        color: AppColors.white,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+      WidgetState.any: TextStyle(
+        color: AppColors.outline,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+    }),
+  ),
+
   // * App Bar Theme
   appBarTheme: const AppBarTheme(
     backgroundColor: AppColors.surface,
@@ -63,6 +94,7 @@ ThemeData darkTheme = ThemeData(
     scrolledUnderElevation: 0,
     surfaceTintColor: Colors.transparent,
     shadowColor: Colors.transparent,
+    titleTextStyle: AppTextStyles.headlineLarge,
   ),
 
   // * Chip Theme
@@ -91,12 +123,7 @@ ThemeData darkTheme = ThemeData(
     ),
 
     // ************ Headline text styles ************
-    headlineLarge: TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: AppColors.onSurface,
-      fontFamily: 'Nunito',
-    ),
+    headlineLarge: AppTextStyles.headlineLarge,
     headlineMedium: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
