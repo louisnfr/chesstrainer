@@ -73,6 +73,7 @@ flutter:
     - assets/fonts/
     - assets/fonts/Nunito/
     - assets/images/
+    - assets/images/icons/
     - assets/openings/
     - assets/openings/french_defense/
     - assets/openings/vienna_gambit/

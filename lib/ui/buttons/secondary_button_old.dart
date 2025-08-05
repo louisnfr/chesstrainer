@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:gaimon/gaimon.dart';
+
+class SecondaryButton extends StatefulWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final Color? backgroundColor;
+  final Color? shadowColor;
+  final Color? textColor;
+  final double shadowHeight;
+  final EdgeInsetsGeometry padding;
+  final double borderRadius;
+
+  const SecondaryButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.backgroundColor,
+    this.shadowColor,
+    this.textColor,
+    this.shadowHeight = 4,
+    this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
+    this.borderRadius = 16,
+  });
+
+  @override
+  State<SecondaryButton> createState() => _SecondaryButtonState();
+}
+
+class _SecondaryButtonState extends State<SecondaryButton> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final backgroundColor =
+        widget.backgroundColor ?? theme.colorScheme.secondary;
+    final shadowColor =
+        widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
+    final textColor = widget.textColor ?? theme.colorScheme.onSecondary;
+
+    return GestureDetector(
+      onPanDown: (_) {
+        Gaimon.selection();
+      },
+      onTapUp: (_) {
+        widget.onPressed.call();
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: widget.shadowHeight),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+        ),
+        child: Container(
+          padding: widget.padding,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            border: Border(
+              top: BorderSide(color: shadowColor, width: 2),
+              left: BorderSide(color: shadowColor, width: 2),
+              right: BorderSide(color: shadowColor, width: 2),
+              bottom: BorderSide(color: shadowColor, width: 2),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                color: textColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

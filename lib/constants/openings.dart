@@ -41,7 +41,11 @@ const viennaGambitLines = <Line>[
 const viennaGambit = OpeningModel(
   id: 'vienna_gambit',
   name: 'Vienna Gambit',
-  description: 'A classic opening that leads to rich tactical battles.',
+  description:
+      'Sacrifice your f-pawn for explosive attacking chances! '
+      'White gets rapid piece development and dangerous threats against '
+      'the enemy king. Perfect for players who love tactical fireworks '
+      'over quiet positional play.',
   tags: ['e4', 'Aggressive', 'Intermediate'],
   linePaths: viennaGambitLines,
   side: Side.white,
@@ -69,7 +73,11 @@ const frenchDefenseLines = <Line>[
 const frenchDefense = OpeningModel(
   id: 'french_defense',
   name: 'French Defense',
-  description: 'A solid and strategic opening that allows for counterplay.',
+  description:
+      'Build a rock-solid pawn chain and launch devastating counterattacks '
+      'from a secure position. The French gives you excellent piece '
+      'coordination and long-term winning chances, even when facing '
+      "early pressure from White's space advantage.",
   tags: ['e4', 'Solid', 'Beginner'],
   linePaths: frenchDefenseLines,
   side: Side.black,

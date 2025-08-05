@@ -1,3 +1,4 @@
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 
@@ -28,47 +29,66 @@ class SecondaryButton extends StatefulWidget {
 }
 
 class _SecondaryButtonState extends State<SecondaryButton> {
+  bool _isPressed = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final backgroundColor =
-        widget.backgroundColor ?? theme.colorScheme.secondary;
+        widget.backgroundColor ?? theme.colorScheme.surfaceDim;
     final shadowColor =
         widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
-    final textColor = widget.textColor ?? theme.colorScheme.onSecondary;
+    final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
 
     return GestureDetector(
       onPanDown: (_) {
+        setState(() => _isPressed = true);
         Gaimon.selection();
       },
       onTapUp: (_) {
-        widget.onPressed.call();
+        setState(() => _isPressed = false);
+        widget.onPressed();
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: widget.shadowHeight),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-        ),
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: Transform.translate(
+        offset: Offset(0, _isPressed ? widget.shadowHeight : 0),
         child: Container(
-          padding: widget.padding,
+          margin: EdgeInsets.only(bottom: widget.shadowHeight),
           decoration: BoxDecoration(
-            color: backgroundColor,
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            border: Border(
-              top: BorderSide(color: shadowColor, width: 2),
-              left: BorderSide(color: shadowColor, width: 2),
-              right: BorderSide(color: shadowColor, width: 2),
-              bottom: BorderSide(color: shadowColor, width: 2),
-            ),
+            boxShadow: _isPressed
+                ? null
+                : [
+                    BoxShadow(
+                      color: shadowColor,
+                      offset: Offset(0, widget.shadowHeight),
+                      blurRadius: 0,
+                      spreadRadius: 0,
+                    ),
+                  ],
           ),
-          child: Center(
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Nunito',
+          child: Container(
+            padding: widget.padding,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              border: Border.all(color: shadowColor, width: 2),
+            ),
+            child: Center(
+              child: Text(
+                widget.text,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Nunito',
+                  shadows: [
+                    const Shadow(
+                      color: AppColors.surfaceBright,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
