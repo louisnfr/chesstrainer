@@ -118,7 +118,6 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       // If finished, mark the opening as learned and update last opening
       if (isFinished) {
         final userNotifier = ref.read(userNotifierProvider.notifier);
-        print('Marking opening as learned: ${state.lineId}');
         userNotifier.markOpeningAsLearned(state.lineId);
         userNotifier.setLastOpening(state.openingId);
       }

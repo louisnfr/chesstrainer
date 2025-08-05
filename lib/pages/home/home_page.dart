@@ -14,6 +14,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     final allOpenings = openings;
 
@@ -31,7 +32,7 @@ class HomePage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 'Continue Learning',
                 style: theme.textTheme.headlineMedium?.copyWith(
@@ -52,7 +53,7 @@ class HomePage extends ConsumerWidget {
                 },
               ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 'All Openings',
                 style: theme.textTheme.headlineMedium?.copyWith(
@@ -60,30 +61,33 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            Center(
-              child: Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: List.generate(allOpenings.length, (index) {
-                  return Column(
-                    children: [
-                      OpeningCard(
-                        opening: allOpenings[index],
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  OpeningPage(opening: allOpenings[index]),
-                            ),
-                          );
-                        },
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: List.generate(allOpenings.length, (index) {
+                return Column(
+                  children: [
+                    OpeningCard(
+                      opening: allOpenings[index],
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                OpeningPage(opening: allOpenings[index]),
+                          ),
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth / 8,
                       ),
-                      const Divider(),
-                    ],
-                  );
-                }),
-              ),
+                      child: const Divider(),
+                    ),
+                  ],
+                );
+              }),
             ),
           ],
         ),
