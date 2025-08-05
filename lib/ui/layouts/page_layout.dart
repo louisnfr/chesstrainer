@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 
 class PageLayout extends StatelessWidget {
-  final Widget child;
+  const PageLayout({
+    super.key,
+    required this.child,
+    this.horizontalPadding = 16,
+    this.verticalPadding = 16,
+  });
 
-  const PageLayout({super.key, required this.child});
+  final double horizontalPadding;
+  final double verticalPadding;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding,
+          vertical: verticalPadding,
+        ),
         child: child,
       ),
     );

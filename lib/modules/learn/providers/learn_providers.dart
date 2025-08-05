@@ -10,15 +10,18 @@ import 'package:dartchess/dartchess.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-const Duration _computerMoveDelay = Duration(milliseconds: 500);
+const Duration _kComputerMoveDelay = Duration(milliseconds: 500);
 
 class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
   // * Other providers
-  ChessNotifier get _chessNotifier =>
-      ref.read(chessNotifierProvider(PlayerSide.white).notifier);
+  PlayerSide get _playerSide => arg.headers['PlayerSide'] == 'white'
+      ? PlayerSide.white
+      : PlayerSide.black;
 
-  ChessState get _chessProvider =>
-      ref.read(chessNotifierProvider(PlayerSide.white));
+  ChessNotifier get _chessNotifier =>
+      ref.read(chessNotifierProvider(_playerSide).notifier);
+
+  ChessState get _chessProvider => ref.read(chessNotifierProvider(_playerSide));
 
   AnnotationNotifier get _annotationNotifier =>
       ref.read(annotationProvider(arg).notifier);
@@ -28,11 +31,9 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
   @override
   LearnState build(PgnGame pgnGame) {
     final learnState = LearnService.initialize(pgnGame);
-    // if (line.playerSide == PlayerSide.black) {
-    //   Future.delayed(_computerMoveDelay, () {
-    //     _playOpponentMoveIfNeeded();
-    //   });
-    // }
+    if (pgnGame.headers['PlayerSide'] == 'black') {
+      Future.microtask(() => _playComputerMove());
+    }
     return learnState;
   }
 
@@ -66,9 +67,9 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       if (!state.isFinished) {
         _playComputerMove();
       } else if (state.isFinished == true) {
-        ref
-            .read(userNotifierProvider.notifier)
-            .markOpeningAsLearned(state.lineId);
+        final userNotifier = ref.read(userNotifierProvider.notifier);
+        userNotifier.markOpeningAsLearned(state.lineId);
+        userNotifier.setLastOpening(state.openingId);
       }
     } else {
       _annotationNotifier.setAnnotation(move.to, correct: false);
@@ -78,13 +79,15 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
   }
 
   void _playComputerMove() {
-    if (state.currentNode != null &&
-        state.currentNode?.children.isEmpty == true) {
+    if (state.currentNode == null || state.currentNode!.children.isEmpty) {
       return;
     }
+
     final nextNode = state.currentNode?.children[0];
-    final nextMove = _chessProvider.position.parseSan(nextNode?.data.san ?? '');
-    Future.delayed(_computerMoveDelay, () {
+    if (nextNode == null) return;
+
+    final nextMove = _chessProvider.position.parseSan(nextNode.data.san);
+    Future.delayed(_kComputerMoveDelay, () {
       // Clear annotations before computer move
       _annotationNotifier.clearAnnotations();
 
@@ -97,14 +100,28 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       if (state.currentStep < newHistory.length - 1) {
         newHistory.removeRange(state.currentStep + 1, newHistory.length);
       }
-      newHistory.add(nextNode!);
+      newHistory.add(nextNode);
+
+      // Check if the computer's move finishes the line
+      final isFinished = nextNode.children.isEmpty;
 
       state = state.copyWith(
         currentNode: nextNode,
-        currentNodeData: nextNode.children[0].data,
+        currentNodeData: nextNode.children.isNotEmpty
+            ? nextNode.children[0].data
+            : null,
         currentStep: state.currentStep + 1,
         navigationHistory: newHistory,
+        isFinished: isFinished,
       );
+
+      // If finished, mark the opening as learned and update last opening
+      if (isFinished) {
+        final userNotifier = ref.read(userNotifierProvider.notifier);
+        print('Marking opening as learned: ${state.lineId}');
+        userNotifier.markOpeningAsLearned(state.lineId);
+        userNotifier.setLastOpening(state.openingId);
+      }
     });
   }
 

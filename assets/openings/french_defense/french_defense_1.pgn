@@ -1,0 +1,27 @@
+[Event "French Defense"]
+[Site "?"]
+[Date "?"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+[PlayerSide "black"]
+[OpeningId "french_defense"]
+[LineId "french_defense_1"]
+
+1. e4 e6 {Welcome to the French Defense! We start with e6, preparing to challenge White's center with d5 next move.}
+
+2. d4 d5 {Time for d5! We strike right at the heart of White's position and establish our central pawn.}
+
+3. e5 c5 {White pushes e5 to cramp us. We hit back with c5, attacking their d4 pawn and fighting for queenside space.}
+
+4. c3 Nc6 {They support d4 with c3. We develop Nc6, keeping the pressure on their center and getting our pieces into the game.}
+
+5. Nf3 Qb6 {White brings out the knight. We play Qb6, eyeing the b2 pawn and putting our queen on an active square.}
+
+6. Be3 Qxb2 {White blunders with Be3! It looks natural, but they overlook that our queen can capture on b2. We immediately punish it with Qxb2, grabbing the pawn and wrecking White's pawn structure.}
+
+7. Nbd2 Qxc3 {They try to defend with Nbd2, but it's too late. We take Qxc3, snatching another pawn and keeping their king trapped in the center.}
+
+* {Fantastic! You've exploited White's slow Be3 perfectly. Two pawns up and their king can't castle safely. This is what happens when White gets too casual in the opening!}

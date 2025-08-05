@@ -1,5 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
+import 'package:chesstrainer/pages/learn/learn_page.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
@@ -34,7 +35,17 @@ class OpeningPage extends ConsumerWidget {
             fen: opening.fen,
           ),
           Text(opening.description),
-          PrimaryButton(text: 'Learn', onPressed: () {}),
+          PrimaryButton(
+            text: 'Learn',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LearnPage(opening: opening),
+                ),
+              );
+            },
+          ),
           const Text('discover improve master'),
           SecondaryButton(text: 'Practice', onPressed: () {}),
         ],

@@ -33,7 +33,6 @@ class _LearnGamePageState extends ConsumerState<LearnPage> {
     final opening = widget.opening;
     final linesNumber = opening.linePaths.length;
 
-    // Initialiser selectedLine avec la première ligne non apprise
     if (selectedLine == null) {
       final currentUser = ref.watch(currentUserProvider);
       final userLearnedOpenings = currentUser?.learnedOpenings ?? [];
@@ -52,7 +51,6 @@ class _LearnGamePageState extends ConsumerState<LearnPage> {
       }
     }
 
-    // Return loading si selectedLine n'est pas encore initialisé
     if (selectedLine == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -128,7 +126,6 @@ class _LearnGamePageState extends ConsumerState<LearnPage> {
                 ),
               ),
               SizedBox(height: 128, child: Coach(pgnGame: pgnGame)),
-
               Column(
                 children: [
                   Chessboard(

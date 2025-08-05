@@ -1,29 +1,19 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:dartchess/dartchess.dart';
+import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
-import 'package:material_symbols_icons/symbols.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class OpeningCard extends StatefulWidget {
   final OpeningModel opening;
   final VoidCallback onPressed;
-  final double shadowHeight;
-  final EdgeInsetsGeometry padding;
-  final double borderRadius;
-  final Color? shadowColor;
-  final Color? backgroundColor;
 
   const OpeningCard({
     super.key,
     required this.opening,
     required this.onPressed,
-    this.backgroundColor,
-    this.shadowHeight = 4,
-    this.shadowColor,
-    this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-    this.borderRadius = 16,
   });
 
   @override
@@ -37,123 +27,298 @@ class _OpeningCardState extends State<OpeningCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final cardSize = screenWidth * 0.35;
-
-    final backgroundColor =
-        widget.backgroundColor ?? theme.colorScheme.surfaceContainer;
-    final shadowColor =
-        widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
-    // final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
 
     return GestureDetector(
       onTapDown: (_) {
-        Gaimon.selection();
         setState(() => _isPressed = true);
       },
       onTapUp: (_) {
         setState(() => _isPressed = false);
+        Gaimon.selection();
         widget.onPressed.call();
       },
-      onTapCancel: () => setState(() => _isPressed = false),
-      child: Transform.translate(
-        offset: Offset(0, _isPressed ? widget.shadowHeight : 0),
-        child: Container(
-          margin: EdgeInsets.only(bottom: widget.shadowHeight),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            boxShadow: _isPressed
-                ? null
-                : [
-                    BoxShadow(
-                      color: shadowColor,
-                      offset: Offset(0, widget.shadowHeight),
-                      blurRadius: 0,
-                      spreadRadius: 0,
+      onTapCancel: () {
+        setState(() => _isPressed = false);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: _isPressed ? theme.colorScheme.surfaceDim : Colors.transparent,
+        ),
+        child: SizedBox(
+          height: screenWidth * 0.35,
+          child: Row(
+            spacing: 12,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Chessboard.fixed(
+                  settings: ChessboardSettings(
+                    border: BoardBorder(
+                      color: theme.colorScheme.surfaceBright,
+                      width: 6,
                     ),
-                  ],
-          ),
-          child: Container(
-            height: cardSize + widget.shadowHeight,
-            // width: screenWidth * 0.4 + widget.shadowHeight,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              border: Border.all(color: shadowColor, width: 2),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(widget.borderRadius - 2),
-                topRight: Radius.circular(widget.borderRadius - 2),
-                bottomLeft: Radius.circular(widget.borderRadius - 2),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Chessboard.fixed(
-                    settings: const ChessboardSettings(
-                      enableCoordinates: false,
-                      pieceAssets: PieceSet.meridaAssets,
-                      colorScheme: ChessboardColorScheme.blue,
-                    ),
-                    fen: widget.opening.fen,
-                    size: cardSize,
-                    orientation: widget.opening.side,
+                    enableCoordinates: false,
+                    pieceAssets: PieceSet.meridaAssets,
+                    colorScheme: ChessboardColorScheme.blue,
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            widget.opening.name,
-                            style: theme.textTheme.headlineLarge?.copyWith(
-                              color: widget.opening.side == Side.black
-                                  ? Colors.black
-                                  : Colors.white,
+                  fen: widget.opening.fen,
+                  size: screenWidth * 0.35,
+                  orientation: widget.opening.side,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.opening.name,
+                          style: theme.textTheme.headlineMedium,
+                        ),
+                        Text(
+                          'Subtitle',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      // spacing: 8,
+                      // runSpacing: 4,
+                      children: widget.opening.tags
+                          .map(
+                            (tag) => Chip(
+                              label: Text(tag),
+                              backgroundColor: theme.colorScheme.outline
+                                  .withValues(alpha: 0.2),
+                              labelStyle: theme.textTheme.labelMedium,
                             ),
-                          ),
-                          Wrap(
-                            // spacing: 8,
-                            // runSpacing: 4,
-                            children: widget.opening.tags
-                                .map(
-                                  (tag) => Chip(
-                                    label: Text(tag),
-                                    backgroundColor: theme.colorScheme.outline
-                                        .withValues(alpha: 0.2),
-                                    labelStyle: theme.textTheme.labelMedium,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: LinearPercentIndicator(
-                                  // backgroundColor: Colors.grey.shade300,
-                                  barRadius: const Radius.circular(8),
-                                  lineHeight: 8,
-                                  animation: true,
-                                  animationDuration: 250,
-                                  animateFromLastPercent: true,
-                                  progressColor: theme.colorScheme.primary,
-                                  percent: 25 / 100,
-                                ),
-                              ),
-                              const Icon(Symbols.line_end_arrow_notch_rounded),
-                            ],
-                          ),
-                        ],
-                      ),
+                          )
+                          .toList(),
                     ),
-                  ),
-                ],
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final currentUser = ref.watch(currentUserProvider);
+                        final userLearnedOpenings =
+                            currentUser?.learnedOpenings ?? [];
+
+                        final progress = widget.opening.progressFor(
+                          userLearnedOpenings,
+                        );
+
+                        return Row(
+                          spacing: 12,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${progress.total} Lines',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            Expanded(
+                              child: LinearPercentIndicator(
+                                padding: const EdgeInsets.all(0),
+                                barRadius: const Radius.circular(32),
+                                lineHeight: 16,
+                                animation: true,
+                                animationDuration: 250,
+                                animateFromLastPercent: true,
+                                progressColor: theme.colorScheme.primary,
+                                percent: progress.percentage,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: LinearPercentIndicator(
+                    //         // backgroundColor: Colors.grey.shade300,
+                    //         barRadius: const Radius.circular(8),
+                    //         lineHeight: 8,
+                    //         animation: true,
+                    //         animationDuration: 250,
+                    //         animateFromLastPercent: true,
+                    //         progressColor: theme.colorScheme.primary,
+                    //         percent: 25 / 100,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
     );
   }
 }
+
+// import 'package:chessground/chessground.dart';
+// import 'package:chesstrainer/modules/opening/models/opening.dart';
+// import 'package:flutter/material.dart';
+// import 'package:gaimon/gaimon.dart';
+// import 'package:material_symbols_icons/symbols.dart';
+// import 'package:percent_indicator/percent_indicator.dart';
+
+// class OpeningCard extends StatefulWidget {
+//   final OpeningModel opening;
+//   final VoidCallback onPressed;
+//   final double shadowHeight;
+//   final EdgeInsetsGeometry padding;
+//   final double borderRadius;
+//   final Color? shadowColor;
+//   final Color? backgroundColor;
+
+//   const OpeningCard({
+//     super.key,
+//     required this.opening,
+//     required this.onPressed,
+//     this.backgroundColor,
+//     this.shadowHeight = 4,
+//     this.shadowColor,
+//     this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+//     this.borderRadius = 16,
+//   });
+
+//   @override
+//   State<OpeningCard> createState() => _OpeningCardState();
+// }
+
+// class _OpeningCardState extends State<OpeningCard> {
+//   bool _isPressed = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final screenWidth = MediaQuery.sizeOf(context).width;
+//     final cardSize = screenWidth * 0.35;
+
+//     final backgroundColor =
+//         widget.backgroundColor ?? theme.colorScheme.surfaceContainer;
+//     final shadowColor =
+//         widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
+//     // final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
+
+//     return GestureDetector(
+//       onTapDown: (_) {
+//         Gaimon.selection();
+//         setState(() => _isPressed = true);
+//       },
+//       onTapUp: (_) {
+//         setState(() => _isPressed = false);
+//         widget.onPressed.call();
+//       },
+//       onTapCancel: () => setState(() => _isPressed = false),
+//       child: Transform.translate(
+//         offset: Offset(0, _isPressed ? widget.shadowHeight : 0),
+//         child: Container(
+//           margin: EdgeInsets.only(bottom: widget.shadowHeight),
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(widget.borderRadius),
+//             boxShadow: _isPressed
+//                 ? null
+//                 : [
+//                     BoxShadow(
+//                       color: shadowColor,
+//                       offset: Offset(0, widget.shadowHeight),
+//                       blurRadius: 0,
+//                       spreadRadius: 0,
+//                     ),
+//                   ],
+//           ),
+//           child: Container(
+//             height: cardSize + widget.shadowHeight,
+//             // width: screenWidth * 0.4 + widget.shadowHeight,
+//             decoration: BoxDecoration(
+//               color: backgroundColor,
+//               borderRadius: BorderRadius.circular(widget.borderRadius),
+//               border: Border.all(color: shadowColor, width: 2),
+//             ),
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.only(
+//                 topLeft: Radius.circular(widget.borderRadius - 2),
+//                 topRight: Radius.circular(widget.borderRadius - 2),
+//                 bottomLeft: Radius.circular(widget.borderRadius - 2),
+//               ),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   Chessboard.fixed(
+//                     settings: const ChessboardSettings(
+//                       enableCoordinates: false,
+//                       pieceAssets: PieceSet.meridaAssets,
+//                       colorScheme: ChessboardColorScheme.blue,
+//                     ),
+//                     fen: widget.opening.fen,
+//                     size: cardSize,
+//                     orientation: widget.opening.side,
+//                   ),
+//                   Expanded(
+//                     child: Padding(
+//                       padding: const EdgeInsets.all(8.0),
+//                       child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           Text(
+//                             widget.opening.name,
+//                             style: theme.textTheme.headlineLarge?.copyWith(
+//                               // color: widget.opening.side == Side.black
+//                               //     ? Colors.black
+//                               //     : Colors.white,
+//                             ),
+//                           ),
+//                           Wrap(
+//                             // spacing: 8,
+//                             // runSpacing: 4,
+//                             children: widget.opening.tags
+//                                 .map(
+//                                   (tag) => Chip(
+//                                     label: Text(tag),
+//                                     backgroundColor: theme.colorScheme.outline
+//                                         .withValues(alpha: 0.2),
+//                                     labelStyle: theme.textTheme.labelMedium,
+//                                   ),
+//                                 )
+//                                 .toList(),
+//                           ),
+//                           Row(
+//                             children: [
+//                               Expanded(
+//                                 child: LinearPercentIndicator(
+//                                   // backgroundColor: Colors.grey.shade300,
+//                                   barRadius: const Radius.circular(8),
+//                                   lineHeight: 8,
+//                                   animation: true,
+//                                   animationDuration: 250,
+//                                   animateFromLastPercent: true,
+//                                   progressColor: theme.colorScheme.primary,
+//                                   percent: 25 / 100,
+//                                 ),
+//                               ),
+//                               const Icon(Symbols.line_end_arrow_notch_rounded),
+//                             ],
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

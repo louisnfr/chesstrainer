@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show immutable;
 @immutable
 class LearnState {
   final PgnGame pgnGame;
+  final String openingId;
   final String lineId;
   final PgnNodeWithParent<PgnNodeData>? currentNode;
   final PgnNodeData? currentNodeData;
@@ -16,6 +17,7 @@ class LearnState {
   const LearnState({
     required this.pgnGame,
     required this.lineLength,
+    required this.openingId,
     required this.lineId,
     this.currentNodeData,
     this.currentNode,
@@ -26,6 +28,7 @@ class LearnState {
 
   LearnState copyWith({
     PgnGame? pgnGame,
+    String? openingId,
     String? lineId,
     int? currentStep,
     PgnNodeWithParent<PgnNodeData>? currentNode,
@@ -36,6 +39,7 @@ class LearnState {
   }) {
     return LearnState(
       pgnGame: pgnGame ?? this.pgnGame,
+      openingId: openingId ?? this.openingId,
       lineId: lineId ?? this.lineId,
       currentNodeData: currentNodeData ?? this.currentNodeData,
       currentNode: currentNode ?? this.currentNode,

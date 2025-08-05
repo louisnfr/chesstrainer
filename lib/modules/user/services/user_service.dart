@@ -32,4 +32,10 @@ class UserService {
       'learnedOpenings': FieldValue.arrayUnion([openingId]),
     });
   }
+
+  Future<void> setLastOpening(String uid, String openingId) async {
+    await _firestore.collection('users').doc(uid).update({
+      'lastOpeningId': openingId,
+    });
+  }
 }

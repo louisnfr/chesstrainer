@@ -7,6 +7,7 @@
 [Result "*"]
 
 [PlayerSide "white"]
+[OpeningId "vienna_gambit"]
 [LineId "vienna_gambit_5"]
 
 1. e4 {Welcome to the Vienna Gambit! We open with e4, claiming our share of the center and getting ready for action.}

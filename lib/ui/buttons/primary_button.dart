@@ -1,3 +1,4 @@
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 
@@ -78,8 +79,14 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                 style: TextStyle(
                   color: textColor,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                   fontFamily: 'Nunito',
+                  shadows: [
+                    const Shadow(
+                      color: AppColors.surfaceBright,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
                 ),
               ),
             ),

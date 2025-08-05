@@ -1,6 +1,6 @@
 import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
-import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -24,9 +24,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultLayout(
+    return Scaffold(
       appBar: AppBar(title: const Text('Register'), centerTitle: true),
-      child: Center(
+      body: PageLayout(
         child: Column(
           children: [
             Column(

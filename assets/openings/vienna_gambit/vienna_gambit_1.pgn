@@ -7,6 +7,7 @@
 [Result "*"]
 
 [PlayerSide "white"]
+[OpeningId "vienna_gambit"]
 [LineId "vienna_gambit_1"]
 [Category "Discover"]
 

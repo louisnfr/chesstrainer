@@ -19,6 +19,7 @@ class LearnService {
 
     return LearnState(
       pgnGame: pgnGame,
+      openingId: pgnGame.headers['OpeningId'] ?? 'unknown',
       lineId: pgnGame.headers['LineId'] ?? 'unknown',
       currentNode: rootNodeWithParent,
       currentNodeData: currentNodeData,

@@ -1,0 +1,35 @@
+[Event "French Defense"]
+[Site "?"]
+[Date "?"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+[PlayerSide "black"]
+[OpeningId "french_defense"]
+[LineId "french_defense_2"]
+
+1. e4 e6 {Welcome to the French Defense! It is played after White plays e4 and starts with e6, a solid but flexible move that prepares d5 while keeping our options open.}
+
+2. d4 d5 {Perfect timing for d5! We strike at White's center immediately and establish our own pawn in the heart of the board.}
+
+3. e5 c5 {White advances to e5, cramping our position. We counter with c5, attacking their d4 pawn and fighting for space on the queenside.}
+
+4. c3 Nc6 {They support the d4 pawn with c3. We develop with Nc6, putting pressure on their center and preparing further piece play.}
+
+5. Nf3 Qb6 {White develops the knight. Time for Qb6! More pressure on d4, and we also eye the b2 pawn, which could become a target.}
+
+6. Bd3 cxd4 {White plays Bd3, and this looks like a mistake! The bishop blocked the queen defending the pawn, so we can grab the d4 pawn with cxd4 and win material, right?}
+
+7. cxd4 Nxd4 {They recapture with the pawn. Perfect! Now we take Nxd4, and it looks like we're just a pawn up after the trades.}
+
+8. Nxd4 Qxd4 {White takes back with the knight. We recapture with Qxd4. Yay, we're a pawn up! But wait, something feels off...}
+
+9. Bb5+ Bd7 {Ouch! White checks us with Bb5+ and we are about to lose our queen! We block with Bd7, but the worst is yet to come.}
+
+10. Bxd7+ Kxd7 {They trade bishops with Bxd7+. Again we can't move our queen because of the check, we take back with Kxd7, but the damage is done.}
+
+11. Qxd4
+
+* {Well, we fell right into their trap. What looked like winning a pawn turned into a disaster. The Bd3 "mistake" was actually brilliant bait from White! Lesson learned. We won't fall for that again.}

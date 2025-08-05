@@ -16,34 +16,44 @@ class AppTextStyles {
 class AppColors {
   const AppColors._();
 
-  // static const Color surface = Color.fromRGBO(41, 41, 41, 1);
-  static const Color surface = Color.fromRGBO(37, 37, 37, 1);
-  static const Color onSurface = AppColors.white;
+  // 🌑 Backgrounds
+  static const Color surface = Color.fromRGBO(49, 46, 43, 1);
+  static const Color surfaceContainer = Color.fromRGBO(39, 37, 34, 1);
+  static const Color surfaceDim = Color.fromRGBO(34, 33, 31, 1);
+  static const Color surfaceBright = Color.fromRGBO(79, 76, 73, 1);
 
-  // static const Color surfaceContainer = Color.fromRGBO(108, 196, 217, 1);
-  static const Color surfaceContainer = Color.fromRGBO(67, 67, 67, 1);
+  static const Color onSurface = white;
+  static const Color onSurfaceVariant = Color.fromRGBO(180, 180, 180, 1);
 
-  static Color surfaceDim = surface.withValues(alpha: 0.8);
+  // 🎯 Accent principale (progression / coups)
+  static const Color primary = Color.fromRGBO(112, 172, 53, 1);
+  static const Color onPrimary = white;
 
-  static const Color primary = Color.fromRGBO(33, 158, 188, 1);
-  static const Color onPrimary = AppColors.black;
+  static const Color primaryContainer = Color(0xFF81C784);
+  static const Color onPrimaryContainer = black;
 
-  static const Color primaryContainer = Color.fromRGBO(142, 202, 230, 1);
-  static const Color onPrimaryContainer = AppColors.black;
+  // 🏆 Secondaire (gamification / trophées)
+  static const Color secondary = Color(0xFFFFC107);
+  static const Color onSecondary = black;
 
-  static const Color secondary = Color.fromRGBO(255, 183, 3, 1);
-  static const Color onSecondary = AppColors.black;
+  // 🔥 Tertiaire (actions / mise en avant)
+  static const Color tertiary = Color(0xFFFB8500);
+  static const Color onTertiary = black;
 
-  static const Color tertiary = Color.fromRGBO(251, 133, 0, 1);
-  static const Color onTertiary = AppColors.black;
+  // 🧱 Borders
+  static const Color outline = Color.fromRGBO(141, 140, 139, 1);
+  static const Color outlineVariant = Color.fromRGBO(100, 100, 100, 0.6);
 
-  static const Color success = Color.fromRGBO(76, 170, 61, 1);
+  // ✅ Succès
+  static const Color success = Color(0xFF00E676);
 
-  static const Color outline = Color.fromRGBO(100, 100, 100, 1);
-  static Color outlineVariant = outline.withValues(alpha: 0.6);
+  // ❌ Erreur
+  static const Color error = Color(0xFFF44336);
+  static const Color onError = AppColors.white;
 
-  static const Color black = Color.fromRGBO(0, 0, 0, 1);
-  static const Color white = Color.fromRGBO(255, 255, 255, 1);
+  // 🎨 Basiques
+  static const Color black = Color(0xFF000000);
+  static const Color white = Color(0xFFFFFFFF);
 }
 
 ThemeData darkTheme = ThemeData(
@@ -55,7 +65,9 @@ ThemeData darkTheme = ThemeData(
     surface: AppColors.surface,
     onSurface: AppColors.onSurface,
     surfaceContainer: AppColors.surfaceContainer,
+    onSurfaceVariant: AppColors.onSurfaceVariant,
     surfaceDim: AppColors.surfaceDim,
+    surfaceBright: AppColors.surfaceBright,
     primary: AppColors.primary,
     onPrimary: AppColors.onPrimary,
     primaryContainer: AppColors.primaryContainer,
@@ -66,10 +78,12 @@ ThemeData darkTheme = ThemeData(
     onTertiary: AppColors.onTertiary,
     outline: AppColors.outline,
     outlineVariant: AppColors.outlineVariant,
+    error: AppColors.error,
+    onError: AppColors.onError,
   ),
 
   navigationBarTheme: const NavigationBarThemeData(
-    backgroundColor: AppColors.surface,
+    backgroundColor: AppColors.surfaceDim,
     indicatorColor: Colors.transparent,
     labelPadding: EdgeInsets.all(0),
     labelTextStyle: WidgetStateProperty.fromMap({
@@ -88,13 +102,37 @@ ThemeData darkTheme = ThemeData(
 
   // * App Bar Theme
   appBarTheme: const AppBarTheme(
-    backgroundColor: AppColors.surface,
+    backgroundColor: AppColors.surfaceDim,
     foregroundColor: AppColors.onSurface,
     elevation: 0,
     scrolledUnderElevation: 0,
     surfaceTintColor: Colors.transparent,
     shadowColor: Colors.transparent,
     titleTextStyle: AppTextStyles.headlineLarge,
+  ),
+
+  // * Input
+  inputDecorationTheme: InputDecorationTheme(
+    filled: true,
+    fillColor: AppColors.surfaceContainer,
+    // border: OutlineInputBorder(
+    //   borderRadius: BorderRadius.circular(16),
+    //   borderSide: const BorderSide(color: AppColors.outline, width: 2),
+    // ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(color: AppColors.outline, width: 2),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(color: AppColors.error, width: 2),
+    ),
+    hintStyle: const TextStyle(color: AppColors.outline),
+    labelStyle: const TextStyle(color: AppColors.outline),
   ),
 
   // * Chip Theme

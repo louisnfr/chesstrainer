@@ -13,7 +13,7 @@ class ChessService {
       fen: position.fen,
       playerSide: playerSide,
       position: position,
-      orientation: Side.white,
+      orientation: playerSide == PlayerSide.white ? Side.white : Side.black,
       // moveHistory: const [],
       fenHistory: const [kInitialBoardFEN],
       historyIndex: 0,

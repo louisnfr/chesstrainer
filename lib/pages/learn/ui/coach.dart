@@ -24,8 +24,9 @@ class Coach extends ConsumerWidget {
     final comments = learnProvider.currentNodeData?.comments ?? [];
     final instructionComment = comments.isNotEmpty ? comments.first : null;
     final computerComment = chessProvider.playerSide == PlayerSide.white
-        ? "White's turn..."
-        : "Black's turn...";
+        ? "Black's turn..."
+        : "White's turn...";
+
     final completionComment = comments.length > 1 ? comments.last : null;
 
     final displayMessage =
@@ -59,7 +60,10 @@ class Coach extends ConsumerWidget {
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -68,6 +72,7 @@ class Coach extends ConsumerWidget {
                     displayMessage,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppColors.black,
+                      letterSpacing: 0,
                     ),
                   ),
                 ),

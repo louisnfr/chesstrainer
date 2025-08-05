@@ -7,6 +7,7 @@ class UserModel {
   final String? displayName;
   final bool isAnonymous;
   final List<String> learnedOpenings; // IDs des ouvertures apprises
+  final String? lastOpeningId; // ID de la dernière ouverture jouée
 
   const UserModel({
     required this.uid,
@@ -14,6 +15,7 @@ class UserModel {
     this.displayName,
     required this.isAnonymous,
     this.learnedOpenings = const [],
+    this.lastOpeningId,
   });
 
   // Pour sauvegarder dans Firestore
@@ -24,6 +26,7 @@ class UserModel {
       'displayName': displayName,
       'isAnonymous': isAnonymous,
       'learnedOpenings': learnedOpenings,
+      'lastOpeningId': lastOpeningId,
     };
   }
 
@@ -35,6 +38,7 @@ class UserModel {
       displayName: map['displayName'],
       isAnonymous: map['isAnonymous'],
       learnedOpenings: List<String>.from(map['learnedOpenings'] ?? []),
+      lastOpeningId: map['lastOpeningId'],
     );
   }
 
@@ -44,6 +48,7 @@ class UserModel {
         'email: $email, '
         'displayName: $displayName, '
         'isAnonymous: $isAnonymous, '
-        'learnedOpenings: $learnedOpenings)';
+        'learnedOpenings: $learnedOpenings), '
+        'lastOpeningId: $lastOpeningId';
   }
 }

@@ -1,7 +1,9 @@
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:dartchess/dartchess.dart';
 
-const openings = <OpeningModel>[viennaGambit];
+const openings = <OpeningModel>[viennaGambit, frenchDefense];
+
+// * Vienna Gambit Opening
 
 const viennaGambitLines = <Line>[
   Line(
@@ -45,4 +47,32 @@ const viennaGambit = OpeningModel(
   side: Side.white,
   ecoCode: 'C29',
   fen: 'rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3',
+);
+
+// * French Defense Opening
+
+const frenchDefenseLines = <Line>[
+  Line(
+    id: 'french_defense_1',
+    name: 'TBD',
+    description: 'TBD',
+    path: 'assets/openings/french_defense/french_defense_1.pgn',
+  ),
+  Line(
+    id: 'french_defense_2',
+    name: 'TBD',
+    description: 'TBD',
+    path: 'assets/openings/french_defense/french_defense_2.pgn',
+  ),
+];
+
+const frenchDefense = OpeningModel(
+  id: 'french_defense',
+  name: 'French Defense',
+  description: 'A solid and strategic opening that allows for counterplay.',
+  tags: ['e4', 'Solid'],
+  linePaths: frenchDefenseLines,
+  side: Side.black,
+  ecoCode: 'C00',
+  fen: 'rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
 );
