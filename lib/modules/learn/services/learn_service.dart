@@ -77,7 +77,7 @@ class LearnService {
       return (newState: state, isCorrect: true);
     } else {
       final incorrectNode = PgnChildNodeWithParent<PgnNodeData>(
-        PgnNodeData(san: sanMove, comments: ['$sanMove is an incorrect move']),
+        PgnNodeData(san: sanMove, comments: ['$sanMove is an incorrect move!']),
         state.currentNode,
       );
 

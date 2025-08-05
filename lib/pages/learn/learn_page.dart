@@ -5,7 +5,7 @@ import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
-import 'package:chesstrainer/pages/learn/ui/coach.dart';
+import 'package:chesstrainer/pages/learn/learn_coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
@@ -19,10 +19,10 @@ class LearnPage extends ConsumerStatefulWidget {
   final OpeningModel opening;
 
   @override
-  ConsumerState<LearnPage> createState() => _LearnGamePageState();
+  ConsumerState<LearnPage> createState() => _LearnPageState();
 }
 
-class _LearnGamePageState extends ConsumerState<LearnPage> {
+class _LearnPageState extends ConsumerState<LearnPage> {
   int? selectedLine;
 
   @override
@@ -125,7 +125,7 @@ class _LearnGamePageState extends ConsumerState<LearnPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 128, child: Coach(pgnGame: pgnGame)),
+              SizedBox(height: 128, child: LearnCoach(pgnGame: pgnGame)),
               Column(
                 children: [
                   Chessboard(

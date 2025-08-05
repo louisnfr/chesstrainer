@@ -2,9 +2,10 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_page.dart';
+import 'package:chesstrainer/pages/practice/practice_page.dart';
+import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
-import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,8 +31,57 @@ class OpeningPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(opening.name)),
+      bottomNavigationBar: Container(
+        color: theme.colorScheme.surfaceDim,
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 12,
+              children: [
+                PrimaryButton(
+                  text: 'Learn',
+                  icon: Image.asset(
+                    'assets/images/icons/learn.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LearnPage(opening: opening),
+                      ),
+                    );
+                  },
+                ),
+                SecondaryButton(
+                  text: 'Practice',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PracticePage(opening: opening),
+                      ),
+                    );
+                  },
+                  icon: Image.asset(
+                    'assets/images/icons/practice.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: PageLayout(
+        verticalPadding: 0,
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(
             spacing: 24,
             children: [
@@ -56,6 +106,20 @@ class OpeningPage extends ConsumerWidget {
                     percent: progress.percentage,
                   ),
                 ],
+              ),
+
+              Chessboard.fixed(
+                settings: ChessboardSettings(
+                  pieceAssets: PieceSet.meridaAssets,
+                  colorScheme: ChessboardColorScheme.blue,
+                  border: BoardBorder(
+                    color: theme.colorScheme.surfaceBright,
+                    width: 16,
+                  ),
+                ),
+                size: screenWidth * _kScreenRatio,
+                orientation: opening.side,
+                fen: opening.fen,
               ),
               Wrap(
                 spacing: 8,
@@ -99,58 +163,33 @@ class OpeningPage extends ConsumerWidget {
                   ),
                 ],
               ),
-              Chessboard.fixed(
-                settings: ChessboardSettings(
-                  pieceAssets: PieceSet.meridaAssets,
-                  colorScheme: ChessboardColorScheme.blue,
-                  border: BoardBorder(
-                    color: theme.colorScheme.surfaceBright,
-                    width: 16,
-                  ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceBright,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                size: screenWidth * _kScreenRatio,
-                orientation: opening.side,
-                fen: opening.fen,
-              ),
-              Text(
-                opening.description,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  height: 0,
+                child: Column(
+                  spacing: 12,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'About this opening',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      opening.description,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        height: 0,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-
-              Column(
-                spacing: 12,
-                children: [
-                  PrimaryButton(
-                    text: 'Learn',
-                    icon: Image.asset(
-                      'assets/images/icons/learn.png',
-                      width: 24,
-                      height: 24,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LearnPage(opening: opening),
-                        ),
-                      );
-                    },
-                  ),
-                  SecondaryButton(
-                    text: 'Practice',
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/images/icons/practice.png',
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                ],
-              ),
-              // const Text('discover improve master'),
             ],
           ),
         ),

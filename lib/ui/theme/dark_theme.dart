@@ -19,7 +19,8 @@ class AppColors {
   // 🌑 Backgrounds
   static const Color surface = Color.fromRGBO(49, 46, 43, 1);
   static const Color surfaceContainer = Color.fromRGBO(39, 37, 34, 1);
-  static const Color surfaceDim = Color.fromRGBO(34, 33, 31, 1);
+  static const Color surfaceContainerHighest = Color.fromRGBO(86, 84, 82, 1);
+  static const Color surfaceDim = Color.fromRGBO(29, 27, 26, 1);
   static const Color surfaceBright = Color.fromRGBO(79, 76, 73, 1);
 
   static const Color onSurface = white;
@@ -65,6 +66,7 @@ ThemeData darkTheme = ThemeData(
     surface: AppColors.surface,
     onSurface: AppColors.onSurface,
     surfaceContainer: AppColors.surfaceContainer,
+    surfaceContainerHighest: AppColors.surfaceContainerHighest,
     onSurfaceVariant: AppColors.onSurfaceVariant,
     surfaceDim: AppColors.surfaceDim,
     surfaceBright: AppColors.surfaceBright,

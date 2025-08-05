@@ -6,8 +6,8 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Coach extends ConsumerWidget {
-  const Coach({super.key, required this.pgnGame});
+class PracticeCoach extends ConsumerWidget {
+  const PracticeCoach({super.key, required this.pgnGame});
 
   final PgnGame pgnGame;
 
@@ -22,7 +22,11 @@ class Coach extends ConsumerWidget {
     final learnProvider = ref.watch(learnNotifierProvider(pgnGame));
 
     final comments = learnProvider.currentNodeData?.comments ?? [];
-    final instructionComment = comments.isNotEmpty ? comments.first : null;
+    final instructionComment = comments.isNotEmpty
+        ? comments.first.endsWith('is an incorrect move!')
+              ? comments.first
+              : "What's the move here?"
+        : null;
     final computerComment = chessProvider.playerSide == PlayerSide.white
         ? "Black's turn..."
         : "White's turn...";
@@ -45,7 +49,6 @@ class Coach extends ConsumerWidget {
             image: AssetImage('assets/images/coach2.png'),
             width: 64,
             height: 64,
-            // color: Colors.white,
           ),
           Expanded(
             child: Stack(

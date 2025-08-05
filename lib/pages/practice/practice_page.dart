@@ -1,11 +1,11 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/constants/openings.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
+import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
-import 'package:chesstrainer/ui/coach/coach.dart';
+import 'package:chesstrainer/pages/practice/practice_coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
@@ -13,35 +13,35 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class LearnGamePage extends ConsumerStatefulWidget {
-  const LearnGamePage({super.key});
+class PracticePage extends ConsumerStatefulWidget {
+  const PracticePage({super.key, required this.opening});
+
+  final OpeningModel opening;
 
   @override
-  ConsumerState<LearnGamePage> createState() => _LearnGamePageState();
+  ConsumerState<PracticePage> createState() => _PracticePageState();
 }
 
-class _LearnGamePageState extends ConsumerState<LearnGamePage> {
-  int? selectedLine; // Nullable au début
+class _PracticePageState extends ConsumerState<PracticePage> {
+  int? selectedLine;
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     final theme = Theme.of(context);
 
-    final linesNumber = viennaGambit.linePaths.length;
+    final opening = widget.opening;
+    final linesNumber = opening.linePaths.length;
 
-    // Initialiser selectedLine avec la première ligne non apprise
     if (selectedLine == null) {
       final currentUser = ref.watch(currentUserProvider);
       final userLearnedOpenings = currentUser?.learnedOpenings ?? [];
-      selectedLine = viennaGambit.getFirstUnlearnedLineIndex(
-        userLearnedOpenings,
-      );
+      selectedLine = opening.getFirstUnlearnedLineIndex(userLearnedOpenings);
     }
 
     final pgnGameProvider = ref.watch(
       pgnGameNotifierProvider(
-        'assets/openings/vienna_gambit/vienna_gambit_$selectedLine.pgn',
+        'assets/openings/${opening.id}/${opening.id}_$selectedLine.pgn',
       ),
     );
 
@@ -51,7 +51,6 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
       }
     }
 
-    // Return loading si selectedLine n'est pas encore initialisé
     if (selectedLine == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -78,7 +77,7 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
           // useSafeAreaLeft: false,
           // useSafeAreaRight: false,
           // useSafeAreaTop: false,
-          appBar: AppBar(title: const Text('Vienna Gambit')),
+          appBar: AppBar(title: Text(opening.name)),
           // bottomNavigationBar: NavigationBar(
           //   height: 48,
           //   destinations: [
@@ -126,8 +125,7 @@ class _LearnGamePageState extends ConsumerState<LearnGamePage> {
                   ],
                 ),
               ),
-              SizedBox(height: 128, child: LearnCoach(pgnGame: pgnGame)),
-
+              SizedBox(height: 128, child: PracticeCoach(pgnGame: pgnGame)),
               Column(
                 children: [
                   Chessboard(
