@@ -94,7 +94,6 @@ class _RecentOpeningCardState extends State<RecentOpeningCard> {
                         final currentUser = ref.watch(currentUserProvider);
                         final userLearnedOpenings =
                             currentUser?.learnedOpenings ?? [];
-
                         final progress = widget.opening.progressFor(
                           userLearnedOpenings,
                         );
