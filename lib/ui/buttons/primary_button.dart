@@ -5,6 +5,7 @@ import 'package:gaimon/gaimon.dart';
 class PrimaryButton extends StatefulWidget {
   final String text;
   final VoidCallback onPressed;
+  final Widget? icon;
   final Color? backgroundColor;
   final Color? shadowColor;
   final Color? textColor;
@@ -16,6 +17,7 @@ class PrimaryButton extends StatefulWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.icon,
     this.backgroundColor,
     this.shadowColor,
     this.textColor,
@@ -73,22 +75,27 @@ class _PrimaryButtonState extends State<PrimaryButton> {
               borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(color: shadowColor, width: 2),
             ),
-            child: Center(
-              child: Text(
-                widget.text,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Nunito',
-                  shadows: [
-                    const Shadow(
-                      color: AppColors.surfaceBright,
-                      offset: Offset(0, 1),
-                    ),
-                  ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: widget.icon != null ? 8 : 0,
+              children: [
+                if (widget.icon != null) widget.icon!,
+                Text(
+                  widget.text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    fontFamily: 'Nunito',
+                    shadows: [
+                      const Shadow(
+                        color: AppColors.surfaceBright,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

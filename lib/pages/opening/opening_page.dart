@@ -50,7 +50,7 @@ class OpeningPage extends ConsumerWidget {
                     barRadius: const Radius.circular(32),
                     lineHeight: 24,
                     animation: true,
-                    animationDuration: 250,
+                    animationDuration: 1000,
                     animateFromLastPercent: true,
                     progressColor: theme.colorScheme.primary,
                     percent: progress.percentage,
@@ -120,18 +120,36 @@ class OpeningPage extends ConsumerWidget {
                 ),
               ),
 
-              PrimaryButton(
-                text: 'Learn',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LearnPage(opening: opening),
+              Column(
+                spacing: 12,
+                children: [
+                  PrimaryButton(
+                    text: 'Learn',
+                    icon: Image.asset(
+                      'assets/images/icons/learn.png',
+                      width: 24,
+                      height: 24,
                     ),
-                  );
-                },
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LearnPage(opening: opening),
+                        ),
+                      );
+                    },
+                  ),
+                  SecondaryButton(
+                    text: 'Practice',
+                    onPressed: () {},
+                    icon: Image.asset(
+                      'assets/images/icons/practice.png',
+                      width: 24,
+                      height: 24,
+                    ),
+                  ),
+                ],
               ),
-              SecondaryButton(text: 'Practice', onPressed: () {}),
               // const Text('discover improve master'),
             ],
           ),
