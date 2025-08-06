@@ -3,7 +3,7 @@ import 'package:chesstrainer/modules/chess/models/chess_state.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/modules/learn/models/learn_state.dart';
 import 'package:chesstrainer/modules/learn/models/pgn_node_with_parent.dart';
-import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/annotation_provider.dart';
 import 'package:chesstrainer/modules/learn/services/learn_service.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:dartchess/dartchess.dart';
@@ -12,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const Duration _kComputerMoveDelay = Duration(milliseconds: 500);
 
+// Provider principal pour l'apprentissage
 class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
   // * Other providers
   PlayerSide get _playerSide => arg.headers['PlayerSide'] == 'white'
@@ -35,6 +36,16 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       Future.microtask(() => _playComputerMove());
     }
     return learnState;
+  }
+
+  void resetWithNewPgn(PgnGame newPgnGame) {
+    final newState = LearnService.reset(state, newPgnGame);
+    state = newState;
+    _chessNotifier.resetGame();
+
+    if (newPgnGame.headers['PlayerSide'] == 'black') {
+      _playComputerMove();
+    }
   }
 
   GameData getGameData() {

@@ -1,7 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/annotation_provider.dart';
+import 'package:chesstrainer/modules/learn/providers/learn_provider.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';

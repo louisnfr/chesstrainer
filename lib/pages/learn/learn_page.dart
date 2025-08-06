@@ -1,8 +1,9 @@
 import 'package:chessground/chessground.dart';
+import 'package:chesstrainer/modules/learn/providers/learn_provider.dart';
+import 'package:chesstrainer/modules/learn/providers/pgn_game_provider.dart';
+import 'package:chesstrainer/modules/learn/providers/selected_line_provider.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/learn_page_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/annotation_provider.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_coach.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
@@ -40,17 +41,16 @@ class _LearnPageState extends ConsumerState<LearnPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final pgnGameProvider = ref.watch(learnPagePgnGameProvider(opening));
+    final pgnGameAsync = ref.watch(pgnGameProvider(opening));
 
     void dropdownCallback(int? value) {
       if (value is int) {
         selectedLineNotifier.selectLine(value);
-        // Charger la nouvelle ligne sans flash
-        ref.read(learnPagePgnGameProvider(opening).notifier).loadLine(value);
+        // La logique de rechargement est gérée par le listener ci-dessous
       }
     }
 
-    return pgnGameProvider.when(
+    return pgnGameAsync.when(
       loading: () => Scaffold(
         appBar: AppBar(title: Text(opening.name)),
         body: const Center(child: CircularProgressIndicator()),
@@ -75,9 +75,14 @@ class _LearnPageState extends ConsumerState<LearnPage> {
         // Réinitialiser le chess provider quand on change de ligne
         ref.listen(selectedLineProvider(opening), (previous, next) {
           if (previous != next && next != null) {
-            // Réinitialiser l'état du chess
-            Future.microtask(() {
-              ref.read(chessNotifierProvider(playerSide).notifier).resetGame();
+            // Charger la nouvelle ligne et réinitialiser l'état
+            ref.read(pgnGameProvider(opening).notifier).loadLine(next).then((
+              _,
+            ) {
+              final newPgnGame = ref.read(pgnGameProvider(opening)).value;
+              if (newPgnGame != null) {
+                learnNotifier.resetWithNewPgn(newPgnGame);
+              }
             });
           }
         });
@@ -187,9 +192,7 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                       onPressed: () {
                         final nextLine = (selectedLine % linesNumber) + 1;
                         selectedLineNotifier.selectLine(nextLine);
-                        ref
-                            .read(learnPagePgnGameProvider(opening).notifier)
-                            .loadLine(nextLine);
+                        // La logique de rechargement est gérée par le listener
                       },
                     ),
                   ),

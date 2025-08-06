@@ -1,6 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/learn_provider.dart';
 import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';

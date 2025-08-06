@@ -1,5 +1,6 @@
 import 'package:chesstrainer/modules/learn/models/learn_state.dart';
 import 'package:chesstrainer/modules/learn/models/pgn_node_with_parent.dart';
+import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:dartchess/dartchess.dart';
 
 class LearnService {
@@ -29,9 +30,27 @@ class LearnService {
     );
   }
 
-  // static LearnState reset(LearnState state) {
-  //   return state.copyWith(pgnGame: state.pgnGame, currentStep: 0);
-  // }
+  static LearnState reset(LearnState state, PgnGame newPgnGame) {
+    return initialize(newPgnGame);
+  }
+
+  // * Opening and line management
+
+  static int? getFirstUnlearnedLineIndex(
+    OpeningModel opening,
+    List<String> userLearnedOpenings,
+  ) {
+    for (int i = 0; i < opening.linePaths.length; i++) {
+      if (!userLearnedOpenings.contains(opening.linePaths[i].id)) {
+        return i + 1;
+      }
+    }
+    return 1;
+  }
+
+  static String buildAssetPath(String openingId, int lineIndex) {
+    return 'assets/openings/$openingId/${openingId}_$lineIndex.pgn';
+  }
 
   // * Validation methods
 
