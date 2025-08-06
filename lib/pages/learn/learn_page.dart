@@ -1,10 +1,9 @@
 import 'package:chessground/chessground.dart';
-import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
-import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
-import 'package:chesstrainer/modules/user/providers/user_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/learn_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/annotation_providers.dart';
+import 'package:chesstrainer/modules/learn/providers/learn_page_providers.dart';
+import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_coach.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
@@ -14,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LearnPage extends ConsumerStatefulWidget {
-  const LearnPage({super.key, required this.opening});
+  const LearnPage({required this.opening, super.key});
 
   final OpeningModel opening;
 
@@ -23,8 +22,6 @@ class LearnPage extends ConsumerStatefulWidget {
 }
 
 class _LearnPageState extends ConsumerState<LearnPage> {
-  int? selectedLine;
-
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
@@ -33,32 +30,35 @@ class _LearnPageState extends ConsumerState<LearnPage> {
     final opening = widget.opening;
     final linesNumber = opening.linePaths.length;
 
-    if (selectedLine == null) {
-      final currentUser = ref.watch(currentUserProvider);
-      final userLearnedOpenings = currentUser?.learnedOpenings ?? [];
-      selectedLine = opening.getFirstUnlearnedLineIndex(userLearnedOpenings);
-    }
-
-    final pgnGameProvider = ref.watch(
-      pgnGameNotifierProvider(
-        'assets/openings/${opening.id}/${opening.id}_$selectedLine.pgn',
-      ),
+    // Utiliser les nouveaux providers
+    final selectedLine = ref.watch(selectedLineProvider(opening));
+    final selectedLineNotifier = ref.read(
+      selectedLineProvider(opening).notifier,
     );
-
-    void dropdownCallback(int? value) {
-      if (value is int) {
-        setState(() => selectedLine = value);
-      }
-    }
 
     if (selectedLine == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return pgnGameProvider.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+    final pgnGameProvider = ref.watch(learnPagePgnGameProvider(opening));
 
+    void dropdownCallback(int? value) {
+      if (value is int) {
+        selectedLineNotifier.selectLine(value);
+        // Charger la nouvelle ligne sans flash
+        ref.read(learnPagePgnGameProvider(opening).notifier).loadLine(value);
+      }
+    }
+
+    return pgnGameProvider.when(
+      loading: () => Scaffold(
+        appBar: AppBar(title: Text(opening.name)),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) => Scaffold(
+        appBar: AppBar(title: Text(opening.name)),
+        body: Center(child: Text('Error: $error')),
+      ),
       data: (PgnGame pgnGame) {
         final playerSide = pgnGame.headers['PlayerSide'] == 'white'
             ? PlayerSide.white
@@ -71,6 +71,16 @@ class _LearnPageState extends ConsumerState<LearnPage> {
         final learnNotifier = ref.watch(
           learnNotifierProvider(pgnGame).notifier,
         );
+
+        // Réinitialiser le chess provider quand on change de ligne
+        ref.listen(selectedLineProvider(opening), (previous, next) {
+          if (previous != next && next != null) {
+            // Réinitialiser l'état du chess
+            Future.microtask(() {
+              ref.read(chessNotifierProvider(playerSide).notifier).resetGame();
+            });
+          }
+        });
 
         return Scaffold(
           appBar: AppBar(title: Text(opening.name)),
@@ -109,10 +119,6 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                               theme.colorScheme.surfaceContainerHighest,
                           underline: Container(), // Enlève la ligne du bas
                           style: TextStyle(color: theme.colorScheme.onSurface),
-                          // icon: Icon(
-                          //   Icons.arrow_drop_down,
-                          //   color: theme.colorScheme.onSurface,
-                          // ),
                           items: List.generate(linesNumber, (index) {
                             return DropdownMenuItem<int>(
                               value: index + 1,
@@ -179,10 +185,11 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                     child: PrimaryButton(
                       text: 'Next Line',
                       onPressed: () {
-                        setState(() {
-                          selectedLine =
-                              ((selectedLine ?? 1) % linesNumber) + 1;
-                        });
+                        final nextLine = (selectedLine % linesNumber) + 1;
+                        selectedLineNotifier.selectLine(nextLine);
+                        ref
+                            .read(learnPagePgnGameProvider(opening).notifier)
+                            .loadLine(nextLine);
                       },
                     ),
                   ),
