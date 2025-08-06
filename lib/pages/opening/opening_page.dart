@@ -2,7 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_page.dart';
-import 'package:chesstrainer/pages/practice/practice_page.dart';
+// import 'package:chesstrainer/pages/practice/practice_page.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
@@ -60,12 +60,12 @@ class OpeningPage extends ConsumerWidget {
                 SecondaryButton(
                   text: 'Practice',
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PracticePage(opening: opening),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => PracticePage(opening: opening),
+                    //   ),
+                    // );
                   },
                   icon: Image.asset(
                     'assets/images/icons/practice.png',

@@ -2,7 +2,7 @@
 import 'package:chesstrainer/modules/learn/providers/selected_line_provider.dart';
 import 'package:chesstrainer/modules/learn/services/learn_service.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
-import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
+import 'package:chesstrainer/modules/opening/services/pgn_loader.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -15,16 +15,16 @@ class PgnGameNotifier extends FamilyAsyncNotifier<PgnGame, OpeningModel> {
     }
 
     final assetPath = LearnService.buildAssetPath(opening.id, selectedLine);
-    final pgnNotifier = ref.read(pgnGameNotifierProvider(assetPath).notifier);
-    return await pgnNotifier.loadGame(assetPath);
+    final pgnString = await PgnLoader.loadPgn(assetPath);
+    return PgnGame.parsePgn(pgnString);
   }
 
   Future<void> loadLine(int lineIndex) async {
     final assetPath = LearnService.buildAssetPath(arg.id, lineIndex);
 
     try {
-      final pgnNotifier = ref.read(pgnGameNotifierProvider(assetPath).notifier);
-      final pgnGame = await pgnNotifier.loadGame(assetPath);
+      final pgnString = await PgnLoader.loadPgn(assetPath);
+      final pgnGame = PgnGame.parsePgn(pgnString);
       state = AsyncValue.data(pgnGame);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

@@ -1,6 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_provider.dart';
-import 'package:chesstrainer/modules/learn/providers/pgn_game_provider.dart';
+import 'package:chesstrainer/modules/opening/providers/pgn_game_provider.dart';
 import 'package:chesstrainer/modules/learn/providers/selected_line_provider.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_provider.dart';
