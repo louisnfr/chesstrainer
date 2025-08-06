@@ -31,16 +31,19 @@ class HomePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                'Continue Learning',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  color: theme.colorScheme.outline,
+            if (lastOpening != null) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  'Continue Learning',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
                 ),
               ),
-            ),
-            if (lastOpening != null)
               RecentOpeningCard(
                 opening: lastOpening,
                 onPressed: () {
@@ -52,6 +55,7 @@ class HomePage extends ConsumerWidget {
                   );
                 },
               ),
+            ],
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
