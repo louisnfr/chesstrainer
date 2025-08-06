@@ -19,21 +19,21 @@ class AppColors {
   // 🌑 Backgrounds
   static const Color surface = Color.fromRGBO(49, 46, 43, 1);
   static const Color surfaceContainer = Color.fromRGBO(39, 37, 34, 1);
-  static const Color surfaceContainerHighest = Color.fromRGBO(86, 84, 82, 1);
+  static const Color surfaceContainerLow = Color.fromRGBO(86, 84, 82, 1);
   static const Color surfaceDim = Color.fromRGBO(29, 27, 26, 1);
   static const Color surfaceBright = Color.fromRGBO(79, 76, 73, 1);
 
   static const Color onSurface = white;
   static const Color onSurfaceVariant = Color.fromRGBO(180, 180, 180, 1);
 
-  // 🎯 Accent principale (progression / coups)
+  // 🟢 Primary
   static const Color primary = Color.fromRGBO(112, 172, 53, 1);
   static const Color onPrimary = white;
 
   static const Color primaryContainer = Color(0xFF81C784);
   static const Color onPrimaryContainer = black;
 
-  // 🏆 Secondaire (gamification / trophées)
+  // 🏆 Secondaire
   static const Color secondary = Color(0xFFFFC107);
   static const Color onSecondary = black;
 
@@ -46,7 +46,8 @@ class AppColors {
   static const Color outlineVariant = Color.fromRGBO(100, 100, 100, 0.6);
 
   // ✅ Succès
-  static const Color success = Color(0xFF00E676);
+  static const Color success = Color.fromRGBO(87, 204, 2, 1);
+  static const Color successTint = Color.fromRGBO(156, 226, 103, 1);
 
   // ❌ Erreur
   static const Color error = Color(0xFFF44336);
@@ -66,7 +67,7 @@ ThemeData darkTheme = ThemeData(
     surface: AppColors.surface,
     onSurface: AppColors.onSurface,
     surfaceContainer: AppColors.surfaceContainer,
-    surfaceContainerHighest: AppColors.surfaceContainerHighest,
+    surfaceContainerLow: AppColors.surfaceContainerLow,
     onSurfaceVariant: AppColors.onSurfaceVariant,
     surfaceDim: AppColors.surfaceDim,
     surfaceBright: AppColors.surfaceBright,

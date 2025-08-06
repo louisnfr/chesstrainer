@@ -7,11 +7,11 @@ import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_coach.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class LearnPage extends ConsumerStatefulWidget {
   const LearnPage({super.key, required this.opening});
@@ -28,7 +28,6 @@ class _LearnPageState extends ConsumerState<LearnPage> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
-    final theme = Theme.of(context);
 
     final opening = widget.opening;
     final linesNumber = opening.linePaths.length;
@@ -99,14 +98,8 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: LinearPercentIndicator(
-                        // backgroundColor: Colors.grey.shade300,
-                        barRadius: const Radius.circular(8),
-                        lineHeight: 16,
-                        animation: true,
-                        animationDuration: 250,
-                        animateFromLastPercent: true,
-                        progressColor: theme.colorScheme.primary,
+                      child: LinearProgressBar(
+                        lineHeight: 24,
                         percent:
                             learnProvider.currentStep /
                             (learnProvider.lineLength),

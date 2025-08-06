@@ -1,7 +1,7 @@
 import 'package:chessground/chessground.dart';
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AnnotationNotifier
@@ -14,7 +14,7 @@ class AnnotationNotifier
   void setAnnotation(Square square, {required bool correct}) {
     final annotation = Annotation(
       symbol: correct ? '✓' : 'X',
-      color: correct ? Colors.green : Colors.red,
+      color: correct ? AppColors.success : AppColors.error,
     );
 
     state = IMap({square: annotation});

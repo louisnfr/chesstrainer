@@ -1,11 +1,11 @@
 import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
+import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 const double _kScreenRatio = 0.33;
 
@@ -157,14 +157,7 @@ class _OpeningCardState extends State<OpeningCard> {
                               ),
                             ),
                             Expanded(
-                              child: LinearPercentIndicator(
-                                padding: const EdgeInsets.all(0),
-                                barRadius: const Radius.circular(32),
-                                lineHeight: 16,
-                                animation: true,
-                                animationDuration: 250,
-                                animateFromLastPercent: true,
-                                progressColor: theme.colorScheme.primary,
+                              child: LinearProgressBar(
                                 percent: progress.percentage,
                               ),
                             ),

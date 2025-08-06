@@ -37,7 +37,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final backgroundColor =
-        widget.backgroundColor ?? theme.colorScheme.surfaceContainerHighest;
+        widget.backgroundColor ?? theme.colorScheme.surfaceContainerLow;
     final shadowColor =
         widget.shadowColor ?? backgroundColor.withValues(alpha: 0.6);
     final textColor = widget.textColor ?? theme.colorScheme.onPrimary;

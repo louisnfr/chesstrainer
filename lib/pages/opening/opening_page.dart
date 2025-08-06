@@ -6,10 +6,10 @@ import 'package:chesstrainer/pages/practice/practice_page.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
+import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 const double _kScreenRatio = 0.85;
 
@@ -95,15 +95,9 @@ class OpeningPage extends ConsumerWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  LinearPercentIndicator(
-                    padding: const EdgeInsets.all(0),
-                    barRadius: const Radius.circular(32),
-                    lineHeight: 24,
-                    animation: true,
-                    animationDuration: 1000,
-                    animateFromLastPercent: true,
-                    progressColor: theme.colorScheme.primary,
+                  LinearProgressBar(
                     percent: progress.percentage,
+                    lineHeight: 24,
                   ),
                 ],
               ),
