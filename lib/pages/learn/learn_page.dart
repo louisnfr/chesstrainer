@@ -6,7 +6,7 @@ import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_coach.dart';
-import 'package:chesstrainer/ui/layouts/default_layout.dart';
+import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
@@ -28,6 +28,7 @@ class _LearnPageState extends ConsumerState<LearnPage> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
+    final theme = Theme.of(context);
 
     final opening = widget.opening;
     final linesNumber = opening.linePaths.length;
@@ -71,111 +72,122 @@ class _LearnPageState extends ConsumerState<LearnPage> {
           learnNotifierProvider(pgnGame).notifier,
         );
 
-        return DefaultLayout(
-          useSafeArea: false,
-          // useSafeAreaLeft: false,
-          // useSafeAreaRight: false,
-          // useSafeAreaTop: false,
+        return Scaffold(
           appBar: AppBar(title: Text(opening.name)),
-          // bottomNavigationBar: NavigationBar(
-          //   height: 48,
-          //   destinations: [
-          //     const NavigationDestination(
-          //       icon: Icon(Icons.lightbulb_outline),
-          //       label: 'Coach',
-          //     ),
-          //     const NavigationDestination(
-          //       icon: Icon(Icons.interests),
-          //       label: 'Annotations',
-          //     ),
-          //   ],
-          // ),
-          child: Column(
-            spacing: 12,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: LinearProgressBar(
-                        lineHeight: 24,
-                        percent:
-                            learnProvider.currentStep /
-                            (learnProvider.lineLength),
+          body: PageLayout(
+            horizontalPadding: 0,
+            child: Column(
+              spacing: 12,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    spacing: 12,
+                    children: [
+                      Expanded(
+                        child: LinearProgressBar(
+                          lineHeight: 24,
+                          percent:
+                              learnProvider.currentStep /
+                              (learnProvider.lineLength),
+                        ),
                       ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceBright,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: DropdownButton(
+                          padding: const EdgeInsets.all(0),
+                          borderRadius: BorderRadius.circular(8),
+                          value: selectedLine,
+                          dropdownColor:
+                              theme.colorScheme.surfaceContainerHighest,
+                          underline: Container(), // Enlève la ligne du bas
+                          style: TextStyle(color: theme.colorScheme.onSurface),
+                          // icon: Icon(
+                          //   Icons.arrow_drop_down,
+                          //   color: theme.colorScheme.onSurface,
+                          // ),
+                          items: List.generate(linesNumber, (index) {
+                            return DropdownMenuItem<int>(
+                              value: index + 1,
+                              child: Text(
+                                'Line ${index + 1}',
+                                style: theme.textTheme.labelLarge,
+                              ),
+                            );
+                          }),
+                          onChanged: dropdownCallback,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 128, child: LearnCoach(pgnGame: pgnGame)),
+                Column(
+                  children: [
+                    Chessboard(
+                      settings: const ChessboardSettings(
+                        pieceAssets: PieceSet.meridaAssets,
+                        colorScheme: ChessboardColorScheme.blue,
+                      ),
+                      game: learnNotifier.getGameData(),
+                      size: screenWidth,
+                      orientation: chessProvider.orientation,
+                      fen: chessProvider.fen,
+                      lastMove: chessProvider.lastMove,
+                      annotations: annotations,
                     ),
-                    DropdownButton(
-                      value: selectedLine,
-                      items: List.generate(linesNumber, (index) {
-                        return DropdownMenuItem<int>(
-                          value: index + 1,
-                          child: Text('Line ${index + 1}'),
-                        );
-                      }),
-                      onChanged: dropdownCallback,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.lightbulb_outline),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.interests),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              learnNotifier.goToPrevious();
+                            },
+                            icon: const Icon(Icons.arrow_back_ios_rounded),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              learnNotifier.goToNext();
+                            },
+                            icon: const Icon(Icons.arrow_forward_ios_rounded),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 128, child: LearnCoach(pgnGame: pgnGame)),
-              Column(
-                children: [
-                  Chessboard(
-                    settings: const ChessboardSettings(
-                      pieceAssets: PieceSet.meridaAssets,
-                      colorScheme: ChessboardColorScheme.blue,
-                    ),
-                    game: learnNotifier.getGameData(),
-                    size: screenWidth,
-                    orientation: chessProvider.orientation,
-                    fen: chessProvider.fen,
-                    lastMove: chessProvider.lastMove,
-                    annotations: annotations,
-                  ),
+                if (learnProvider.isFinished)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.lightbulb_outline),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.interests),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            learnNotifier.goToPrevious();
-                          },
-                          icon: const Icon(Icons.arrow_back_ios_rounded),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            learnNotifier.goToNext();
-                          },
-                          icon: const Icon(Icons.arrow_forward_ios_rounded),
-                        ),
-                      ],
+                    child: PrimaryButton(
+                      text: 'Next Line',
+                      onPressed: () {
+                        setState(() {
+                          selectedLine =
+                              ((selectedLine ?? 1) % linesNumber) + 1;
+                        });
+                      },
                     ),
                   ),
-                ],
-              ),
-              if (learnProvider.isFinished)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: PrimaryButton(
-                    text: 'Next Line',
-                    onPressed: () {
-                      setState(() {
-                        selectedLine = ((selectedLine ?? 1) % linesNumber) + 1;
-                      });
-                    },
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         );
       },

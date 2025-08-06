@@ -6,7 +6,6 @@ import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/opening/providers/opening_pgn_provider.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/pages/practice/practice_coach.dart';
-import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
@@ -71,31 +70,15 @@ class _PracticePageState extends ConsumerState<PracticePage> {
           learnNotifierProvider(pgnGame).notifier,
         );
 
-        return DefaultLayout(
-          useSafeArea: false,
-          // useSafeAreaLeft: false,
-          // useSafeAreaRight: false,
-          // useSafeAreaTop: false,
+        return Scaffold(
           appBar: AppBar(title: Text(opening.name)),
-          // bottomNavigationBar: NavigationBar(
-          //   height: 48,
-          //   destinations: [
-          //     const NavigationDestination(
-          //       icon: Icon(Icons.lightbulb_outline),
-          //       label: 'Coach',
-          //     ),
-          //     const NavigationDestination(
-          //       icon: Icon(Icons.interests),
-          //       label: 'Annotations',
-          //     ),
-          //   ],
-          // ),
-          child: Column(
+          body: Column(
             spacing: 12,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
+                  spacing: 12,
                   children: [
                     Expanded(
                       child: LinearProgressBar(

@@ -27,7 +27,9 @@ class AppColors {
   static const Color onSurfaceVariant = Color.fromRGBO(180, 180, 180, 1);
 
   // 🟢 Primary
-  static const Color primary = Color.fromRGBO(112, 172, 53, 1);
+  // static const Color primary = Color.fromRGBO(112, 172, 53, 1);
+  static const Color primary = Color.fromRGBO(0, 139, 163, 1);
+
   static const Color onPrimary = white;
 
   static const Color primaryContainer = Color(0xFF81C784);
@@ -137,6 +139,11 @@ ThemeData darkTheme = ThemeData(
     hintStyle: const TextStyle(color: AppColors.outline),
     labelStyle: const TextStyle(color: AppColors.outline),
   ),
+
+  // // * Dropdown Menu Theme
+  // dropdownMenuTheme: const DropdownMenuThemeData(
+  //   inputDecorationTheme: InputDecorationTheme(fillColor: Colors.amber),
+  // ),
 
   // * Chip Theme
   chipTheme: const ChipThemeData(),
