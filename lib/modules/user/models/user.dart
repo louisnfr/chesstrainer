@@ -42,6 +42,25 @@ class UserModel {
     );
   }
 
+  // CopyWith method for immutable updates
+  UserModel copyWith({
+    String? uid,
+    String? email,
+    String? displayName,
+    bool? isAnonymous,
+    List<String>? learnedOpenings,
+    String? lastOpeningId,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      displayName: displayName ?? this.displayName,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
+      learnedOpenings: learnedOpenings ?? this.learnedOpenings,
+      lastOpeningId: lastOpeningId ?? this.lastOpeningId,
+    );
+  }
+
   @override
   String toString() {
     return 'UserModel(uid: $uid, '

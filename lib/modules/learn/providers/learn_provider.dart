@@ -78,9 +78,12 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       if (!state.isFinished) {
         _playComputerMove();
       } else if (state.isFinished == true) {
-        final userNotifier = ref.read(userNotifierProvider.notifier);
-        userNotifier.markOpeningAsLearned(state.lineId);
-        userNotifier.setLastOpening(state.openingId);
+        // Check if provider is still mounted before calling user methods
+        if (ref.mounted) {
+          final userNotifier = ref.read(userNotifierProvider.notifier);
+          userNotifier.markOpeningAsLearned(state.lineId);
+          userNotifier.setLastOpening(state.openingId);
+        }
       }
     } else {
       _annotationNotifier.setAnnotation(move.to, correct: false);
@@ -99,6 +102,9 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
 
     final nextMove = _chessProvider.position.parseSan(nextNode.data.san);
     Future.delayed(_kComputerMoveDelay, () {
+      // Check if the provider is still mounted before continuing
+      if (!ref.mounted) return;
+
       // Clear annotations before computer move
       _annotationNotifier.clearAnnotations();
 
@@ -127,7 +133,7 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       );
 
       // If finished, mark the opening as learned and update last opening
-      if (isFinished) {
+      if (isFinished && ref.mounted) {
         final userNotifier = ref.read(userNotifierProvider.notifier);
         userNotifier.markOpeningAsLearned(state.lineId);
         userNotifier.setLastOpening(state.openingId);

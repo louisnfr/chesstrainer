@@ -81,12 +81,6 @@ class _OpeningCardState extends State<OpeningCard> {
                       spacing: 4,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Icon(
-                        //   Symbols.chess_pawn_rounded,
-                        //   color: isWhite ? Colors.white : Colors.black,
-                        //   fill: 1,
-                        //   size: 24,
-                        // ),
                         Text(
                           widget.opening.name,
                           style: theme.textTheme.headlineMedium,
@@ -135,15 +129,13 @@ class _OpeningCardState extends State<OpeningCard> {
                         ),
                       ],
                     ),
-
                     Consumer(
                       builder: (context, ref, child) {
-                        final currentUser = ref.watch(currentUserProvider);
-                        final userLearnedOpenings =
-                            currentUser?.learnedOpenings ?? [];
-
+                        final learnedOpenings = ref.watch(
+                          learnedOpeningsProvider,
+                        );
                         final progress = widget.opening.progressFor(
-                          userLearnedOpenings,
+                          learnedOpenings,
                         );
 
                         return Row(

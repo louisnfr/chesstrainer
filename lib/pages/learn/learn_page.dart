@@ -200,7 +200,6 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                       onPressed: () {
                         final nextLine = (selectedLine % linesNumber) + 1;
                         selectedLineNotifier.selectLine(nextLine);
-                        // La logique de rechargement est gérée par le listener
                       },
                     ),
                   ),

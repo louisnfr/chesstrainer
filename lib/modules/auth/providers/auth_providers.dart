@@ -1,10 +1,6 @@
 import 'package:chesstrainer/modules/auth/services/auth_service.dart';
-import 'package:chesstrainer/modules/user/models/user.dart';
-import 'package:chesstrainer/modules/user/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-final _userServiceProvider = Provider<UserService>((ref) => UserService());
 
 final _authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
@@ -52,20 +48,12 @@ class AuthNotifier extends AsyncNotifier<void> {
     state = const AsyncLoading();
 
     try {
-      final user = await ref
+      await ref
           .read(_authServiceProvider)
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      if (user != null) {
-        final userModel = UserModel(
-          uid: user.uid,
-          email: user.email,
-          displayName: user.email?.split('@').first,
-          isAnonymous: user.isAnonymous,
-        );
-
-        await ref.read(_userServiceProvider).createUser(userModel);
-      }
+      // User profile will be created automatically by UserNotifier when it detects
+      // a new authenticated user without a database profile
 
       state = const AsyncData(null);
     } catch (e) {
