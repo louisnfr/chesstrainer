@@ -34,6 +34,12 @@ final lastOpeningProvider = Provider<String?>((ref) {
   return user?.lastOpeningId;
 });
 
+// Provider pour les ouvertures apprises
+final learnedOpeningsProvider = Provider<List<String>>((ref) {
+  final user = ref.watch(currentUserProvider);
+  return user?.learnedOpenings ?? [];
+});
+
 // Notifier pour les actions
 class UserNotifier extends AsyncNotifier<void> {
   @override
@@ -60,9 +66,6 @@ class UserNotifier extends AsyncNotifier<void> {
 
       await ref.read(userServiceProvider).createUser(user);
 
-      // Invalider le cache pour recharger les données
-      ref.invalidate(userDataProvider);
-
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
@@ -82,9 +85,6 @@ class UserNotifier extends AsyncNotifier<void> {
           .read(userServiceProvider)
           .addLearnedOpening(authUser.uid, openingId);
 
-      // Invalider le cache pour recharger les données
-      ref.invalidate(userDataProvider);
-
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
@@ -103,9 +103,6 @@ class UserNotifier extends AsyncNotifier<void> {
       await ref
           .read(userServiceProvider)
           .setLastOpening(authUser.uid, openingId);
-
-      // Invalider le cache pour recharger les données
-      ref.invalidate(userDataProvider);
 
       state = const AsyncData(null);
     } catch (e) {

@@ -91,11 +91,11 @@ class _RecentOpeningCardState extends State<RecentOpeningCard> {
                     ),
                     Consumer(
                       builder: (context, ref, child) {
-                        final currentUser = ref.watch(currentUserProvider);
-                        final userLearnedOpenings =
-                            currentUser?.learnedOpenings ?? [];
+                        final learnedOpenings = ref.watch(
+                          learnedOpeningsProvider,
+                        );
                         final progress = widget.opening.progressFor(
-                          userLearnedOpenings,
+                          learnedOpenings,
                         );
 
                         return Column(

@@ -75,6 +75,7 @@ class _LearnPageState extends ConsumerState<LearnPage> {
         // Réinitialiser le chess provider quand on change de ligne
         ref.listen(selectedLineProvider(opening), (previous, next) {
           if (previous != next && next != null) {
+            print('Selected line changed: $next');
             // Charger la nouvelle ligne et réinitialiser l'état
             ref.read(pgnGameProvider(opening).notifier).loadLine(next).then((
               _,
@@ -139,7 +140,14 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 128, child: LearnCoach(pgnGame: pgnGame)),
+                Container(
+                  height: MediaQuery.sizeOf(context).height * 0.12,
+                  constraints: const BoxConstraints(
+                    minHeight: 80,
+                    maxHeight: 150,
+                  ),
+                  child: LearnCoach(pgnGame: pgnGame),
+                ),
                 Column(
                   children: [
                     Chessboard(
