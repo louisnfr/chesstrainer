@@ -50,8 +50,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   builder: (context, ref, child) {
                     final authState = ref.watch(authNotifierProvider);
 
-                    ref.listen(authNotifierProvider, (previous, next) {
-                      if (previous?.isLoading == true && next.hasValue) {
+                    ref.listen(authStateProvider, (previous, next) {
+                      if (next.hasValue && next.value != null) {
                         Navigator.pop(context);
                       }
                     });
