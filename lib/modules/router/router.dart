@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:chesstrainer/constants/routes.dart';
-import 'package:chesstrainer/modules/auth/services/auth_service.dart';
+import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
 import 'package:chesstrainer/pages/auth/login_page.dart';
 import 'package:chesstrainer/pages/auth/register_page.dart';
 import 'package:chesstrainer/pages/onboarding/onboarding_page.dart';
@@ -11,9 +11,6 @@ import 'package:chesstrainer/pages/root/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-// Provider local pour auth service
-final _authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 // Helper class pour refresh GoRouter quand authState change
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -34,7 +31,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
 
 // Router provider avec refresh automatique
 final routerProvider = Provider<GoRouter>((ref) {
-  final authService = ref.read(_authServiceProvider);
+  final authService = ref.read(authServiceProvider);
 
   return GoRouter(
     initialLocation: AppRoutes.login,
@@ -115,8 +112,3 @@ final routerProvider = Provider<GoRouter>((ref) {
     ),
   );
 });
-
-// Helper pour obtenir le router dans les widgets
-extension GoRouterExtension on WidgetRef {
-  GoRouter get router => read(routerProvider);
-}

@@ -4,11 +4,11 @@ import 'package:chesstrainer/modules/user/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final _authServiceProvider = Provider<AuthService>((ref) => AuthService());
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 final _userServiceProvider = Provider<UserService>((ref) => UserService());
 
 final authStateProvider = StreamProvider<User?>((ref) {
-  return ref.read(_authServiceProvider).authStateChanges();
+  return ref.read(authServiceProvider).authStateChanges();
 });
 
 // Separate notifier for login
@@ -25,7 +25,7 @@ class LoginNotifier extends AsyncNotifier<void> {
     state = const AsyncLoading();
     try {
       await ref
-          .read(_authServiceProvider)
+          .read(authServiceProvider)
           .signInWithEmailAndPassword(email: email, password: password);
 
       state = const AsyncData(null);
@@ -50,7 +50,7 @@ class RegisterNotifier extends AsyncNotifier<void> {
 
     try {
       final user = await ref
-          .read(_authServiceProvider)
+          .read(authServiceProvider)
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // Create user profile in Firestore immediately after account creation
@@ -83,7 +83,7 @@ class AuthNotifier extends AsyncNotifier<void> {
     state = const AsyncLoading();
 
     try {
-      await ref.read(_authServiceProvider).signInAnonymously();
+      await ref.read(authServiceProvider).signInAnonymously();
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
@@ -94,7 +94,7 @@ class AuthNotifier extends AsyncNotifier<void> {
     state = const AsyncLoading();
 
     try {
-      await ref.read(_authServiceProvider).signOut();
+      await ref.read(authServiceProvider).signOut();
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);

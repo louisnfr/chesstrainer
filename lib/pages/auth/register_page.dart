@@ -1,5 +1,4 @@
 import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
-import 'package:chesstrainer/modules/router/navigation_extensions.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:chesstrainer/ui/theme/dark_theme.dart';
@@ -73,12 +72,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                 );
-
-                            // Navigation automatique si succès
-                            if (context.mounted &&
-                                !ref.read(registerNotifierProvider).hasError) {
-                              context.goToHome();
-                            }
                           },
                           text: 'Register',
                         ),
