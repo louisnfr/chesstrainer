@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/ui/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,9 +27,7 @@ class WelcomePage extends StatelessWidget {
               Consumer(
                 builder: (context, ref, child) {
                   return FilledButton(
-                    onPressed: () {
-                      unawaited(Navigator.pushNamed(context, onboardingRoute));
-                    },
+                    onPressed: () {},
                     child: const Text('Get Started'),
                   );
                 },

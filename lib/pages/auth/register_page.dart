@@ -1,6 +1,8 @@
 import 'package:chesstrainer/modules/auth/providers/auth_providers.dart';
+import 'package:chesstrainer/modules/router/navigation_extensions.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -48,35 +50,67 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    final authState = ref.watch(authNotifierProvider);
+                    final registerState = ref.watch(registerNotifierProvider);
 
-                    ref.listen(authStateProvider, (previous, next) {
-                      if (next.hasValue && next.value != null) {
-                        Navigator.pop(context);
-                      }
-                    });
-
-                    if (authState.isLoading) {
-                      return const CircularProgressIndicator();
+                    if (registerState.isLoading) {
+                      return const Column(
+                        spacing: 12,
+                        children: [
+                          CircularProgressIndicator(),
+                          Text('Creating your account...'),
+                        ],
+                      );
                     }
 
                     return Column(
+                      spacing: 12,
                       children: [
                         PrimaryButton(
                           onPressed: () async {
                             await ref
-                                .read(authNotifierProvider.notifier)
+                                .read(registerNotifierProvider.notifier)
                                 .createUserWithEmailAndPassword(
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                 );
+
+                            // Navigation automatique si succès
+                            if (context.mounted &&
+                                !ref.read(registerNotifierProvider).hasError) {
+                              context.goToHome();
+                            }
                           },
                           text: 'Register',
                         ),
-                        if (authState.hasError)
-                          Text(
-                            'Error: ${authState.error}',
-                            style: const TextStyle(color: Colors.red),
+                        if (registerState.hasError)
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.error.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: AppColors.error.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.error_outline,
+                                  color: AppColors.error,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Registration failed: '
+                                    '${registerState.error}',
+                                    style: const TextStyle(
+                                      color: AppColors.error,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                       ],
                     );

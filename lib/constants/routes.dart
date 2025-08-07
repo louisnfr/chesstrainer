@@ -1,6 +1,9 @@
-const welcomeRoute = '/welcome';
-const onboardingRoute = '/onboarding';
-const loginRoute = '/login';
-const homeRoute = '/home';
-const learnRoute = '/learn';
-const registerRoute = '/register';
+// Routes constants
+class AppRoutes {
+  static const String home = '/';
+  static const String login = '/login';
+  static const String register = '/register';
+  static const String welcome = '/welcome';
+  static const String onboarding = '/onboarding';
+  static const String profile = '/profile';
+}

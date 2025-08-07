@@ -11,21 +11,11 @@ final authStateProvider = StreamProvider<User?>((ref) {
   return ref.read(_authServiceProvider).authStateChanges();
 });
 
-class AuthNotifier extends AsyncNotifier<void> {
+// Separate notifier for login
+class LoginNotifier extends AsyncNotifier<void> {
   @override
   Future<void> build() async {
     // État initial
-  }
-
-  Future<void> signInAnonymously() async {
-    state = const AsyncLoading();
-
-    try {
-      await ref.read(_authServiceProvider).signInAnonymously();
-      state = const AsyncData(null);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
   }
 
   Future<void> signInWithEmailAndPassword({
@@ -42,6 +32,14 @@ class AuthNotifier extends AsyncNotifier<void> {
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
+  }
+}
+
+// Separate notifier for register
+class RegisterNotifier extends AsyncNotifier<void> {
+  @override
+  Future<void> build() async {
+    // État initial
   }
 
   Future<void> createUserWithEmailAndPassword({
@@ -62,12 +60,30 @@ class AuthNotifier extends AsyncNotifier<void> {
           email: user.email,
           displayName: user.email?.split('@').first ?? 'User',
           createdAt: DateTime.now(),
-          // isAnonymous: user.isAnonymous,
         );
 
         await ref.read(_userServiceProvider).createUser(userModel);
       }
 
+      state = const AsyncData(null);
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+    }
+  }
+}
+
+// General auth notifier for other operations
+class AuthNotifier extends AsyncNotifier<void> {
+  @override
+  Future<void> build() async {
+    // État initial
+  }
+
+  Future<void> signInAnonymously() async {
+    state = const AsyncLoading();
+
+    try {
+      await ref.read(_authServiceProvider).signInAnonymously();
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
@@ -85,6 +101,14 @@ class AuthNotifier extends AsyncNotifier<void> {
     }
   }
 }
+
+final loginNotifierProvider = AsyncNotifierProvider<LoginNotifier, void>(
+  LoginNotifier.new,
+);
+
+final registerNotifierProvider = AsyncNotifierProvider<RegisterNotifier, void>(
+  RegisterNotifier.new,
+);
 
 final authNotifierProvider = AsyncNotifierProvider<AuthNotifier, void>(
   AuthNotifier.new,
