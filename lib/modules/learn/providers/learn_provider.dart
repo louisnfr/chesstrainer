@@ -79,11 +79,9 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
         _playComputerMove();
       } else if (state.isFinished == true) {
         // Check if provider is still mounted before calling user methods
-        if (ref.mounted) {
-          final userNotifier = ref.read(userNotifierProvider.notifier);
-          userNotifier.markOpeningAsLearned(state.lineId);
-          userNotifier.setLastOpening(state.openingId);
-        }
+        final userNotifier = ref.read(userNotifierProvider.notifier);
+        userNotifier.markOpeningAsLearned(state.lineId);
+        userNotifier.setLastOpening(state.openingId);
       }
     } else {
       _annotationNotifier.setAnnotation(move.to, correct: false);
@@ -133,7 +131,7 @@ class LearnNotifier extends FamilyNotifier<LearnState, PgnGame> {
       );
 
       // If finished, mark the opening as learned and update last opening
-      if (isFinished && ref.mounted) {
+      if (isFinished) {
         final userNotifier = ref.read(userNotifierProvider.notifier);
         userNotifier.markOpeningAsLearned(state.lineId);
         userNotifier.setLastOpening(state.openingId);

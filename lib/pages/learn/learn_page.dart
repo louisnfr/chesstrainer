@@ -31,7 +31,6 @@ class _LearnPageState extends ConsumerState<LearnPage> {
     final opening = widget.opening;
     final linesNumber = opening.linePaths.length;
 
-    // Utiliser les nouveaux providers
     final selectedLine = ref.watch(selectedLineProvider(opening));
     final selectedLineNotifier = ref.read(
       selectedLineProvider(opening).notifier,
@@ -46,7 +45,6 @@ class _LearnPageState extends ConsumerState<LearnPage> {
     void dropdownCallback(int? value) {
       if (value is int) {
         selectedLineNotifier.selectLine(value);
-        // La logique de rechargement est gérée par le listener ci-dessous
       }
     }
 
@@ -72,11 +70,8 @@ class _LearnPageState extends ConsumerState<LearnPage> {
           learnNotifierProvider(pgnGame).notifier,
         );
 
-        // Réinitialiser le chess provider quand on change de ligne
         ref.listen(selectedLineProvider(opening), (previous, next) {
           if (previous != next && next != null) {
-            print('Selected line changed: $next');
-            // Charger la nouvelle ligne et réinitialiser l'état
             ref.read(pgnGameProvider(opening).notifier).loadLine(next).then((
               _,
             ) {
@@ -123,7 +118,7 @@ class _LearnPageState extends ConsumerState<LearnPage> {
                           value: selectedLine,
                           dropdownColor:
                               theme.colorScheme.surfaceContainerHighest,
-                          underline: Container(), // Enlève la ligne du bas
+                          underline: const SizedBox(),
                           style: TextStyle(color: theme.colorScheme.onSurface),
                           items: List.generate(linesNumber, (index) {
                             return DropdownMenuItem<int>(

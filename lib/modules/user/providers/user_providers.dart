@@ -21,32 +21,11 @@ class UserNotifier extends AsyncNotifier<UserModel?> {
 
     try {
       final user = await ref.read(userServiceProvider).getUser(authUser.uid);
-
-      // If user exists in database, return it
-      if (user != null) {
-        return user;
-      }
-
-      // If user doesn't exist in database, create a basic profile in memory only
-      // Don't save to database automatically to avoid errors blocking the UI
-      final newUser = UserModel(
-        uid: authUser.uid,
-        email: authUser.email,
-        displayName: authUser.email?.split('@').first ?? 'User',
-        isAnonymous: authUser.isAnonymous,
-      );
-
-      return newUser;
+      return user;
     } catch (e) {
-      // Even on error, create a basic user model so the UI doesn't break
-      final basicUser = UserModel(
-        uid: authUser.uid,
-        email: authUser.email,
-        displayName: authUser.email?.split('@').first ?? 'User',
-        isAnonymous: authUser.isAnonymous,
-      );
-
-      return basicUser;
+      // If there's an error fetching user data, return null
+      // This should not happen if the user was created properly during registration
+      return null;
     }
   }
 
@@ -73,26 +52,6 @@ class UserNotifier extends AsyncNotifier<UserModel?> {
       // Rollback on error
       state = const AsyncData(null);
       rethrow;
-    }
-  }
-
-  Future<void> ensureUserInDatabase() async {
-    final currentUser = state.value;
-    if (currentUser == null) {
-      throw Exception('No user data available');
-    }
-
-    try {
-      // Check if user exists in database
-      final existingUser = await ref
-          .read(userServiceProvider)
-          .getUser(currentUser.uid);
-      if (existingUser == null) {
-        // User doesn't exist, create it
-        await ref.read(userServiceProvider).createUser(currentUser);
-      }
-    } catch (e) {
-      // Don't rethrow - this is not critical for app functionality
     }
   }
 
@@ -178,7 +137,7 @@ final currentUserProvider = Provider<UserModel?>((ref) {
   return userData.when(
     data: (user) => user,
     loading: () => null,
-    error: (_, __) => null,
+    error: (_, _) => null,
   );
 });
 
