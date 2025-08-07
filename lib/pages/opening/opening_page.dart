@@ -48,6 +48,7 @@ class OpeningPage extends ConsumerWidget {
                     height: 24,
                   ),
                   onPressed: () {
+                    // context.push(LearnPage(opening: opening));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
