@@ -5,10 +5,8 @@ class UserService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> createUser(UserModel user) async {
-    await _firestore.collection('users').doc(user.uid).set({
-      ...user.toMap(),
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    print('Creating user: ${user.createdAt}');
+    await _firestore.collection('users').doc(user.uid).set({...user.toMap()});
   }
 
   Future<UserModel?> getUser(String uid) async {

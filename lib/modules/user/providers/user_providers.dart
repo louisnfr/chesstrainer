@@ -23,35 +23,7 @@ class UserNotifier extends AsyncNotifier<UserModel?> {
       final user = await ref.read(userServiceProvider).getUser(authUser.uid);
       return user;
     } catch (e) {
-      // If there's an error fetching user data, return null
-      // This should not happen if the user was created properly during registration
       return null;
-    }
-  }
-
-  Future<void> createUserProfile({required String displayName}) async {
-    final authUser = ref.read(authStateProvider).value;
-    if (authUser == null) {
-      throw Exception('No authenticated user');
-    }
-
-    final newUser = UserModel(
-      uid: authUser.uid,
-      email: authUser.email,
-      displayName: displayName,
-      isAnonymous: authUser.isAnonymous,
-    );
-
-    // Optimistic update: update local state immediately
-    state = AsyncData(newUser);
-
-    try {
-      await ref.read(userServiceProvider).createUser(newUser);
-      // Success: state is already updated optimistically
-    } catch (e) {
-      // Rollback on error
-      state = const AsyncData(null);
-      rethrow;
     }
   }
 

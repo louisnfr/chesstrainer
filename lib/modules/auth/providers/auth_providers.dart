@@ -61,7 +61,8 @@ class AuthNotifier extends AsyncNotifier<void> {
           uid: user.uid,
           email: user.email,
           displayName: user.email?.split('@').first ?? 'User',
-          isAnonymous: user.isAnonymous,
+          createdAt: DateTime.now(),
+          // isAnonymous: user.isAnonymous,
         );
 
         await ref.read(_userServiceProvider).createUser(userModel);

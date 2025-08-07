@@ -5,15 +5,17 @@ class UserModel {
   final String uid;
   final String? email;
   final String? displayName;
-  final bool isAnonymous;
   final List<String> learnedOpenings; // IDs des ouvertures apprises
   final String? lastOpeningId; // ID de la dernière ouverture jouée
+  final DateTime createdAt;
+  // final bool isAnonymous;
 
   const UserModel({
     required this.uid,
+    required this.createdAt,
+    // required this.isAnonymous,
     this.email,
     this.displayName,
-    required this.isAnonymous,
     this.learnedOpenings = const [],
     this.lastOpeningId,
   });
@@ -24,9 +26,10 @@ class UserModel {
       'uid': uid,
       'email': email,
       'displayName': displayName,
-      'isAnonymous': isAnonymous,
+      // 'isAnonymous': isAnonymous,
       'learnedOpenings': learnedOpenings,
       'lastOpeningId': lastOpeningId,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -36,9 +39,12 @@ class UserModel {
       uid: map['uid'],
       email: map['email'],
       displayName: map['displayName'],
-      isAnonymous: map['isAnonymous'],
+      // isAnonymous: map['isAnonymous'],
       learnedOpenings: List<String>.from(map['learnedOpenings'] ?? []),
       lastOpeningId: map['lastOpeningId'],
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'])
+          : DateTime.now(),
     );
   }
 
@@ -55,9 +61,10 @@ class UserModel {
       uid: uid ?? this.uid,
       email: email ?? this.email,
       displayName: displayName ?? this.displayName,
-      isAnonymous: isAnonymous ?? this.isAnonymous,
+      // isAnonymous: isAnonymous ?? this.isAnonymous,
       learnedOpenings: learnedOpenings ?? this.learnedOpenings,
       lastOpeningId: lastOpeningId ?? this.lastOpeningId,
+      createdAt: createdAt,
     );
   }
 
@@ -65,8 +72,9 @@ class UserModel {
   String toString() {
     return 'UserModel(uid: $uid, '
         'email: $email, '
+        'createdAt: $createdAt, '
         'displayName: $displayName, '
-        'isAnonymous: $isAnonymous, '
+        // 'isAnonymous: $isAnonymous, '
         'learnedOpenings: $learnedOpenings), '
         'lastOpeningId: $lastOpeningId';
   }

@@ -68,12 +68,6 @@ class _OnboardingState extends State<Onboarding> {
                         if (context.mounted) {
                           Navigator.pop(context);
                         }
-
-                        // await ref
-                        //     .read(userNotifierProvider.notifier)
-                        //     .createUserProfile(
-                        //       displayName: _usernameController.text,
-                        //     );
                       },
                       child: const Text('Finish Onboarding'),
                     ),
