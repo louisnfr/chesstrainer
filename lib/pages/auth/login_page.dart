@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                context.push(AppRoutes.register);
+                context.push(RoutePaths.register);
               },
               child: const Text("Don't have an account yet? Register"),
             ),

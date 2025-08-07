@@ -1,5 +1,5 @@
 import 'package:chesstrainer/firebase_options.dart';
-import 'package:chesstrainer/modules/router/router.dart';
+import 'package:chesstrainer/modules/router/router_provider.dart';
 import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
