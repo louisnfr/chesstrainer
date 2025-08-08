@@ -37,7 +37,7 @@ class _RootPageNavigationBarState extends State<RootPageNavigationBar> {
             fill: 1,
             size: 30,
           ),
-          label: 'Home',
+          label: 'Openings',
         ),
         // NavigationDestination(
         //   icon: Icon(

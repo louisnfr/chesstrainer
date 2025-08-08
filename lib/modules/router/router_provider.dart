@@ -28,7 +28,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authService = ref.watch(authServiceProvider);
 
   return GoRouter(
-    initialLocation: RoutePaths.login,
+    initialLocation: Routes.login,
     routes: appRoutes,
     refreshListenable: GoRouterRefreshStream(authService.authStateChanges()),
     redirect: (context, state) {
@@ -36,15 +36,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = user != null;
 
       final isOnAuthPage =
-          state.matchedLocation == RoutePaths.login ||
-          state.matchedLocation == RoutePaths.register;
+          state.matchedLocation == Routes.login ||
+          state.matchedLocation == Routes.register;
 
       if (isLoggedIn && isOnAuthPage) {
-        return RoutePaths.home;
+        return Routes.openings;
       }
 
       if (!isLoggedIn && !isOnAuthPage) {
-        return RoutePaths.login;
+        return Routes.login;
       }
 
       return null;
@@ -61,7 +61,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             Text('Page not found: ${state.matchedLocation}'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => context.go(RoutePaths.home),
+              onPressed: () => context.go(Routes.openings),
               child: const Text('Go Home'),
             ),
           ],

@@ -1,18 +1,41 @@
+import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/pages/auth/login_page.dart';
 import 'package:chesstrainer/pages/auth/register_page.dart';
-import 'package:chesstrainer/pages/home/home_page.dart';
+import 'package:chesstrainer/pages/learn/learn_page.dart';
+import 'package:chesstrainer/pages/opening/opening_page.dart';
+import 'package:chesstrainer/pages/openings/openings_page.dart';
 import 'package:chesstrainer/pages/profile/profile_page.dart';
 import 'package:chesstrainer/pages/root/shell_page.dart';
 import 'package:go_router/go_router.dart';
 
-class RoutePaths {
+class Routes {
+  // * Auth routes
   static const String login = '/login';
   static const String register = '/register';
-  static const String home = '/home';
+
+  // * Openings routes
+  static const String openings = '/openings';
+  static const String openingDetail = ':openingName';
+
+  // * Profile routes
   static const String profile = '/profile';
+
+  // * Learn routes
+  static const String learn = '/learn';
+
+  // * Practice routes
+  static const String practice = '/practice';
 }
 
 final appRoutes = <RouteBase>[
+  // * Auth routes
+  GoRoute(path: Routes.login, builder: (context, state) => const LoginPage()),
+  GoRoute(
+    path: Routes.register,
+    builder: (context, state) => const RegisterPage(),
+  ),
+
+  // * Main shell route
   StatefulShellRoute.indexedStack(
     builder: (context, state, navigationShell) {
       return ShellPage(navigationShell: navigationShell);
@@ -21,16 +44,15 @@ final appRoutes = <RouteBase>[
       StatefulShellBranch(
         routes: [
           GoRoute(
-            path: RoutePaths.home,
-            builder: (context, state) => const HomePage(),
+            path: Routes.openings,
+            builder: (context, state) => const OpeningsPage(),
             routes: [
-              // GoRoute(
-              //   path: 'openings/:openingName',
-              //   builder: (context, state) {
-              //     final openingId = state.pathParameters['openingId'];
-              //     return OpeningPage(opening: opening);
-              //   },
-              // ),
+              GoRoute(
+                path: Routes.openingDetail,
+                builder: (context, state) {
+                  return OpeningPage(opening: state.extra as OpeningModel);
+                },
+              ),
             ],
           ),
         ],
@@ -38,7 +60,7 @@ final appRoutes = <RouteBase>[
       StatefulShellBranch(
         routes: [
           GoRoute(
-            path: RoutePaths.profile,
+            path: Routes.profile,
             builder: (context, state) => const ProfilePage(),
           ),
         ],
@@ -46,45 +68,19 @@ final appRoutes = <RouteBase>[
     ],
   ),
 
-  // Shell route avec navigation bar
-  // ShellRoute(
-  //   builder: (context, state, child) => Scaffold(
-  //     body: SafeArea(child: child),
-  //     bottomNavigationBar: NavigationBar(
-  //       height: 48,
-  //       destinations: [
-  //         const NavigationDestination(
-  //           icon: Icon(Icons.home_rounded),
-  //           selectedIcon: Icon(Icons.home),
-  //           label: 'Home',
-  //         ),
-  //         const NavigationDestination(
-  //           icon: Icon(Icons.account_circle_outlined),
-  //           selectedIcon: Icon(Icons.account_circle),
-  //           label: 'Profile',
-  //         ),
-  //       ],
-  //     ),
-  //   ),
-  //   routes: [
-  //     GoRoute(
-  //       path: RoutePaths.home,
-  //       builder: (context, state) => const HomePage(),
-  //     ),
-  //     GoRoute(
-  //       path: RoutePaths.profile,
-  //       builder: (context, state) => const ProfilePage(),
-  //     ),
-  //   ],
-  // ),
-
-  // Routes d'authentification (hors shell)
+  // * Learn routes
   GoRoute(
-    path: RoutePaths.login,
-    builder: (context, state) => const LoginPage(),
+    path: Routes.learn,
+    builder: (context, state) {
+      return LearnPage(opening: state.extra as OpeningModel);
+    },
   ),
+
+  // * Practice routes
   GoRoute(
-    path: RoutePaths.register,
-    builder: (context, state) => const RegisterPage(),
+    path: Routes.practice,
+    builder: (context, state) {
+      return LearnPage(opening: state.extra as OpeningModel);
+    },
   ),
 ];

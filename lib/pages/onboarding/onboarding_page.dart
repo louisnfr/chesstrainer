@@ -64,10 +64,6 @@ class _OnboardingState extends State<Onboarding> {
                         await ref
                             .read(authNotifierProvider.notifier)
                             .signInAnonymously();
-
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                        }
                       },
                       child: const Text('Finish Onboarding'),
                     ),

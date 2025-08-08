@@ -1,4 +1,5 @@
 import 'package:chessground/chessground.dart';
+import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/learn/providers/learn_provider.dart';
 import 'package:chesstrainer/modules/opening/providers/pgn_game_provider.dart';
 import 'package:chesstrainer/modules/learn/providers/selected_line_provider.dart';
@@ -6,11 +7,13 @@ import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/learn/providers/annotation_provider.dart';
 import 'package:chesstrainer/modules/chess/providers/chess_providers.dart';
 import 'package:chesstrainer/pages/learn/learn_coach.dart';
+import 'package:chesstrainer/pages/practice/practice_coach.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:chesstrainer/ui/ui.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LearnPage extends ConsumerStatefulWidget {
@@ -23,10 +26,15 @@ class LearnPage extends ConsumerStatefulWidget {
 }
 
 class _LearnPageState extends ConsumerState<LearnPage> {
+  final test = 3;
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     final theme = Theme.of(context);
+    final routePath = GoRouterState.of(context).path;
+
+    final isPracticeMode = routePath?.contains(Routes.practice) ?? false;
 
     final opening = widget.opening;
     final linesNumber = opening.linePaths.length;
@@ -83,122 +91,135 @@ class _LearnPageState extends ConsumerState<LearnPage> {
           }
         });
 
-        return Scaffold(
-          appBar: AppBar(title: Text(opening.name)),
-          body: PageLayout(
-            horizontalPadding: 0,
-            child: Column(
-              spacing: 12,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    spacing: 12,
+        return PopScope(
+          canPop: false,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(opening.name),
+              leading: IconButton(
+                onPressed: () => context.pop(),
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              ),
+            ),
+            body: PageLayout(
+              horizontalPadding: 0,
+              child: Column(
+                spacing: 12,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      spacing: 12,
+                      children: [
+                        Expanded(
+                          child: LinearProgressBar(
+                            lineHeight: 24,
+                            percent:
+                                learnProvider.currentStep /
+                                (learnProvider.lineLength),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceBright,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: DropdownButton(
+                            padding: const EdgeInsets.all(0),
+                            borderRadius: BorderRadius.circular(8),
+                            value: selectedLine,
+                            dropdownColor:
+                                theme.colorScheme.surfaceContainerHighest,
+                            underline: const SizedBox(),
+                            style: TextStyle(
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            items: List.generate(linesNumber, (index) {
+                              return DropdownMenuItem<int>(
+                                value: index + 1,
+                                child: Text(
+                                  'Line ${index + 1}',
+                                  style: theme.textTheme.labelLarge,
+                                ),
+                              );
+                            }),
+                            onChanged: dropdownCallback,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.sizeOf(context).height * 0.12,
+                    constraints: const BoxConstraints(
+                      minHeight: 80,
+                      maxHeight: 150,
+                    ),
+                    child: isPracticeMode
+                        ? PracticeCoach(pgnGame: pgnGame)
+                        : LearnCoach(pgnGame: pgnGame),
+                  ),
+                  Column(
                     children: [
-                      Expanded(
-                        child: LinearProgressBar(
-                          lineHeight: 24,
-                          percent:
-                              learnProvider.currentStep /
-                              (learnProvider.lineLength),
+                      Chessboard(
+                        settings: const ChessboardSettings(
+                          pieceAssets: PieceSet.meridaAssets,
+                          colorScheme: ChessboardColorScheme.blue,
                         ),
+                        game: learnNotifier.getGameData(),
+                        size: screenWidth,
+                        orientation: chessProvider.orientation,
+                        fen: chessProvider.fen,
+                        lastMove: chessProvider.lastMove,
+                        annotations: annotations,
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceBright,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: DropdownButton(
-                          padding: const EdgeInsets.all(0),
-                          borderRadius: BorderRadius.circular(8),
-                          value: selectedLine,
-                          dropdownColor:
-                              theme.colorScheme.surfaceContainerHighest,
-                          underline: const SizedBox(),
-                          style: TextStyle(color: theme.colorScheme.onSurface),
-                          items: List.generate(linesNumber, (index) {
-                            return DropdownMenuItem<int>(
-                              value: index + 1,
-                              child: Text(
-                                'Line ${index + 1}',
-                                style: theme.textTheme.labelLarge,
-                              ),
-                            );
-                          }),
-                          onChanged: dropdownCallback,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.lightbulb_outline),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.interests),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                learnNotifier.goToPrevious();
+                              },
+                              icon: const Icon(Icons.arrow_back_ios_rounded),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                learnNotifier.goToNext();
+                              },
+                              icon: const Icon(Icons.arrow_forward_ios_rounded),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                Container(
-                  height: MediaQuery.sizeOf(context).height * 0.12,
-                  constraints: const BoxConstraints(
-                    minHeight: 80,
-                    maxHeight: 150,
-                  ),
-                  child: LearnCoach(pgnGame: pgnGame),
-                ),
-                Column(
-                  children: [
-                    Chessboard(
-                      settings: const ChessboardSettings(
-                        pieceAssets: PieceSet.meridaAssets,
-                        colorScheme: ChessboardColorScheme.blue,
-                      ),
-                      game: learnNotifier.getGameData(),
-                      size: screenWidth,
-                      orientation: chessProvider.orientation,
-                      fen: chessProvider.fen,
-                      lastMove: chessProvider.lastMove,
-                      annotations: annotations,
-                    ),
+                  if (learnProvider.isFinished)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.lightbulb_outline),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.interests),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              learnNotifier.goToPrevious();
-                            },
-                            icon: const Icon(Icons.arrow_back_ios_rounded),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              learnNotifier.goToNext();
-                            },
-                            icon: const Icon(Icons.arrow_forward_ios_rounded),
-                          ),
-                        ],
+                      child: PrimaryButton(
+                        text: 'Next Line',
+                        onPressed: () {
+                          final nextLine = (selectedLine % linesNumber) + 1;
+                          selectedLineNotifier.selectLine(nextLine);
+                        },
                       ),
                     ),
-                  ],
-                ),
-                if (learnProvider.isFinished)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: PrimaryButton(
-                      text: 'Next Line',
-                      onPressed: () {
-                        final nextLine = (selectedLine % linesNumber) + 1;
-                        selectedLineNotifier.selectLine(nextLine);
-                      },
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         );

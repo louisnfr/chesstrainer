@@ -1,13 +1,14 @@
 import 'package:chessground/chessground.dart';
+import 'package:chesstrainer/constants/routes.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
-import 'package:chesstrainer/pages/learn/learn_page.dart';
 import 'package:chesstrainer/ui/buttons/primary_button.dart';
 import 'package:chesstrainer/ui/buttons/secondary_button.dart';
 import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const double _kScreenRatio = 0.85;
@@ -48,24 +49,13 @@ class OpeningPage extends ConsumerWidget {
                     height: 24,
                   ),
                   onPressed: () {
-                    // context.push(LearnPage(opening: opening));
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LearnPage(opening: opening),
-                      ),
-                    );
+                    context.push(Routes.learn, extra: opening);
                   },
                 ),
                 SecondaryButton(
                   text: 'Practice',
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => PracticePage(opening: opening),
-                    //   ),
-                    // );
+                    context.push(Routes.practice, extra: opening);
                   },
                   icon: Image.asset(
                     'assets/images/icons/practice.png',

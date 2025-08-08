@@ -34,9 +34,7 @@ class WelcomePage extends StatelessWidget {
               ),
               OutlinedButton(
                 child: const Text('I already have an account'),
-                onPressed: () {
-                  // Navigator.pushNamed(context, loginRoute);
-                },
+                onPressed: () {},
               ),
             ],
           ),

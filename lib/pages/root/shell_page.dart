@@ -18,17 +18,17 @@ class ShellPage extends StatelessWidget {
         destinations: [
           NavigationDestination(
             icon: Icon(
-              Symbols.home_rounded,
+              Symbols.chess_pawn_rounded,
               color: Theme.of(context).colorScheme.outline,
               size: 30,
             ),
             selectedIcon: Icon(
-              Symbols.home_rounded,
+              Symbols.chess_pawn_rounded,
               color: Theme.of(context).colorScheme.primary,
               fill: 1,
               size: 30,
             ),
-            label: 'Home',
+            label: 'Openings',
           ),
           NavigationDestination(
             icon: Icon(
