@@ -3,12 +3,34 @@ import 'package:chesstrainer/ui/layouts/page_layout.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    void sendFeedback() async {
+      final Uri emailUri = Uri(
+        scheme: 'mailto',
+        path: 'contact@louisraffin.com',
+        query: 'subject=ChessTrainer Feedback',
+      );
+      if (await canLaunchUrl(emailUri)) {
+        // If the device can launch the email app, do so
+        await launchUrl(emailUri);
+      } else {
+        // If not, you might want to show an error message or fallback
+        if (context.mounted) {
+          // Check if context is still mounted
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not launch email app')),
+          );
+        }
+      }
+      await launchUrl(emailUri);
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: PageLayout(
@@ -19,7 +41,7 @@ class ProfilePage extends ConsumerWidget {
                 context,
                 Icons.feedback_outlined,
                 'Feedback',
-                () => print('Feedback'),
+                () => sendFeedback(),
               ),
             ]),
             const SizedBox(height: 20),
