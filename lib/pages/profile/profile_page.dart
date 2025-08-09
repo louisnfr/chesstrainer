@@ -14,16 +14,6 @@ class ProfilePage extends ConsumerWidget {
       body: PageLayout(
         child: ListView(
           children: [
-            // _buildSection(context, 'Account', [
-            //   _buildItem(
-            //     context,
-            //     Icons.lock_outline,
-            //     'Change Password',
-            //     () => print('Edit profile'),
-            //   ),
-            // ]),
-
-            // const SizedBox(height: 20),
             _buildSection(context, 'Support', [
               _buildItem(
                 context,
