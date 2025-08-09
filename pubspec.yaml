@@ -45,6 +45,7 @@ dependencies:
   hooks_riverpod: ^3.0.0-dev.16
   intl: ^0.20.2
   material_symbols_icons: ^4.2815.1
+  package_info_plus: ^8.3.0
   percent_indicator: ^4.2.5
   shared_preferences: ^2.5.3
   sign_in_with_apple: ^7.0.1

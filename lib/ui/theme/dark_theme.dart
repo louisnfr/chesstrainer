@@ -62,8 +62,8 @@ class AppColors {
 
 ThemeData darkTheme = ThemeData(
   useMaterial3: true,
-  splashFactory: NoSplash.splashFactory,
 
+  // splashFactory: NoSplash.splashFactory,
   colorScheme: const ColorScheme.dark().copyWith(
     brightness: Brightness.dark,
     surface: AppColors.surface,

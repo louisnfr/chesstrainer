@@ -32,12 +32,12 @@ class ShellPage extends StatelessWidget {
           ),
           NavigationDestination(
             icon: Icon(
-              Icons.account_circle_outlined,
+              Icons.person_outline_rounded,
               color: Theme.of(context).colorScheme.outline,
               size: 30,
             ),
             selectedIcon: const Icon(
-              Icons.account_circle_sharp,
+              Icons.person_rounded,
               color: Colors.white,
               size: 30,
             ),

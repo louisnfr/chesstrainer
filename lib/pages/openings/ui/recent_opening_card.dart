@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:chesstrainer/modules/opening/models/opening.dart';
 import 'package:chesstrainer/modules/user/providers/user_providers.dart';
 import 'package:chesstrainer/ui/progress_indicators/linear_progress_bar.dart';
+import 'package:chesstrainer/ui/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -101,12 +102,21 @@ class _RecentOpeningCardState extends State<RecentOpeningCard> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Next: Line ${progress.learned + 1} / ${progress.total}',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
+                            if (progress.percentage >= 1.0)
+                              Text(
+                                'Opening completed!',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.success,
+                                ),
+                              )
+                            else
+                              Text(
+                                'Next: Line ${progress.learned + 1}',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
                             LinearProgressBar(
                               percent: progress.percentage,
                               lineHeight: 20,
